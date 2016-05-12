@@ -14,7 +14,10 @@
     <packaging>pom</packaging>
 
     <properties>
+        <activemq.version>5.13.2</activemq.version>
         <assertj.version>3.3.0</assertj.version>
+        <camel.version>2.17.1</camel.version>
+        <smolok.version>0.0.0-SNAPSHOT</smolok.version>
     </properties>
 
     <dependencyManagement>
@@ -27,8 +30,34 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-parent</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Smolok dependencies -->
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-bootstrap</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
 
             <!-- Dependencies -->
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-amqp</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-broker</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+
+            <!-- Testing dependencies -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
