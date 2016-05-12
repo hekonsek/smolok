@@ -87,7 +87,7 @@
                         <image>
                             <name>smolok/${image.target}</name>
                             <build>
-                                <from>java:8u72</from>
+                                <from>java:8u92-alpine</from>
                                 <tags>
                                     <tag>latest</tag>
                                     <tag>${project.version}</tag>
