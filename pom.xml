@@ -9,9 +9,14 @@
     <packaging>pom</packaging>
 
     <properties>
+        <!-- General build rules -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
+
+    <modules>
+        <module>bom</module>
+    </modules>
 
 </project>
