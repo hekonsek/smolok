@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Configuration
 class EventBusConfiguration {
 
     @Bean(initMethod = 'start', destroyMethod = 'stop')
-    BrokerService broker(@Value('${amqp.port:5672}') int port) {
+    BrokerService broker(
+            @Value('${amqp.host:0.0.0.0}') String host,
+            @Value('${amqp.port:5672}') int port) {
         def broker = new BrokerService()
         broker.setPersistent(false)
-        broker.addConnector("amqp://0.0.0.0:${port}")
+        broker.addConnector("amqp://${host}:${port}")
         broker
     }
 
