@@ -12,6 +12,10 @@
     </parent>
     <artifactId>smolok-eventbus</artifactId>
 
+    <properties>
+        <image.target>eventbus</image.target>
+    </properties>
+
     <dependencies>
         <!-- Smolok dependencies -->
         <dependency>
@@ -44,6 +48,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
