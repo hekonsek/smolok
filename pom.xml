@@ -26,6 +26,9 @@
         <groovy-eclipse-compiler.version>2.9.1-01</groovy-eclipse-compiler.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <spring-boot.version>1.3.5.RELEASE</spring-boot.version>
+
+        <!-- Plugins configuration -->
+        <mainClass>smolok.bootstrap.Smolok</mainClass>
     </properties>
 
     <build>
@@ -54,6 +57,22 @@
                 <artifactId>groovy-eclipse-compiler</artifactId>
                 <version>${groovy-eclipse-compiler.version}</version>
                 <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <classifier>fat</classifier>
+                            <mainClass>${mainClass}</mainClass>
+                        </configuration>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
