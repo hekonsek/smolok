@@ -13,6 +13,7 @@
         <module>bom</module>
         <module>bootstrap</module>
         <module>eventbus</module>
+        <module>cmd</module>
     </modules>
 
     <properties>
@@ -107,7 +108,13 @@
                                         </fileSets>
                                     </inline>
                                 </assembly>
-                                <entryPoint>java -jar /app/${artifactId}-${version}-fat.jar</entryPoint>
+                                <entryPoint>
+                                    <exec>
+                                        <args>java</args>
+                                        <args>-jar</args>
+                                        <args>/app/${artifactId}-${version}-fat.jar</args>
+                                    </exec>
+                                </entryPoint>
                             </build>
                         </image>
                     </images>

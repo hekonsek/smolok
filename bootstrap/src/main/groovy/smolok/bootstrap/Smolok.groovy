@@ -4,6 +4,7 @@ import org.apache.camel.component.amqp.AMQPComponent
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Bean
 
 import static org.apache.camel.component.amqp.AMQPComponent.amqpComponent
@@ -17,6 +18,9 @@ class Smolok {
 
     // Event bus connectivity
 
+    /**
+     * Camel AMQP component pre-configured to connect to the Smolok event bus.
+     */
     @Bean
     AMQPComponent amqp(
             @Value('${amqp.host:localhost}') String host,
@@ -24,10 +28,14 @@ class Smolok {
         amqpComponent("failover:(amqp://${host}:${port})")
     }
 
-    // Main execution point
+    // Execution points
 
-    public static void main(String[] args) {
+    ConfigurableApplicationContext run(String[] args) {
         new SpringApplicationBuilder(Smolok.class).run(args)
+    }
+
+    static void main(String... args) {
+        new Smolok().run(args)
     }
 
 }
