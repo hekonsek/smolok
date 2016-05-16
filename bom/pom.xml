@@ -44,6 +44,11 @@
                 <artifactId>smolok-bootstrap</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-lib-process</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
 
             <!-- Dependencies -->
             <dependency>
