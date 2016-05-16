@@ -1,17 +1,23 @@
-package smolok.paas.openshift
+package smolok.paas.openshift.spring
 
 import org.junit.Before
 import org.junit.Test
-import smolok.lib.process.DefaultProcessManager
-import smolok.paas.openshift.OpenshiftPaas
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import smolok.paas.Paas
 
 import static org.assertj.core.api.Assertions.assertThat
 
-class OpenshiftPaasTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = OpenshiftPaasConfiguration.class)
+class OpenshiftPaasConfigurationTest {
 
     // Collaborators fixtures
 
-    def paas = new OpenshiftPaas(new DefaultProcessManager())
+    @Autowired
+    Paas paas
 
     @Before
     void before() {
