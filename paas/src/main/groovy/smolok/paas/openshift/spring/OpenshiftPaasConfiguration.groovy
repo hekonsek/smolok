@@ -12,6 +12,7 @@ import smolok.paas.openshift.OpenshiftPaas
 class OpenshiftPaasConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean
     Paas paas(ProcessManager processManager) {
         new OpenshiftPaas(processManager)
     }
