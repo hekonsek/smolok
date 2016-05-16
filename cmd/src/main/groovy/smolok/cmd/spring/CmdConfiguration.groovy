@@ -8,6 +8,7 @@ import smolok.cmd.CommandDispatcher
 import smolok.cmd.OutputSink
 import smolok.cmd.StdoutOutputSink
 import smolok.cmd.commands.CloudStartCommand
+import smolok.paas.Paas
 
 @Configuration
 class CmdConfiguration {
@@ -26,8 +27,8 @@ class CmdConfiguration {
     // Commands
 
     @Bean
-    CloudStartCommand cloudStartCommand() {
-        new CloudStartCommand()
+    CloudStartCommand cloudStartCommand(Paas paas) {
+        new CloudStartCommand(paas)
     }
 
 }

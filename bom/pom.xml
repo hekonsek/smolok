@@ -50,6 +50,11 @@
                 <artifactId>smolok-lib-process</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-paas</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
 
             <!-- Dependencies -->
             <dependency>

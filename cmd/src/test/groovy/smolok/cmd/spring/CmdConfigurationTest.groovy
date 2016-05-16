@@ -1,5 +1,6 @@
 package smolok.cmd.spring
 
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.cmd.CommandDispatcher
 import smolok.cmd.InMemoryOutputSink
+import smolok.paas.Paas
 
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -27,10 +29,27 @@ class CmdConfigurationTest {
     @Autowired
     CommandDispatcher commandHandler
 
+    @Autowired
+    Paas paas
+
+    @Before
+    void before() {
+        paas.reset()
+    }
+
     // Tests
 
     @Test
     void shouldExecuteCloudStartCommand() {
+        // When
+        commandHandler.handleCommand('cloud', 'start')
+
+        // Then
+        assertThat(paas.started)
+    }
+
+    @Test
+    void shouldInformAboutCloudStart() {
         // When
         commandHandler.handleCommand('cloud', 'start')
 

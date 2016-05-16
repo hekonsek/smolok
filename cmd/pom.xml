@@ -24,6 +24,10 @@
             <groupId>smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
         </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-paas</artifactId>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
