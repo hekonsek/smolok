@@ -9,6 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class OpenshiftPaasTest {
 
+    // Collaborators fixtures
+
     def paas = new OpenshiftPaas(new DefaultProcessManager())
 
     @Before
@@ -25,6 +27,15 @@ class OpenshiftPaasTest {
 
         // Then
         assertThat(paas.started).isTrue()
+    }
+
+    @Test
+    void shouldProvisionAfterStart() {
+        // When
+        paas.start()
+
+        // Then
+        assertThat(paas.provisioned).isTrue()
     }
 
     @Test

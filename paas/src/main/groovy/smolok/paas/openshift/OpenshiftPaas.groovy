@@ -22,6 +22,8 @@ class OpenshiftPaas implements Paas {
 
     private final static OS_START_COMMAND = 'docker start openshift-server'
 
+    private final static OS_REMOVE_COMMAND = 'docker rm openshift-server'
+
     private final static DOCKER_PS = 'docker ps -f name=openshift-server'
 
     private final static DOCKER_PS_ALL = "${DOCKER_PS} -a"
@@ -73,7 +75,8 @@ class OpenshiftPaas implements Paas {
     @Override
     void reset() {
         stop()
-        println 'docker rm openshift-server'.execute().text
+        def output = processManager.execute(command(OS_REMOVE_COMMAND))
+        LOG.debug('Removing OpenShift instance. Result: {}', output)
     }
 
 }
