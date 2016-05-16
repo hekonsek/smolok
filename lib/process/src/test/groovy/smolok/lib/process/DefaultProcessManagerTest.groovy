@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.fail
+import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class DefaultProcessManagerTest {
 
@@ -59,6 +60,24 @@ class DefaultProcessManagerTest {
             return
         }
         fail('Expected process exception')
+    }
+
+    @Test
+    void shouldParseCommandWithSpaces() {
+        def output = processManager.execute(command('echo foo'))
+        assertThat(output).isEqualTo(['foo'])
+    }
+
+    @Test
+    void shouldParseCommandWithDoubleSpaces() {
+        def output = processManager.execute(command('echo  foo'))
+        assertThat(output).isEqualTo(['foo'])
+    }
+
+    @Test
+    void shouldParseCommandWithNewLines() {
+        def output = processManager.execute(command('echo\nfoo'))
+        assertThat(output).isEqualTo(['foo'])
     }
 
 }

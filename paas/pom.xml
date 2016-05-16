@@ -13,11 +13,13 @@
     <artifactId>smolok-paas</artifactId>
 
     <dependencies>
+        <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-lib-process</artifactId>
         </dependency>
 
+        <!-- Non-Smolok dependencies -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
@@ -28,6 +30,11 @@
         </dependency>
 
         <!-- Testing -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

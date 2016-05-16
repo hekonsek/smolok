@@ -9,7 +9,10 @@ import static java.util.Arrays.asList;
 import static java.util.concurrent.Executors.newCachedThreadPool
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class ExecutorBasedProcessManager implements ProcessManager {
+/**
+ * Base process manager using JDK Executor Framework for handling asynchronous command invocations.
+ */
+abstract class ExecutorBasedProcessManager implements ProcessManager {
 
     protected final Logger log = getLogger(getClass())
 
@@ -35,7 +38,7 @@ public abstract class ExecutorBasedProcessManager implements ProcessManager {
     }
 
     static String[] command(String command) {
-        command.split(' ')
+        command.split(/\s+/)
     }
 
 }

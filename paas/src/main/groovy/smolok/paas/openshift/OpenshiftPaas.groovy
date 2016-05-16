@@ -38,33 +38,39 @@ class OpenshiftPaas implements Paas {
 
     // Platform operations
 
+    @Override
     boolean isProvisioned() {
         processManager.execute(command(DOCKER_PS_ALL)).size() > 1
     }
 
+    @Override
     boolean isStarted() {
         processManager.execute(command(DOCKER_PS)).size() > 1
     }
 
+    @Override
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
                 def output = processManager.execute(command(OS_START_COMMAND))
-                LOG.debug('Starting exisiting OpenShift instance. Result: {}', output)
+                LOG.debug('Starting existing OpenShift instance. Result: {}', output)
             } else {
-                println OS_PROVISION_COMMAND.execute().text
+                def output = processManager.execute(command(OS_PROVISION_COMMAND))
+                LOG.debug('No OpenShift instance found - provisioning new one. Result: {}', output)
             }
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
         }
     }
 
+    @Override
     void stop() {
         processManager.execute(command('docker ps -q')).collect {
             processManager.executeAsync(command("docker stop ${it}"))
         }.collect { it.get() }
     }
 
+    @Override
     void reset() {
         stop()
         println 'docker rm openshift-server'.execute().text
