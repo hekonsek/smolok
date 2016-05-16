@@ -54,11 +54,9 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                def output = processManager.execute(command(OS_START_COMMAND))
-                LOG.debug('Starting existing OpenShift instance. Result: {}', output)
+                processManager.execute(command(OS_START_COMMAND))
             } else {
-                def output = processManager.execute(command(OS_PROVISION_COMMAND))
-                LOG.debug('No OpenShift instance found - provisioning new one. Result: {}', output)
+                processManager.execute(command(OS_PROVISION_COMMAND))
             }
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
@@ -75,8 +73,7 @@ class OpenshiftPaas implements Paas {
     @Override
     void reset() {
         stop()
-        def output = processManager.execute(command(OS_REMOVE_COMMAND))
-        LOG.debug('Removing OpenShift instance. Result: {}', output)
+        processManager.execute(command(OS_REMOVE_COMMAND))
     }
 
 }

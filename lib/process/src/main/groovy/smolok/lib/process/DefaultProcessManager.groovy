@@ -12,7 +12,11 @@ class DefaultProcessManager extends ExecutorBasedProcessManager {
 
         try {
             def process = new ProcessBuilder().redirectErrorStream(true).command(command).start()
-            readLines(process.getInputStream())
+            def output = readLines(process.getInputStream())
+            if(log.isDebugEnabled()) {
+                log.debug('Output of the command {}: {}', command.toList(), output)
+            }
+            output
         } catch (IOException e) {
             throw new ProcessExecutionException(e)
         }
