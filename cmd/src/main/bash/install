@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sudo wget https://raw.githubusercontent.com/rhiot/rhiot/master/tooling/bash/rhiot -O /usr/bin/smolok && sudo chmod +x /usr/bin/smolok
