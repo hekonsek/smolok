@@ -13,7 +13,7 @@ Smolok command line tool, execute the following command:
 
     bash <(curl -sL https://goo.gl/vEyGhF)
 
-The requirement for using Smolok command line tool is to have Docker client available in the classpath.
+The requirement for using Smolok command line tool is to have Docker client available in the path.
 
 ### Installing and starting Smolok Cloud
 
