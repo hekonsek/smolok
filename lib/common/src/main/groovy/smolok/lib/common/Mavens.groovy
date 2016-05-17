@@ -8,27 +8,22 @@ import static java.lang.String.format
 import static org.apache.commons.lang3.SystemUtils.USER_HOME
 import static org.slf4j.LoggerFactory.getLogger
 
-public final class Mavens {
+final class Mavens {
+
+    private static final DEPENDENCIES_PROPERTIES_PATH = "META-INF/maven/dependencies.properties"
+
+    // Static collaborators
 
     private static final VERSIONS = new Properties()
 
     private static final LOG = getLogger(Mavens.class)
 
-    private static final String DEPENDENCIES_PROPERTIES_PATH = "META-INF/maven/dependencies.properties";
+    // Static initializer
 
     static {
-        try {
-            Enumeration<URL> dependenciesPropertiesStreams = Mavens.class.getClassLoader().getResources(DEPENDENCIES_PROPERTIES_PATH);
-            if(!dependenciesPropertiesStreams.hasMoreElements()) {
-                LOG.debug(format("No %s file found in the classpath.", DEPENDENCIES_PROPERTIES_PATH))
-            }
-            while (dependenciesPropertiesStreams.hasMoreElements()) {
-                InputStream propertiesStream = dependenciesPropertiesStreams.nextElement().openStream();
-                LOG.debug("Loading properties: " + propertiesStream);
-                VERSIONS.load(propertiesStream);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        Mavens.class.getClassLoader().getResources(DEPENDENCIES_PROPERTIES_PATH).toSet().each {
+            LOG.debug('Loading properties file{}', it)
+            VERSIONS.load(it.openStream())
         }
     }
 
@@ -39,7 +34,7 @@ public final class Mavens {
 
     /**
      * Returns local Maven repository.
-     * 
+     *
      * @return {@code java.io.File} pointing to the local Maven repository.
      */
     static File localMavenRepository() {
