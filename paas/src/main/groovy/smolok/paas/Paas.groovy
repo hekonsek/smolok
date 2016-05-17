@@ -10,7 +10,10 @@ interface Paas {
     boolean isStarted()
 
     /**
-     * Starts PaaS platform. Nothing happens is platform is started already.
+     * Starts PaaS platform and event bus on the top of it. Before the method call ends, both PaaS and event bus must be
+     * up and running.
+     *
+     * Nothing happens if this method is called while platform bus is started already.
      */
     void start()
 

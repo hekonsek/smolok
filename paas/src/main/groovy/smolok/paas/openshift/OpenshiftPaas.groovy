@@ -21,18 +21,18 @@ class OpenshiftPaas implements Paas {
     // Docker commands constants
 
     private final static OS_PROVISION_COMMAND =
-            '''docker run -d --name openshift-server --privileged --pid=host --net=host
+            '''run -d --name openshift-server --privileged --pid=host --net=host
             -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys -v /var/lib/docker:/var/lib/docker:rw
             -v /var/lib/origin/openshift.local.volumes:/var/lib/origin/openshift.local.volumes
             openshift/origin start'''
 
-    private final static OS_STATUS_COMMAND = 'docker exec openshift-server oc status'
+    private final static OS_STATUS_COMMAND = 'exec openshift-server oc status'
 
-    private final static OS_START_COMMAND = 'docker start openshift-server'
+    private final static OS_START_COMMAND = 'start openshift-server'
 
-    private final static OS_REMOVE_COMMAND = 'docker rm openshift-server'
+    private final static OS_REMOVE_COMMAND = 'rm openshift-server'
 
-    private final static DOCKER_PS_ALL = "docker ps -a -f name=openshift-server"
+    private final static DOCKER_PS_ALL = "ps -a -f name=openshift-server"
 
     // Collaborators
 
@@ -48,12 +48,12 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isProvisioned() {
-        processManager.execute(command(DOCKER_PS_ALL)).size() > 1
+        dockerRun(DOCKER_PS_ALL).size() > 1
     }
 
     @Override
     boolean isStarted() {
-        processManager.execute(command('docker exec -t openshift-server oc get service')).find {
+        dockerRun('exec -t openshift-server oc get service').find {
             it.startsWith('eventbus')
         } != null
     }
@@ -62,13 +62,13 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                processManager.execute(command(OS_START_COMMAND))
+                dockerRun(OS_START_COMMAND)
             } else {
-                processManager.execute(command(OS_PROVISION_COMMAND))
+                dockerRun(OS_PROVISION_COMMAND)
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
-                processManager.execute(command("docker exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}"))
+                dockerRun("exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}")
             }
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
@@ -77,7 +77,7 @@ class OpenshiftPaas implements Paas {
 
     @Override
     void stop() {
-        processManager.execute(command('docker ps -q')).collect {
+        dockerRun('ps -q').collect {
             processManager.executeAsync(command("docker stop ${it}"))
         }.collect { it.get() }
     }
@@ -85,14 +85,17 @@ class OpenshiftPaas implements Paas {
     @Override
     void reset() {
         stop()
-        processManager.execute(command(OS_REMOVE_COMMAND))
+        dockerRun(OS_REMOVE_COMMAND)
     }
 
     // Helpers
 
-    private boolean isOsStarted() {
-        def osStatus = processManager.execute(command(OS_STATUS_COMMAND)).first()
-        osStatus.startsWith('In project ')
+    private isOsStarted() {
+        dockerRun(OS_STATUS_COMMAND).first().startsWith('In project ')
+    }
+
+    private dockerRun(String cmd) {
+        processManager.execute(command("docker ${cmd}"))
     }
 
 }
