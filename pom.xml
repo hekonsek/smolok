@@ -11,6 +11,7 @@
 
     <modules>
         <module>bom</module>
+        <module>docker</module>
         <module>lib</module>
         <module>bootstrap</module>
         <module>eventbus</module>
@@ -90,7 +91,7 @@
                         <image>
                             <name>smolok/${image.target}</name>
                             <build>
-                                <from>java:8u92-alpine</from>
+                                <from>smolok/fatjar:${project.version}</from>
                                 <tags>
                                     <tag>latest</tag>
                                     <tag>${project.version}</tag>
@@ -110,13 +111,6 @@
                                         </fileSets>
                                     </inline>
                                 </assembly>
-                                <entryPoint>
-                                    <exec>
-                                        <args>java</args>
-                                        <args>-jar</args>
-                                        <args>/app/${artifactId}-${version}-fat.jar</args>
-                                    </exec>
-                                </entryPoint>
                             </build>
                         </image>
                     </images>
