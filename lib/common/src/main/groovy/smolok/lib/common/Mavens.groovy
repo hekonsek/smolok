@@ -41,8 +41,8 @@ final class Mavens {
         Paths.get(USER_HOME, '.m2', 'repository').toFile()
     }
 
-    static String artifactVersionFromDependenciesProperties(String groupId, String artifactId) {
-        VERSIONS.getProperty(format("%s/%s/version", groupId, artifactId))
+    static Optional<String> artifactVersionFromDependenciesProperties(String groupId, String artifactId) {
+        Optional.ofNullable(VERSIONS.getProperty(format("%s/%s/version", groupId, artifactId)))
     }
 
     // Static classes

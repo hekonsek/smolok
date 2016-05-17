@@ -45,7 +45,13 @@ class MavensTest {
     @Test
     void shouldLoadDependencyVersion() {
         def version = artifactVersionFromDependenciesProperties('com.test', 'test')
-        assertThat(version).isEqualTo('6.6.6')
+        assertThat(version).contains('6.6.6')
+    }
+
+    @Test
+    void shouldHandleMissingDependency() {
+        def version = artifactVersionFromDependenciesProperties('invalidGroupId', 'invalidArtifacts')
+        assertThat(version).isEmpty()
     }
 
 }
