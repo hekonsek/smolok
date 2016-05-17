@@ -8,5 +8,15 @@ management, telemetry reading/writing, etc), big data analytics and IoT-scale me
 
 ## Command line tool
 
+Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
+Smolok command line tool, execute the following command:
+
     bash <(curl -sL https://goo.gl/vEyGhF)
 
+The requirement for using Smolok command line tool is to have Docker client available in the classpath.
+
+### Installing and starting Smolok Cloud
+
+In order to start Smolok Cloud, just execute the following command:
+
+    smolok cloud start
