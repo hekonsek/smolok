@@ -17,6 +17,7 @@
         <activemq.version>5.13.2</activemq.version>
         <assertj.version>3.3.0</assertj.version>
         <camel.version>2.17.1</camel.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
         <commons-logging.version>1.1</commons-logging.version>
         <smolok.version>0.0.0-SNAPSHOT</smolok.version>
     </properties>
@@ -47,6 +48,11 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-lib-common</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-lib-process</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
@@ -56,7 +62,12 @@
                 <version>${smolok.version}</version>
             </dependency>
 
-            <!-- Dependencies -->
+            <!-- Non-Smolok dependencies -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging-api</artifactId>

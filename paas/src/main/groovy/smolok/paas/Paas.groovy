@@ -9,6 +9,9 @@ interface Paas {
 
     boolean isStarted()
 
+    /**
+     * Starts PaaS platform. Nothing happens is platform is started already.
+     */
     void start()
 
     void stop()

@@ -1,9 +1,15 @@
 package smolok.paas.openshift
 
+import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 import smolok.paas.Paas
 
+import java.util.concurrent.Callable
+
+import static com.jayway.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.SECONDS
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class OpenshiftPaas implements Paas {
@@ -20,13 +26,13 @@ class OpenshiftPaas implements Paas {
             -v /var/lib/origin/openshift.local.volumes:/var/lib/origin/openshift.local.volumes
             openshift/origin start'''
 
+    private final static OS_STATUS_COMMAND = 'docker exec openshift-server oc status'
+
     private final static OS_START_COMMAND = 'docker start openshift-server'
 
     private final static OS_REMOVE_COMMAND = 'docker rm openshift-server'
 
-    private final static DOCKER_PS = 'docker ps -f name=openshift-server'
-
-    private final static DOCKER_PS_ALL = "${DOCKER_PS} -a"
+    private final static DOCKER_PS_ALL = "docker ps -a -f name=openshift-server"
 
     // Collaborators
 
@@ -47,7 +53,9 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isStarted() {
-        processManager.execute(command(DOCKER_PS)).size() > 1
+        processManager.execute(command('docker exec -t openshift-server oc get service')).find {
+            it.startsWith('eventbus')
+        } != null
     }
 
     @Override
@@ -57,6 +65,11 @@ class OpenshiftPaas implements Paas {
                 processManager.execute(command(OS_START_COMMAND))
             } else {
                 processManager.execute(command(OS_PROVISION_COMMAND))
+                await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
+                def smolokVersion = Validate.notNull(
+                        artifactVersionFromDependenciesProperties('smolok', 'smolok-paas'),
+                        'Smolok version cannot be resolved.')
+                processManager.execute(command("docker exec openshift-server oc new-app smolok/eventbus:${smolokVersion}"))
             }
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
@@ -74,6 +87,13 @@ class OpenshiftPaas implements Paas {
     void reset() {
         stop()
         processManager.execute(command(OS_REMOVE_COMMAND))
+    }
+
+    // Helpers
+
+    private boolean isOsStarted() {
+        def osStatus = processManager.execute(command(OS_STATUS_COMMAND)).first()
+        osStatus.startsWith('In project ')
     }
 
 }
