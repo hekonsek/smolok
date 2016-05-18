@@ -35,7 +35,7 @@
 
         <!-- Docker configuration -->
         <mainClass>smolok.bootstrap.Smolok</mainClass>
-        <image.target>${artifactId}</image.target>
+        <image.target>${project.artifactId}</image.target>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
     </properties>
