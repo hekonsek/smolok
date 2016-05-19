@@ -81,7 +81,7 @@ class OpenshiftPaas implements Paas {
                 dockerRun("exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
-            await().atMost(60, SECONDS).until({isStarted()} as Callable<Boolean>)
+            await().atMost(120, SECONDS).until({isStarted()} as Callable<Boolean>)
             LOG.debug('Event bus has been started.')
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
