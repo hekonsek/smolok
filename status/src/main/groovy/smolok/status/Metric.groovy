@@ -1,20 +1,42 @@
 package smolok.status
 
-import groovy.transform.Immutable
+import groovy.transform.CompileStatic
 
 /**
  * Metric describing status of a given subject.
  */
-@Immutable
+@CompileStatic
 class Metric {
 
     /**
      * Key uniquely identifying the metric.
      */
-    String key
+    private final String key
 
-    String value
+    private final Object value
 
-    boolean warning
+    private final boolean warning
+
+    Metric(String key, Object value, boolean warning) {
+        this.key = key
+        this.value = value
+        this.warning = warning
+    }
+
+    static Metric metric(String key, Object value) {
+        new Metric(key, value, false)
+    }
+
+    String key() {
+        key
+    }
+
+    Object value() {
+        value
+    }
+
+    boolean warning() {
+        warning
+    }
 
 }

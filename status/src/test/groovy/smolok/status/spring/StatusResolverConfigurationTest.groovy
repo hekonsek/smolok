@@ -44,12 +44,12 @@ class StatusResolverConfigurationTest {
     @Test
     void canSendToEventBus() {
         // When
-        def canSendToEventBus = statusResolver.status().find{ it.key == 'eventbus.canSend' }
+        def canSendToEventBus = statusResolver.status().find{ it.key() == 'eventbus.canSend' }
 
         // Then
         assertThat(canSendToEventBus).isNotNull()
-        assertThat(canSendToEventBus.value).isEqualTo("true")
-        assertThat(canSendToEventBus.warning).isEqualTo(false)
+        assertThat(canSendToEventBus.value()).isEqualTo(true)
+        assertThat(canSendToEventBus.warning()).isEqualTo(false)
     }
 
     @Test
@@ -59,12 +59,12 @@ class StatusResolverConfigurationTest {
         processManager.execute(command("docker stop ${eventsBusPid}"))
 
         // When
-        def canSendToEventBus = statusResolver.status().find{ it.key == 'eventbus.canSend' }
+        def canSendToEventBus = statusResolver.status().find{ it.key() == 'eventbus.canSend' }
 
         // Then
         assertThat(canSendToEventBus).isNotNull()
-        assertThat(canSendToEventBus.value).isEqualTo("false")
-        assertThat(canSendToEventBus.warning).isEqualTo(true)
+        assertThat(canSendToEventBus.value()).isEqualTo(false)
+        assertThat(canSendToEventBus.warning()).isEqualTo(true)
     }
 
 }

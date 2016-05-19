@@ -1,12 +1,12 @@
 package smolok.status.handlers.eventbus
 
-import org.slf4j.LoggerFactory
 import smolok.lib.vertx.AmqpProbe
 import smolok.status.MetricSubjectHandler
 import smolok.status.Metric
 import smolok.status.TcpEndpointStatusSubject
 
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.status.Metric.metric
 
 class EventBusMetricHandler implements MetricSubjectHandler<TcpEndpointStatusSubject> {
 
@@ -34,8 +34,8 @@ class EventBusMetricHandler implements MetricSubjectHandler<TcpEndpointStatusSub
     @Override
     Metric metric(TcpEndpointStatusSubject subject) {
         amqpProbe.canSendMessageTo(subject.host, subject.port) ?
-                new Metric(METRIC_KEY, "${true}", false) :
-                new Metric(METRIC_KEY, "${false}", true)
+                metric(METRIC_KEY, true) :
+                new Metric(METRIC_KEY, false, true)
     }
 
 }
