@@ -6,55 +6,46 @@
 
     <parent>
         <groupId>smolok</groupId>
-        <artifactId>smolok-bom</artifactId>
+        <artifactId>smolok-lib</artifactId>
         <version>0.0.0-SNAPSHOT</version>
-        <relativePath>../bom</relativePath>
+        <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-paas</artifactId>
+    <artifactId>smolok-lib-vertx</artifactId>
 
     <dependencies>
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
-            <artifactId>smolok-lib-process</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-lib-vertx</artifactId>
+            <artifactId>smolok-lib-common</artifactId>
         </dependency>
 
         <!-- Non-Smolok dependencies -->
         <dependency>
-            <groupId>com.jayway.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-proton</artifactId>
         </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
+
+        <!-- Optional Spring configuration -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
         </dependency>
 
-        <!-- Testing -->
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-bootstrap</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- Testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -67,14 +58,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.servicemix.tooling</groupId>
-                <artifactId>depends-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

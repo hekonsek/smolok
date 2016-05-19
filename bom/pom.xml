@@ -20,6 +20,7 @@
         <commons-lang3.version>3.4</commons-lang3.version>
         <commons-logging.version>1.1</commons-logging.version>
         <smolok.version>0.0.0-SNAPSHOT</smolok.version>
+        <vertx.version>3.2.0</vertx.version>
     </properties>
 
     <dependencyManagement>
@@ -58,11 +59,26 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-lib-vertx</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-paas</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-status</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
 
             <!-- Non-Smolok dependencies -->
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-proton</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>

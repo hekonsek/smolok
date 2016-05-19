@@ -16,6 +16,7 @@
         <module>bootstrap</module>
         <module>eventbus</module>
         <module>paas</module>
+        <module>status</module>
         <module>cmd</module>
     </modules>
 

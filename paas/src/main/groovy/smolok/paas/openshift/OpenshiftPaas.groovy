@@ -2,6 +2,7 @@ package smolok.paas.openshift
 
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
+import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
 
 import java.util.concurrent.Callable
@@ -32,16 +33,20 @@ class OpenshiftPaas implements Paas {
 
     private final static OS_REMOVE_COMMAND = 'rm openshift-server'
 
+    private final static OS_GET_SERVICES_COMMAND = 'exec openshift-server oc get service'
+
     private final static DOCKER_PS_ALL = "ps -a -f name=openshift-server"
 
     // Collaborators
 
     private final ProcessManager processManager
 
-    // Constructors
+    private final AmqpProbe amqpProbe
 
-    OpenshiftPaas(ProcessManager processManager) {
+    // Constructors
+    OpenshiftPaas(ProcessManager processManager, AmqpProbe amqpProbe) {
         this.processManager = processManager
+        this.amqpProbe = amqpProbe
     }
 
     // Platform operations
@@ -53,9 +58,14 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isStarted() {
-        dockerRun('exec -t openshift-server oc get service').find {
+        def eventBusOutput = dockerRun(OS_GET_SERVICES_COMMAND).find {
             it.startsWith('eventbus')
-        } != null
+        }
+        if(eventBusOutput == null) {
+            return false
+        }
+        def eventBusOutputParts = eventBusOutput.split(/\s+/)
+        amqpProbe.canSendMessageTo(eventBusOutputParts[1], eventBusOutputParts[3].replaceFirst('/.+', '').toInteger())
     }
 
     @Override
@@ -70,6 +80,9 @@ class OpenshiftPaas implements Paas {
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 dockerRun("exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}")
             }
+            LOG.debug('Waiting for the event bus to start...')
+            await().atMost(60, SECONDS).until({isStarted()} as Callable<Boolean>)
+            LOG.debug('Event bus has been started.')
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
         }

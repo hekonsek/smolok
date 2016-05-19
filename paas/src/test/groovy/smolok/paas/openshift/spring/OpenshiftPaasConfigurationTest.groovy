@@ -6,6 +6,7 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import smolok.bootstrap.Smolok
 import smolok.lib.process.ProcessManager
 import smolok.paas.Paas
 
@@ -13,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = OpenshiftPaasConfiguration.class)
+@SpringApplicationConfiguration(classes = [Smolok.class, OpenshiftPaasConfiguration.class])
 class OpenshiftPaasConfigurationTest {
 
     // Collaborators fixtures

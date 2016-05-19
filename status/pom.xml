@@ -10,19 +10,28 @@
         <version>0.0.0-SNAPSHOT</version>
         <relativePath>../bom</relativePath>
     </parent>
-    <artifactId>smolok-cmd</artifactId>
+    <artifactId>smolok-status</artifactId>
 
     <properties>
-        <!-- Docker image configuration -->
-        <mainClass>smolok.cmd.Cmd</mainClass>
-        <image.target>cmd</image.target>
+        <image.target>status</image.target>
     </properties>
 
     <dependencies>
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
-            <artifactId>smolok-status</artifactId>
+            <artifactId>smolok-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-paas</artifactId>
+        </dependency>
+
+        <!-- Event bus status handler -->
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-lib-vertx</artifactId>
+            <version>0.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Testing -->
@@ -43,6 +52,17 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images>
+                        <image>
+                            <build>
+                                <ports>
+                                    <port>8090</port>
+                                </ports>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
