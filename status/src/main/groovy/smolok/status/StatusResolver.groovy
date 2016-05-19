@@ -2,21 +2,21 @@ package smolok.status
 
 class StatusResolver {
 
-    private final StatusSubjectsResolver subjectsResolver
+    private final MetricSubjectsResolver subjectsResolver
 
-    private final List<StatusSubjectHandler> subjectHandlers
+    private final List<MetricSubjectHandler> subjectHandlers
 
-    StatusResolver(StatusSubjectsResolver subjectsResolver, List<StatusSubjectHandler> subjectHandlers) {
+    StatusResolver(MetricSubjectsResolver subjectsResolver, List<MetricSubjectHandler> subjectHandlers) {
         this.subjectsResolver = subjectsResolver
         this.subjectHandlers = subjectHandlers
     }
 
-    List<SubjectStatus> status() {
+    List<Metric> status() {
         def status = []
-        subjectsResolver.statusSubjects().each { subject ->
+        subjectsResolver.metricSubjects().each { subject ->
             subjectHandlers.each {
                 if(it.supports(subject)) {
-                    status << it.statusOfSubject(subject)
+                    status << it.metric(subject)
                 }
             }
         }

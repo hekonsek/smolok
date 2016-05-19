@@ -18,8 +18,12 @@ import static smolok.lib.process.ExecutorBasedProcessManager.command
 @SpringApplicationConfiguration(classes = [Smolok.class, StatusResolverConfigurationTest.class])
 class StatusResolverConfigurationTest {
 
+    // Tests subject
+
     @Autowired
     StatusResolver statusResolver
+
+    // Collaborators
 
     @Autowired
     Paas paas
@@ -27,11 +31,15 @@ class StatusResolverConfigurationTest {
     @Autowired
     ProcessManager processManager
 
+    // Fixtures
+
     @Before
     void before() {
         paas.reset()
         paas.start()
     }
+
+    // Tests
 
     @Test
     void canSendToEventBus() {
@@ -39,6 +47,7 @@ class StatusResolverConfigurationTest {
         def canSendToEventBus = statusResolver.status().find{ it.key == 'eventbus.canSend' }
 
         // Then
+        assertThat(canSendToEventBus).isNotNull()
         assertThat(canSendToEventBus.value).isEqualTo("true")
         assertThat(canSendToEventBus.warning).isEqualTo(false)
     }
@@ -53,6 +62,7 @@ class StatusResolverConfigurationTest {
         def canSendToEventBus = statusResolver.status().find{ it.key == 'eventbus.canSend' }
 
         // Then
+        assertThat(canSendToEventBus).isNotNull()
         assertThat(canSendToEventBus.value).isEqualTo("false")
         assertThat(canSendToEventBus.warning).isEqualTo(true)
     }
