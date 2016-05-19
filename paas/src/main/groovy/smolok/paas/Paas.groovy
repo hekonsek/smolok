@@ -21,4 +21,6 @@ interface Paas {
 
     void reset()
 
+    List<ServiceEndpoint> services()
+
 }

@@ -1,9 +1,9 @@
-package smolok.status
+package smolok.paas
 
 import groovy.transform.Immutable
 
 @Immutable
-class TcpEndpointStatusSubject {
+class ServiceEndpoint {
 
     String name
 

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
+import smolok.paas.ServiceEndpoint
 
 import java.util.concurrent.Callable
 
@@ -99,6 +100,15 @@ class OpenshiftPaas implements Paas {
     void reset() {
         stop()
         dockerRun(OS_REMOVE_COMMAND)
+    }
+
+    @Override
+    List<ServiceEndpoint> services() {
+        def output = dockerRun(OS_GET_SERVICES_COMMAND)
+        def servicesOutput = output.subList(1, output.size())
+        servicesOutput.collect{ it.split(/\s+/) }.collect {
+            new ServiceEndpoint(it[0], it[1], it[3].replaceFirst('/.+', '').toInteger())
+        }
     }
 
     // Helpers
