@@ -12,7 +12,11 @@ class EventBusMetricHandler implements MetricSubjectHandler<ServiceEndpoint> {
 
     private final static LOG = getLogger(EventBusMetricHandler.class)
 
+    // Constants
+
     public static final String METRIC_KEY = 'eventbus.canSend'
+
+    // Collaborators
 
     private final AmqpProbe amqpProbe
 
@@ -32,11 +36,11 @@ class EventBusMetricHandler implements MetricSubjectHandler<ServiceEndpoint> {
     }
 
     @Override
-    Metric metric(ServiceEndpoint subject) {
+    List<Metric> metric(ServiceEndpoint subject) {
         LOG.debug('Generating metric for subject: {}', subject)
-        amqpProbe.canSendMessageTo(subject.host, subject.port) ?
+        [amqpProbe.canSendMessageTo(subject.host, subject.port) ?
                 metric(METRIC_KEY, true) :
-                metric(METRIC_KEY, false, true)
+                metric(METRIC_KEY, false, true)]
     }
 
 }

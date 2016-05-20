@@ -10,9 +10,11 @@ import smolok.bootstrap.Smolok
 import smolok.lib.process.ProcessManager
 import smolok.paas.Paas
 import smolok.status.StatusResolver
+import smolok.status.handlers.eventbus.EventBusMetricHandler
 
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.process.ExecutorBasedProcessManager.command
+import static smolok.status.handlers.eventbus.EventBusMetricHandler.METRIC_KEY
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = [Smolok.class, StatusResolverConfigurationTest.class])
@@ -44,7 +46,7 @@ class StatusResolverConfigurationTest {
     @Test
     void canSendToEventBus() {
         // When
-        def canSendToEventBus = statusResolver.status().find{ it.key() == 'eventbus.canSend' }
+        def canSendToEventBus = statusResolver.status().find{ it.key() == METRIC_KEY }
 
         // Then
         assertThat(canSendToEventBus).isNotNull()
@@ -59,7 +61,7 @@ class StatusResolverConfigurationTest {
         processManager.execute(command("docker stop ${eventsBusPid}"))
 
         // When
-        def canSendToEventBus = statusResolver.status().find{ it.key() == 'eventbus.canSend' }
+        def canSendToEventBus = statusResolver.status().find{ it.key() == METRIC_KEY }
 
         // Then
         assertThat(canSendToEventBus).isNotNull()
