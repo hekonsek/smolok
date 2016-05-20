@@ -14,7 +14,7 @@ class EventBusMetricHandler implements MetricSubjectHandler<ServiceEndpoint> {
 
     // Constants
 
-    public static final String METRIC_KEY = 'eventbus.canSend'
+    public static final String EVENTBUS_CAN_SEND_METRIC_KEY = 'eventbus.canSend'
 
     // Collaborators
 
@@ -39,8 +39,8 @@ class EventBusMetricHandler implements MetricSubjectHandler<ServiceEndpoint> {
     List<Metric> metric(ServiceEndpoint subject) {
         LOG.debug('Generating metric for subject: {}', subject)
         [amqpProbe.canSendMessageTo(subject.host, subject.port) ?
-                metric(METRIC_KEY, true) :
-                metric(METRIC_KEY, false, true)]
+                metric(EVENTBUS_CAN_SEND_METRIC_KEY, true) :
+                metric(EVENTBUS_CAN_SEND_METRIC_KEY, false, true)]
     }
 
 }

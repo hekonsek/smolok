@@ -8,7 +8,7 @@ import smolok.lib.vertx.AmqpProbe
 @Configuration
 class VertxConfiguration {
 
-    @Bean
+    @Bean(destroyMethod = 'close')
     Vertx vertx() {
         Vertx.vertx()
     }

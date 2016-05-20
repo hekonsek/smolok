@@ -8,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Bean
 
 import static org.apache.camel.component.amqp.AMQPComponent.amqpComponent
+import static org.slf4j.LoggerFactory.getLogger
 
 /**
  * Boostraps Spring Boot application capable of connecting to the Smolok event bus. The application loads all Smolok
@@ -15,6 +16,8 @@ import static org.apache.camel.component.amqp.AMQPComponent.amqpComponent
  */
 @SpringBootApplication(scanBasePackages = 'smolok')
 class Smolok {
+
+    protected final log = getLogger(getClass())
 
     // Event bus connectivity
 
