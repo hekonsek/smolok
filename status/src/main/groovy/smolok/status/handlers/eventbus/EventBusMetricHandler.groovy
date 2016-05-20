@@ -33,9 +33,10 @@ class EventBusMetricHandler implements MetricSubjectHandler<ServiceEndpoint> {
 
     @Override
     Metric metric(ServiceEndpoint subject) {
+        LOG.debug('Generating metric for subject: {}', subject)
         amqpProbe.canSendMessageTo(subject.host, subject.port) ?
                 metric(METRIC_KEY, true) :
-                new Metric(METRIC_KEY, false, true)
+                metric(METRIC_KEY, false, true)
     }
 
 }
