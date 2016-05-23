@@ -12,6 +12,9 @@ import smolok.cmd.commands.CloudStatusCommand
 import smolok.paas.Paas
 import smolok.status.StatusResolver
 
+/**
+ * Configuration of command line tool.
+ */
 @Configuration
 class CmdConfiguration {
 
@@ -22,6 +25,7 @@ class CmdConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     CommandDispatcher commandDispatcher(OutputSink outputSink, List<Command> commands) {
         new CommandDispatcher(outputSink, commands)
     }

@@ -20,3 +20,20 @@ The requirement for using Smolok command line tool is to have Docker client avai
 In order to start Smolok Cloud, just execute the following command:
 
     smolok cloud start
+
+### Checking Smolok Cloud status
+
+In order to check current status of Smolok Cloud, execute the following command:
+
+    smolok cloud status
+
+If Smolok Cloud is up and running you should see an output similar to the one below:
+
+     $ smolok cloud status
+     eventbus.canSend	true
+
+If there are issues with some components of Smolok, it will be reported to the status command:
+
+    $ smolok cloud status
+    eventbus.canSend	false	Warning!
+
