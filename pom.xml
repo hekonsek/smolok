@@ -15,6 +15,7 @@
         <module>lib</module>
         <module>bootstrap</module>
         <module>eventbus</module>
+        <module>encoding</module>
         <module>paas</module>
         <module>status</module>
         <module>cmd</module>

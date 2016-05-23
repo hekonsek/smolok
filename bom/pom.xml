@@ -49,6 +49,21 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-encoding-camel</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-encoding-json</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
+                <artifactId>smolok-encoding-spi</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-lib-common</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
