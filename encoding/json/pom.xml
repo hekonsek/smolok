@@ -13,14 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
@@ -36,12 +28,14 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Smolok testing dependencies -->
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Non-Smolok testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -55,11 +49,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-bootstrap</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
