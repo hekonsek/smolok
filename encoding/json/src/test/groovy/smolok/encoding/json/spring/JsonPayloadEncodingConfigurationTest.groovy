@@ -48,7 +48,7 @@ class JsonPayloadEncodingConfigurationTest {
     }
 
     @Test
-    public void shouldDecodePayload() {
+    void shouldDecodePayload() {
         // Given
         byte[] encodedPayload = payloadEncoding.encode(payload);
 

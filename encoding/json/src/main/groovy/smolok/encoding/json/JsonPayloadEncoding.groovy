@@ -8,21 +8,27 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
 
 class JsonPayloadEncoding implements PayloadEncoding {
 
-    private final ObjectMapper objectMapper;
+    public static final String ENVELOPE = 'payload'
 
-    public JsonPayloadEncoding(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    private final ObjectMapper objectMapper
+
+    // Constructors
+
+    JsonPayloadEncoding(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper
     }
 
-    public JsonPayloadEncoding() {
-        this(new ObjectMapper().setSerializationInclusion(NON_NULL));
+    JsonPayloadEncoding() {
+        this(new ObjectMapper().setSerializationInclusion(NON_NULL))
     }
+
+    // Encoding operations
 
     @Override
-    public byte[] encode(Object payload) {
+    byte[] encode(Object payload) {
         try {
             Map<String, Object> wrappedPayload = new HashMap<>();
-            wrappedPayload.put("payload", payload);
+            wrappedPayload.put(ENVELOPE, payload);
             return objectMapper.writeValueAsBytes(wrappedPayload);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -30,9 +36,9 @@ class JsonPayloadEncoding implements PayloadEncoding {
     }
 
     @Override
-    public Object decode(byte[] payload) {
+    Object decode(byte[] payload) {
         try {
-            return objectMapper.readValue(payload, Map.class).get("payload");
+            return objectMapper.readValue(payload, Map.class).get(ENVELOPE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
