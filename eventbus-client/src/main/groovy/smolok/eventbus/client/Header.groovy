@@ -20,16 +20,12 @@ class Header {
 
     // Factory methods
 
-    public static Header header(String key, Object value) {
-        return new Header(key, value);
+    static Header header(String key, Object value) {
+        new Header(key, value)
     }
 
-    public static Header[] arguments(Object... arguments) {
-        Header[] headers = new Header[arguments.length];
-        for(int i = 0; i < arguments.length; i++) {
-            headers[i] = header("SMOLOK_ARG" + i, arguments[i]);
-        }
-        return headers;
+    static Header[] arguments(Object... arguments) {
+        arguments.toList().withIndex().collect{ arg, i -> header("SMOLOK_ARG${i}", arguments[i]) }
     }
 
     public static Map<String, Object> arguments(Header[] arguments) {
