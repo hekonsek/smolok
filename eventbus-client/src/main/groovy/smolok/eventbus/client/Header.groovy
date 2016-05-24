@@ -28,12 +28,8 @@ class Header {
         arguments.toList().withIndex().collect{ arg, i -> header("SMOLOK_ARG${i}", arguments[i]) }
     }
 
-    public static Map<String, Object> arguments(Header[] arguments) {
-        Map<String, Object> collectedHeaders = new HashMap<>();
-        for(Header header : arguments) {
-            collectedHeaders.put(header.key(), header.value());
-        }
-        return collectedHeaders;
+    static Map<String, Object> arguments(Header[] arguments) {
+        arguments.inject([:]) { result, it -> result[it.key] = it.value; result }
     }
 
     // Getters
