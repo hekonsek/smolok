@@ -30,21 +30,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringApplicationConfiguration(classes = Smolok.class)
 class JsonPayloadEncodingConfigurationTest {
 
-    def payload = 'payload'
-
     @Autowired
     PayloadEncoding payloadEncoding
 
+    def payload = 'payload'
+
+    // Tests
+
     @Test
     void shouldEncodePayload() {
-        // Given
-        byte[] encodedPayload = payloadEncoding.encode(payload)
-
         // When
+        byte[] encodedPayload = payloadEncoding.encode(payload)
         def json = new String(encodedPayload)
 
         // Then
         assertThat(json).contains('"payload":"payload"')
+    }
+
+    @Test
+    void shouldEncodeNullPayload() {
+        // When
+        def encodedPayload = payloadEncoding.encode(null)
+        def json = new String(encodedPayload)
+
+        // Then
+        assertThat(json).contains('"payload":null')
     }
 
     @Test
@@ -65,7 +75,7 @@ class JsonPayloadEncodingConfigurationTest {
         def encodedPayload = payloadEncoding.encode(null)
 
         // When
-        String decodedPayload = (String) payloadEncoding.decode(encodedPayload)
+        def decodedPayload = payloadEncoding.decode(encodedPayload)
 
         // Then
         assertThat(decodedPayload).isNull()
