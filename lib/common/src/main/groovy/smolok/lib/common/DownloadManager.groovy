@@ -1,5 +1,6 @@
 package smolok.lib.common
 
+import org.apache.commons.lang3.Validate
 import org.slf4j.Logger
 
 import static org.apache.commons.io.IOUtils.copyLarge
@@ -21,8 +22,11 @@ class DownloadManager {
 
     // Download operations
 
-    void download(URL source, String name) {
-        def imageZip = downloadedFile(name)
+    void download(URL source, String targetName) {
+        Validate.notNull(source, 'Source URL cannot be null.')
+        Validate.notNull(targetName, 'Please indicate the name of the target file.')
+
+        def imageZip = downloadedFile(targetName)
         if(!imageZip.exists()) {
             LOG.debug('File {} does not exist - downloading...', imageZip.absolutePath)
             imageZip.parentFile.mkdirs()

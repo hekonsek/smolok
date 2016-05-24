@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class DownloadManagerTest {
 
-    def downloadManager = new DownloadManager(createTempDirectory('xx').toFile())
+    def downloadManager = new DownloadManager(createTempDirectory('smolok').toFile())
 
     @Test
     void shouldDownloadFile() {
