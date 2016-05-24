@@ -9,11 +9,17 @@ class DownloadManager {
 
     private final static Logger LOG = getLogger(DownloadManager.class)
 
+    // Members
+
     private final File downloadDirectory
+
+    // Constructors
 
     DownloadManager(File downloadDirectory) {
         this.downloadDirectory = downloadDirectory
     }
+
+    // Download operations
 
     void download(URL source, String name) {
         def imageZip = downloadedFile(name)
@@ -27,12 +33,14 @@ class DownloadManager {
         }
     }
 
-    File downloadedFile(String name) {
-        new File(downloadDirectory, name)
-    }
+    // File access operations
 
     File downloadDirectory() {
         downloadDirectory
+    }
+
+    File downloadedFile(String name) {
+        new File(downloadDirectory, name)
     }
 
 }
