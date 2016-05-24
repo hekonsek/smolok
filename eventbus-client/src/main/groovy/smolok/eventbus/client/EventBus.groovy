@@ -1,5 +1,6 @@
 package smolok.eventbus.client
 
+import org.apache.camel.ConsumerTemplate
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory
@@ -12,12 +13,14 @@ class EventBus {
 
     // Collaborators
 
-    private final ProducerTemplate producerTemplate;
+    private final ProducerTemplate producerTemplate
+
+    private final ConsumerTemplate consumerTemplate
 
     // Constructors
-
-    EventBus(ProducerTemplate producerTemplate) {
+    EventBus(ProducerTemplate producerTemplate, ConsumerTemplate consumerTemplate) {
         this.producerTemplate = producerTemplate
+        this.consumerTemplate = consumerTemplate
     }
 
     // Connector channels API
@@ -51,7 +54,8 @@ class EventBus {
     }
 
     def <T> T pollChannel(String channel, Class<T> responseType) {
-        producerTemplate.getCamelContext().createConsumerTemplate().receiveBody("amqp:" + channel, responseType)
+        LOG.debug('Polling channel {}. Expecting type {}.', channel, responseType)
+        consumerTemplate.receiveBody("amqp:${channel}", responseType)
     }
 
 }

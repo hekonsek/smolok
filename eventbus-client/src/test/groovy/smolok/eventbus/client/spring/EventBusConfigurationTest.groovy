@@ -39,8 +39,10 @@ class EventBusConfigurationTest {
 
     @Test
     void shouldReceiveResponse() {
+        // When
         def response = eventBus.fromBus('echo', 'bar', String.class)
 
+        // Then
         assertThat(response).isEqualTo('bar')
     }
 
