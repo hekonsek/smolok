@@ -1,21 +1,21 @@
 package smolok.eventbus.client
 
 /**
- * Utility class to make it easier to attach headers to the messages sent to the IoT Connector.
+ * Header which can be attached to the messages sent to the Event Bus.
  */
-public class Header {
+class Header {
 
     // Members
 
-    private final String key;
+    private final String key
 
-    private final Object value;
+    private final Object value
 
     // Constructors
 
-    public Header(String key, Object value) {
-        this.key = key;
-        this.value = value;
+    Header(String key, Object value) {
+        this.key = key
+        this.value = value
     }
 
     // Factory methods
@@ -27,7 +27,7 @@ public class Header {
     public static Header[] arguments(Object... arguments) {
         Header[] headers = new Header[arguments.length];
         for(int i = 0; i < arguments.length; i++) {
-            headers[i] = header("RHIOT_ARG" + i, arguments[i]);
+            headers[i] = header("SMOLOK_ARG" + i, arguments[i]);
         }
         return headers;
     }
@@ -40,12 +40,14 @@ public class Header {
         return collectedHeaders;
     }
 
-    public String key() {
-        return key;
+    // Getters
+
+    String key() {
+        key
     }
 
-    public Object value() {
-        return value;
+    Object value() {
+        value
     }
 
 }

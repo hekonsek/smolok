@@ -25,23 +25,14 @@
             <artifactId>camel-core</artifactId>
         </dependency>
 
+        <!-- Optional Spring runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing dependencies -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- Smolok testing dependencies -->
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
@@ -50,6 +41,18 @@
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-paas</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Non-Smolok testing dependencies -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
