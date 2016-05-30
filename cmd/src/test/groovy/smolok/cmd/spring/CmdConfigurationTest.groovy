@@ -1,6 +1,5 @@
 package smolok.cmd.spring
 
-import com.google.common.io.Files
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
@@ -97,20 +96,33 @@ class CmdConfigurationTest {
 
     @Test
     void shouldInstallImageOnDevice() {
+        // Given
+        def device = new File(devicesDirectory, 'foo')
+        device.createNewFile()
+
         // When
         commandHandler.handleCommand('sdcard', 'install-raspbian', 'foo')
 
         // Then
-        assertThat(new File(devicesDirectory, 'foo').length()).isGreaterThan(0L)
+        assertThat(device.length()).isGreaterThan(0L)
     }
 
     @Test
-    void shouldValidateDeviceAbsence() {
+    void shouldValidateDeviceParameterAbsence() {
         // When
         commandHandler.handleCommand('sdcard', 'install-raspbian')
 
         // Then
         assertThat(outputSink.output().first()).startsWith('Device not specified.')
+    }
+
+    @Test
+    void shouldValidateDeviceAbsence() {
+        // When
+        commandHandler.handleCommand('sdcard', 'install-raspbian', 'bar')
+
+        // Then
+        assertThat(outputSink.output().first()).matches('Device .* does not exist.')
     }
 
 

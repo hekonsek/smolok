@@ -15,9 +15,13 @@ class SdcardInstallRaspbianCommand implements Command {
 
     private static final LOG = getLogger(SdcardInstallRaspbianCommand)
 
+    // Collaborators
+
     private final DownloadManager downloadManager
 
     private final ProcessManager processManager
+
+    // Configuration
 
     private final String devicesDirectory
 
@@ -41,14 +45,16 @@ class SdcardInstallRaspbianCommand implements Command {
 
     @Override
     void handle(OutputSink outputSink, String... command) {
+        // Device validation
         Validate.isTrue(command.length >= 3, 'Device not specified. Expected device name, for example:\n\n\tsmolok sdcard install-raspbian mmcblk0')
+        def device = "${devicesDirectory}/${command[2]}"
+        Validate.isTrue(new File(device).exists(), 'Device %s does not exist.', device)
 
         downloadManager.download(image)
 
         outputSink.out('Writing image to SD card...')
         def extractedImage = downloadManager.downloadedFile(image.extractedFileName())
-        def device = command[2]
-        processManager.execute("dd", "bs=4M", "if=${extractedImage}", "of=${devicesDirectory}/${device}").forEach {
+        processManager.execute("dd", "bs=4M", "if=${extractedImage}", "of=${device}").forEach {
             outputSink.out(it)
         }
         processManager.execute('sync').forEach {
