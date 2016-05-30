@@ -1,14 +1,18 @@
 package smolok.lib.common
 
 import org.apache.commons.lang3.Validate
-import org.slf4j.Logger
 
 import static org.apache.commons.io.IOUtils.copyLarge
 import static org.slf4j.LoggerFactory.getLogger
 
+/**
+ * Downloads and caches binary files.
+ */
 class DownloadManager {
 
-    private final static Logger LOG = getLogger(DownloadManager.class)
+    // Logger
+
+    private final static LOG = getLogger(DownloadManager.class)
 
     // Members
 
@@ -18,6 +22,8 @@ class DownloadManager {
 
     DownloadManager(File downloadDirectory) {
         this.downloadDirectory = downloadDirectory
+
+        downloadDirectory.mkdirs()
     }
 
     // Download operations
