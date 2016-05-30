@@ -15,6 +15,15 @@ Smolok command line tool, execute the following command:
 
 The requirement for using Smolok command line tool is to have Docker client available in the path.
 
+### Installing Raspbian on SD card
+
+Installs Raspbian to a given SD card. For example to install Raspbian Jessie (2016-02-26) to SD card device `/dev/mmcblk0`,
+execute the following command:
+
+    smolok sdcard install-raspbian mmcblk0
+
+Smolok will download a Raspbian image for you (if needed), extract it and install to the target SD card.
+
 ### Installing and starting Smolok Cloud
 
 In order to start Smolok Cloud, just execute the following command:
