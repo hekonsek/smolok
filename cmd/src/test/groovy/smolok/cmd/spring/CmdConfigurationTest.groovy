@@ -1,6 +1,8 @@
 package smolok.cmd.spring
 
+import com.google.common.io.Files
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,6 +15,8 @@ import smolok.cmd.CommandDispatcher
 import smolok.cmd.InMemoryOutputSink
 import smolok.paas.Paas
 
+import static com.google.common.io.Files.createTempDir
+import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
@@ -31,6 +35,20 @@ class CmdConfigurationTest {
 
     @Autowired
     CommandDispatcher commandHandler
+
+    // Raspbian install fixtures
+
+    static def devicesDirectory = createTempDir()
+
+    @BeforeClass
+    static void beforeClass() {
+        System.setProperty('raspbian.image.uri', 'https://repo1.maven.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar')
+        System.setProperty('devices.directory', devicesDirectory.absolutePath)
+        System.setProperty('raspbian.image.file.name.extracted', randomUUID().toString())
+        System.setProperty('raspbian.image.file.name.compressed', randomUUID().toString())
+    }
+
+    // PaaS fixtures
 
     @Autowired
     Paas paas
@@ -73,6 +91,15 @@ class CmdConfigurationTest {
         // Then
         def eventBusStatus = outputSink.output().find{ it.startsWith(EVENTBUS_CAN_SEND_METRIC_KEY) }
         assertThat(eventBusStatus).startsWith("${EVENTBUS_CAN_SEND_METRIC_KEY}\t${true}")
+    }
+
+    @Test
+    void shouldInstallImageOnDevice() {
+        // When
+        commandHandler.handleCommand('sdcard', 'install-raspbian', 'foo')
+
+        // Then
+        assertThat(new File(devicesDirectory, 'foo').length()).isGreaterThan(0L)
     }
 
 

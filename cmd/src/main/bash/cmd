@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-docker run --privileged -v /var/run/docker.sock:/run/docker.sock -it smolok/cmd:0.0.0-SNAPSHOT "$@"
+docker run --privileged -v /dev:/host/dev -v ${HOME}/.smolok/downloads:/root/.smolok/downloads \
+  -v /var/run/docker.sock:/run/docker.sock -it smolok/cmd:0.0.0-SNAPSHOT "$@"

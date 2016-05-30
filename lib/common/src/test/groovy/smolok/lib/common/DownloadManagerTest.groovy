@@ -12,9 +12,9 @@ class DownloadManagerTest {
     @Test
     void shouldDownloadFile() {
         // When
-        downloadManager.download(
+        downloadManager.download(new DownloadManager.BinaryCoordinates(
                 new URL('http://search.maven.org/remotecontent?filepath=org/wildfly/swarm/guava/1.0.0.Alpha8/guava-1.0.0.Alpha8.jar'),
-                'guava.jar')
+                'guava.jar'))
 
         // Then
         def guavaSize = downloadManager.downloadedFile('guava.jar').length()
