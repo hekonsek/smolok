@@ -58,7 +58,7 @@ class CmdConfiguration {
             @Value('${raspbian.image.uri:http://vx2-downloads.raspberrypi.org/raspbian/images/raspbian-2016-02-29/2016-02-26-raspbian-jessie.zip}') URL imageUrl,
             @Value('${raspbian.image.file.name.compressed:2016-02-26-raspbian-jessie.zip}') String compressedFileName,
             @Value('${raspbian.image.file.name.extracted:2016-02-26-raspbian-jessie.img}') String extractedFileName) {
-        new SdcardInstallRaspbianCommand(devicesDirectory, downloadManager, processManager, new DownloadManager.BinaryCoordinates(imageUrl, compressedFileName, extractedFileName))
+        new SdcardInstallRaspbianCommand(downloadManager, processManager, devicesDirectory, new DownloadManager.BinaryCoordinates(imageUrl, compressedFileName, extractedFileName))
     }
 
 }

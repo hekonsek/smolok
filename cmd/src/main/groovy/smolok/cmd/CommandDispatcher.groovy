@@ -1,6 +1,10 @@
 package smolok.cmd
 
+import static org.slf4j.LoggerFactory.getLogger
+
 class CommandDispatcher {
+
+    private final static LOG = getLogger(CommandDispatcher.class)
 
     private final OutputSink outputSink
 
@@ -12,7 +16,12 @@ class CommandDispatcher {
     }
 
     void handleCommand(String... command) {
-        commands.find{ it.supports(command) }.handle(outputSink, command)
+        try {
+            commands.find { it.supports(command) }.handle(outputSink, command)
+        } catch (Exception e) {
+            outputSink.out(e.message)
+            LOG.info('Exception catch during command execution:', e)
+        }
     }
 
 }

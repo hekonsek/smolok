@@ -93,6 +93,8 @@ class CmdConfigurationTest {
         assertThat(eventBusStatus).startsWith("${EVENTBUS_CAN_SEND_METRIC_KEY}\t${true}")
     }
 
+    // "smolok sdcard install-raspbian" tests
+
     @Test
     void shouldInstallImageOnDevice() {
         // When
@@ -100,6 +102,15 @@ class CmdConfigurationTest {
 
         // Then
         assertThat(new File(devicesDirectory, 'foo').length()).isGreaterThan(0L)
+    }
+
+    @Test
+    void shouldValidateDeviceAbsence() {
+        // When
+        commandHandler.handleCommand('sdcard', 'install-raspbian')
+
+        // Then
+        assertThat(outputSink.output().first()).startsWith('Device not specified.')
     }
 
 
