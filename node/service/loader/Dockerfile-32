@@ -1,8 +1,4 @@
-FROM hypriot/rpi-node
-
-RUN echo 5.153.225.206 archive.raspbian.org > /etc/hosts
-RUN apt-get update
-RUN apt-get install docker.io -qq
+FROM smolok/rpi-node-docker:0.0.0-SNAPSHOT
 
 COPY . /app
 
