@@ -1,7 +1,7 @@
 FROM hypriot/rpi-node
 
 RUN apt-get update
-RUN apt-get install libraspberrypi-bin
+RUN apt-get install docker.io
 
 COPY . /app
 
