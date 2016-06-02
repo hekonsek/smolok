@@ -2,7 +2,7 @@ var mkdirp = require('mkdirp');
 var container = require('rhea');
 var fs = require('fs');
 
-var host = process.env.EVENT_BUS_HOST || 'localhost';
+var host = process.env.EVENT_BUS_SERVICE_HOST || 'localhost';
 var devicesDirectory = '/var/smolok/devices';
 
 mkdirp(devicesDirectory, function (err) {
