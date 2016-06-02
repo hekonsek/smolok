@@ -1,6 +1,6 @@
 FROM hypriot/rpi-node
 
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+RUN echo 5.153.225.206 archive.raspbian.org > /etc/hosts
 RUN apt-get update
 RUN apt-get install docker.io -qq
 
