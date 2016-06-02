@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/jasmine"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jasmine": "2.4.1",
     "rhea": "0.1.3"
   }
 }
