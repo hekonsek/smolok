@@ -1,7 +1,7 @@
 FROM hypriot/rpi-node
 
 RUN apt-get update
-RUN apt-get install docker.io
+RUN apt-get install docker.io -qq
 
 COPY . /app
 
