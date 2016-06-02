@@ -3,9 +3,12 @@ var container = require('rhea');
 var fs = require('fs');
 
 var host = process.env.EVENT_BUS_SERVICE_HOST || 'localhost';
-var devicesDirectory = '/var/smolok/devices';
+var devicesDirectory = process.env.HOME + '/.smolok/devices';
 
 mkdirp(devicesDirectory, function (err) {
+    if(err) {
+        return console.log(err)
+    }
     console.log(`Using ${devicesDirectory} as device directory.`);
     container.on('message', function (context) {
         var from = context.receiver.remote.attach.source.address;
