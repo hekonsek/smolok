@@ -1,5 +1,6 @@
 FROM hypriot/rpi-node
 
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
 RUN apt-get update
 RUN apt-get install docker.io -qq
 
