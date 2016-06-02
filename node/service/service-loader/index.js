@@ -1,7 +1,7 @@
 var spawn = require('child_process').spawn;
 var container = require('rhea');
 
-var deviceId = process.env.DEVICE_ID || 'device-' + Math.random();
+var deviceId = process.env.DEVICE_ID;
 var host = process.env.EVENT_BUS_SERVICE_HOST || 'localhost';
 
 container.on('message', function (context) {
@@ -29,4 +29,4 @@ container.on('message', function (context) {
 });
 
 var connection = container.connect({'host': host, 'port': 5672});
-connection.attach_receiver('loader/load/deviceId');
+connection.attach_receiver(`loader/load/${deviceId}`);
