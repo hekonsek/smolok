@@ -1,1 +1,0 @@
-(cd service/loader && ./build-32.sh)

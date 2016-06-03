@@ -1,5 +1,0 @@
-FROM smolok/rpi-node-docker:0.0.0-SNAPSHOT
-
-COPY . /app
-
-ENTRYPOINT ["node", "/app/index.js"]
