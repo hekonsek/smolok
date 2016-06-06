@@ -1,10 +1,14 @@
 # Smolok
 
-Smolok is a backend services platform for the Internet Of Things enablement. Smolok is based on the top of the leading
-open source projects including [Eclipse IoT stack](http://iot.eclipse.org) and [Red Hat software](https://www.redhat.com/en).
+Smolok is a platform for the inter-device communication, where *device* can be web browser, smart phone, tablet,
+IoT (Internet Of Things) device or other IT system.
 
-The idea behind Smolok is to provide a scalable out-of-the-box PaaS platform providing core IoT services (like device
-management, telemetry reading/writing, etc), big data analytics and IoT-scale messaging infrastructure.
+The idea behind Smolok is to deliver a scalable backend PaaS platform providing core services required by
+devices. List of such services includes device management, telemetry reading/writing, big data analytics and IoT-scale
+messaging infrastructure and so forth.
+
+Smolok is based on the top of the leading open source projects including [Eclipse IoT stack](http://iot.eclipse.org),
+[Red Hat software](https://www.redhat.com/en) and [Apache Spark](http://spark.apache.org).
 
 ## Command line tool
 
