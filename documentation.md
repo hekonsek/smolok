@@ -1,6 +1,6 @@
 # Smolok
 
-Smolok is a platform for the inter-device communication, where *device* can be web browser, smart phone, tablet,
+Smolok is a platform for the inter-device data stream communication, where *device* can be web browser, smart phone, tablet,
 IoT (Internet Of Things) device or other IT system.
 
 The idea behind Smolok is to deliver a scalable backend PaaS platform providing core services required by
