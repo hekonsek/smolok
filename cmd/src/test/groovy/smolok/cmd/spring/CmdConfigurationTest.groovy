@@ -12,11 +12,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.cmd.CommandDispatcher
 import smolok.cmd.InMemoryOutputSink
+import smolok.lib.docker.ContainerStartupStatus
+import smolok.lib.docker.ContainerStatus
+import smolok.lib.docker.Docker
+import smolok.lib.process.ExecutorBasedProcessManager
 import smolok.paas.Paas
 
 import static com.google.common.io.Files.createTempDir
 import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.docker.ContainerStatus.created
+import static smolok.lib.docker.ContainerStatus.running
+import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -57,6 +64,11 @@ class CmdConfigurationTest {
         outputSink.reset()
         paas.reset()
     }
+
+    // Spark fixtures
+
+    @Autowired
+    Docker docker
 
     // Tests
 
@@ -125,5 +137,16 @@ class CmdConfigurationTest {
         assertThat(outputSink.output().first()).matches('Device .* does not exist.')
     }
 
+    // Spark tests
+
+    @Test
+    void shouldStartSpark() {
+        // When
+        commandHandler.handleCommand(command('spark start'))
+
+        // Then
+        assertThat(docker.status('spark-master')).isIn(created, running)
+        assertThat(docker.status('spark-worker')).isIn(created, running)
+    }
 
 }
