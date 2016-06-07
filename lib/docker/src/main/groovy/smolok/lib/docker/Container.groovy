@@ -1,5 +1,10 @@
 package smolok.lib.docker
 
+import com.google.common.collect.ImmutableList
+
+/**
+ * Represents CommandLineDocker container to be created.
+ */
 class Container {
 
     private final String image
@@ -8,10 +13,13 @@ class Container {
 
     private final String net
 
-    Container(String image, String name, String net) {
+    private final String[] arguments
+
+    Container(String image, String name, String net, String[] arguments) {
         this.image = image
         this.name = name
         this.net = net
+        this.arguments = arguments
     }
 
     static Container container(String image, String name) {
@@ -21,6 +29,8 @@ class Container {
     static Container container(String image) {
         new Container(image, null, null)
     }
+
+    // Getters
 
     String image() {
         image
@@ -32,6 +42,10 @@ class Container {
 
     String net() {
         net
+    }
+
+    List<String> arguments() {
+        ImmutableList.copyOf(arguments)
     }
 
 }
