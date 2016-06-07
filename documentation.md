@@ -50,3 +50,12 @@ If there are issues with some components of Smolok, it will be reported to the s
     $ smolok cloud status
     eventbus.canSend	false	Warning!
 
+### Installing and starting standalone Apache Spark cluster
+
+In order to install and start standalone Apache Spark cluster (dockerized Spark master and slave nodes connected
+together) on your machine, execute the following command:
+
+    smolok spark start
+
+This command ensures that cluster is installed and properly started - components of the cluster that are already started
+or installed, will be skipped from the process.
