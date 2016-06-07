@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 import smolok.eventbus.client.EventBus
 
 @Configuration
-class EventBusConfiguration {
+class EventBusClientConfiguration {
 
     @Bean
     EventBus eventBus(ProducerTemplate producerTemplate, ConsumerTemplate consumerTemplate) {

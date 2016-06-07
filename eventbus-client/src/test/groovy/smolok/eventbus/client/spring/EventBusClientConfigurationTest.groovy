@@ -12,12 +12,13 @@ import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 import smolok.paas.Paas
 
+import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Smolok.class)
 @Configuration
-class EventBusConfigurationTest {
+class EventBusClientConfigurationTest {
 
     @Autowired
     EventBus eventBus
@@ -37,14 +38,17 @@ class EventBusConfigurationTest {
         }
     }
 
+    def payload = randomUUID().toString()
+
+    // Tests
+
     @Test
     void shouldReceiveResponse() {
         // When
-        def response = eventBus.fromBus('echo', 'bar', String.class)
+        def response = eventBus.fromBus('echo', payload, String.class)
 
         // Then
-        assertThat(response).isEqualTo('bar')
+        assertThat(response).isEqualTo(payload)
     }
-
 
 }

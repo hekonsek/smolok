@@ -20,6 +20,7 @@
         <module>paas</module>
         <module>status</module>
         <module>cmd</module>
+        <module>service</module>
     </modules>
 
     <properties>
