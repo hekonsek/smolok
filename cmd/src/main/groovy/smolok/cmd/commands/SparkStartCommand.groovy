@@ -34,27 +34,20 @@ class SparkStartCommand implements Command {
         def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
-        switch(docker.createAndStart(new Container("smolok/spark-standalone-master:${smolokVersion.get()}", 'spark-master', 'host'))) {
-            case ContainerStartupStatus.alreadyRunning:
-                outputSink.out('Spark master is already running. No need to start it.')
-                break
-            case ContainerStartupStatus.started:
-                outputSink.out('Started existing Spark master instance.')
-                break
-            case ContainerStartupStatus.created:
-                outputSink.out('No Spark master found. New one created and started.')
-                break
-        }
+        startSparkNode(outputSink, smolokVersion.get(), 'master')
+        startSparkNode(outputSink, smolokVersion.get(), 'worker')
+    }
 
-        switch(docker.createAndStart(new Container("smolok/spark-standalone-worker:${smolokVersion.get()}", 'spark-worker', 'host'))) {
+    private void startSparkNode(OutputSink outputSink, String smolokVersion, String nodeType) {
+        switch(docker.createAndStart(new Container("smolok/spark-standalone-${nodeType}:${smolokVersion}", "spark-${nodeType}", 'host'))) {
             case ContainerStartupStatus.alreadyRunning:
-                outputSink.out('Spark worker is already running. No need to start it.')
+                outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
             case ContainerStartupStatus.started:
-                outputSink.out('Started existing Spark worker instance.')
+                outputSink.out("Started existing Spark ${nodeType} instance.")
                 break
             case ContainerStartupStatus.created:
-                outputSink.out('No Spark worker found. New one created and started.')
+                outputSink.out("No Spark ${nodeType} found. New one created and started.")
                 break
         }
     }
