@@ -74,6 +74,11 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-lib-docker</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-lib-process</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
