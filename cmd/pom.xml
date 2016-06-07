@@ -22,6 +22,10 @@
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
+            <artifactId>smolok-lib-docker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
             <artifactId>smolok-status</artifactId>
         </dependency>
 

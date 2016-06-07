@@ -15,7 +15,7 @@ class Container {
 
     private final String[] arguments
 
-    Container(String image, String name, String net, String[] arguments) {
+    Container(String image, String name, String net, String... arguments) {
         this.image = image
         this.name = name
         this.net = net

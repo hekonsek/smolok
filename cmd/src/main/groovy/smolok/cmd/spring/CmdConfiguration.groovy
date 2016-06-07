@@ -12,7 +12,9 @@ import smolok.cmd.StdoutOutputSink
 import smolok.cmd.commands.CloudStartCommand
 import smolok.cmd.commands.CloudStatusCommand
 import smolok.cmd.commands.SdcardInstallRaspbianCommand
+import smolok.cmd.commands.SparkStartCommand
 import smolok.lib.common.DownloadManager
+import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
 import smolok.paas.Paas
 import smolok.status.StatusResolver
@@ -59,6 +61,11 @@ class CmdConfiguration {
             @Value('${raspbian.image.file.name.compressed:2016-02-26-raspbian-jessie.zip}') String compressedFileName,
             @Value('${raspbian.image.file.name.extracted:2016-02-26-raspbian-jessie.img}') String extractedFileName) {
         new SdcardInstallRaspbianCommand(downloadManager, processManager, devicesDirectory, new DownloadManager.BinaryCoordinates(imageUrl, compressedFileName, extractedFileName))
+    }
+
+    @Bean
+    SparkStartCommand sparkStartCommand(Docker docker) {
+        new SparkStartCommand(docker)
     }
 
 }
