@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.service.binding;
+package smolok.service.binding
 
+import org.junit.BeforeClass;
 import org.junit.Test
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +28,7 @@ import smolok.encoding.spi.PayloadEncoding
 import smolok.eventbus.client.EventBus
 
 import static org.assertj.core.api.Assertions.assertThat
+import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.eventbus.client.Header.arguments;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,6 +37,11 @@ public class ServiceBindingTest {
 
     @Autowired
     EventBus eventBus
+
+    @BeforeClass
+    static void beforeClass() {
+        System.setProperty('amqp.port', "${findAvailableTcpPort()}")
+    }
 
     // Tests
 
