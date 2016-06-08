@@ -1,5 +1,11 @@
 package smolok.service.binding
 
+import groovy.transform.CompileStatic
+
+/**
+ * Represents information about a successfully authenticated user.
+ */
+@CompileStatic
 class Credentials {
 
     private final String username
@@ -10,6 +16,8 @@ class Credentials {
         this.username = username
         this.tenant = tenant
     }
+
+    // Getters
 
     String username() {
         username

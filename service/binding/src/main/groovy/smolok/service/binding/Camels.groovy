@@ -30,7 +30,7 @@ class Camels {
 
     // Collaborators
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
 
     // Operations
 
