@@ -19,8 +19,8 @@ package smolok.service.binding;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory
+import smolok.service.binding.camel.CamelOperationBindingFactory
 
-import static OperationBinding.operationBinding;
 import static java.lang.String.format;
 
 /**
@@ -61,8 +61,8 @@ class ServiceBinding extends RouteBuilder {
             def credentials = authenticationProvider.authenticate(exchange)
 
             def message = exchange.getIn()
-            String channel = message.getHeader('JMSDestination').toString()
-            OperationBinding operationBinding = operationBinding(credentials, channel, message.body, message.getHeaders(), getContext().getRegistry());
+            def channel = message.getHeader('JMSDestination').toString()
+            def operationBinding = new CamelOperationBindingFactory(context.registry).operationBinding(credentials, channel, message.body, message.getHeaders())
             exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
             exchange.setProperty("RETURN_TYPE", operationBinding.operationMethod().getReturnType());
             message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));
