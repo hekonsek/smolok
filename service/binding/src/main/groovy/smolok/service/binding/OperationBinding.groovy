@@ -19,30 +19,28 @@ package smolok.service.binding;
 import org.apache.camel.spi.Registry;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.asList
+import static org.slf4j.LoggerFactory.getLogger;
 
 class OperationBinding {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OperationBinding.class);
+    // Logger
 
-    private final String service;
+    private static final LOG = getLogger(OperationBinding.class)
 
-    private final String operation;
+    private final String service
 
-    private final List<?> arguments;
+    private final Method operationMethod
 
-    private final Method operationMethod;
+    private final List<?> arguments
 
-    public OperationBinding(String service, String operation, List<?> arguments, Method operationMethod) {
-        this.service = service;
-        this.operation = operation;
-        this.arguments = arguments;
-        this.operationMethod = operationMethod;
+    OperationBinding(String service, Method operationMethod, List<?> arguments) {
+        this.service = service
+        this.operationMethod = operationMethod
+        this.arguments = arguments
     }
 
     static OperationBinding operationBinding(Credentials credentials, String channel, Object incomingPayload, Map<String, Object> headers, Registry registry) {
@@ -73,20 +71,22 @@ class OperationBinding {
             arguments.add(payload);
         }
 
-        def tenantPosition = operationMethod.parameterAnnotations.findIndexOf{ it.find{ it.annotationType() == Tenant.class } }
+        def tenantPosition = operationMethod.parameterAnnotations.findIndexOf {
+            it.find{ it.annotationType() == Tenant.class }
+        }
         if(tenantPosition >= 0) {
             arguments.addAll(tenantPosition, credentials.tenant())
         }
 
-        return new OperationBinding(service, operation, arguments, operationMethod);
+        new OperationBinding(service, operationMethod, arguments)
     }
 
-    public String service() {
-        return service;
+    String service() {
+        service;
     }
 
-    public String operation() {
-        return operation;
+    String operation() {
+        operationMethod.name
     }
 
     public List<?> arguments() {
@@ -98,8 +98,8 @@ class OperationBinding {
     }
 
     @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+    String toString() {
+        ReflectionToStringBuilder.toString(this)
     }
 
 }

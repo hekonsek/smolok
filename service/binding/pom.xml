@@ -29,12 +29,25 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+
+        <!-- Smolok testing dependencies -->
         <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-bootstrap</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-eventbus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-eventbus-client</artifactId>
+            <scope>test</scope>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Non-Smolok testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -46,28 +59,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-encoding-json</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-bootstrap</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-eventbus</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-eventbus-client</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
