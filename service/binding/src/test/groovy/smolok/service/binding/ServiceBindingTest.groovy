@@ -82,15 +82,15 @@ public class ServiceBindingTest {
     }
 
     @Test
-    public void shouldHandleHeaderArguments() {
-        def received = eventBus.fromBus("echo.multiply", int.class, arguments(1, 2, 3))
+    void shouldHandleHeaderArguments() {
+        def received = eventBus.fromBus('echo.multiply', int.class, arguments(1, 2, 3))
         assertThat(received).isEqualTo(6)
     }
 
     @Test
-    public void shouldPreserveHeaderArguments() {
-        String received = eventBus.fromBus("echo.concatenate", String.class, arguments(1, 2, 3))
-        assertThat(received).isEqualTo("123");
+    void shouldPreserveHeaderArgumentsOrder() {
+        def received = eventBus.fromBus('echo.concatenate', String.class, arguments(1, 2, 3))
+        assertThat(received).isEqualTo('123')
     }
 
     // Beans fixtures
@@ -119,27 +119,27 @@ public class ServiceBindingTest {
 
     }
 
-    @Component("echo")
-    public static class DefaultEchoService implements EchoService {
+    @Component('echo')
+    static class DefaultEchoService implements EchoService {
 
         @Override
-        public long echo(long value) {
-            return value;
+        long echo(long value) {
+            value
         }
 
         @Override
-        public long multiply(int a, int b, int c) {
-            return a * b * c;
+        long multiply(int a, int b, int c) {
+            a * b * c
         }
 
         @Override
-        public String concatenate(int a, int b, int c) {
-            return "" + a + b + c;
+        String concatenate(int a, int b, int c) {
+            "${a}${b}${c}"
         }
 
         @Override
-        public long sizeOfMap(Map map) {
-            return map.size();
+        long sizeOfMap(Map map) {
+            map.size()
         }
 
         @Override
