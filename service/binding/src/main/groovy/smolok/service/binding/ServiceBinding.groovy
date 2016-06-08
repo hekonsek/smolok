@@ -16,11 +16,9 @@
  */
 package smolok.service.binding;
 
-import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory
-import smolok.encoding.spi.PayloadEncoding;
 
 import static OperationBinding.operationBinding;
 import static java.lang.String.format;
@@ -41,17 +39,17 @@ class ServiceBinding extends RouteBuilder {
 
     // Member collaborators
 
-    protected final PayloadEncoding payloadEncoding;
+    protected final AuthenticationProvider authenticationProvider
 
     // Member configuration
 
-    protected final String serviceChannel;
+    protected final String serviceChannel
 
     // Constructors
 
-    public ServiceBinding(PayloadEncoding payloadEncoding, String serviceChannel) {
-        this.payloadEncoding = payloadEncoding;
-        this.serviceChannel = serviceChannel;
+    ServiceBinding(AuthenticationProvider authenticationProvider, String serviceChannel) {
+        this.authenticationProvider = authenticationProvider
+        this.serviceChannel = serviceChannel
     }
 
     @Override
@@ -60,12 +58,13 @@ class ServiceBinding extends RouteBuilder {
         LOG.debug("Starting route consuming from channel: {}", fromChannel);
 
         from(fromChannel).process { exchange ->
+            def credentials = authenticationProvider.authenticate(exchange)
+
             def message = exchange.getIn()
             String channel = message.getHeader('JMSDestination').toString()
-            OperationBinding operationBinding = operationBinding(payloadEncoding, channel, message.body, message.getHeaders(), getContext().getRegistry());
+            OperationBinding operationBinding = operationBinding(credentials, channel, message.body, message.getHeaders(), getContext().getRegistry());
             exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
             exchange.setProperty("RETURN_TYPE", operationBinding.operationMethod().getReturnType());
-
             message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));
         }.toD(format('${property.%s}', TARGET_PROPERTY)).process { it ->
             Class returnType = it.getProperty("RETURN_TYPE", Class.class);

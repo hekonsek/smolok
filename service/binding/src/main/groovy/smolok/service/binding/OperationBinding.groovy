@@ -21,7 +21,6 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import smolok.encoding.spi.PayloadEncoding;
 
 import java.lang.reflect.Method
 
@@ -46,19 +45,11 @@ class OperationBinding {
         this.operationMethod = operationMethod;
     }
 
-    static OperationBinding operationBinding(PayloadEncoding payloadEncoding, String channel, Object incomingPayload, Map<String, Object> headers, Registry registry) {
+    static OperationBinding operationBinding(Credentials credentials, String channel, Object incomingPayload, Map<String, Object> headers, Registry registry) {
         String rawChannel = channel.substring(channel.lastIndexOf('/') + 1);
         String[] channelParts = rawChannel.split("\\.");
         String service = channelParts[0];
         String operation = channelParts[1];
-
-        List<Object> arguments = new LinkedList<>(asList(channelParts).subList(2, channelParts.length));
-
-        for(Map.Entry<String, Object> header : headers.entrySet()) {
-            if(header.getKey().startsWith("SMOLOK_ARG")) {
-                arguments.add(header.getValue());
-            }
-        }
 
         Object bean = registry.lookupByName(service);
         Validate.notNull(bean, "Cannot find service with name '%s'.", service);
@@ -69,10 +60,24 @@ class OperationBinding {
         beanMethods.addAll(asList(beanType.getMethods()));
         Method operationMethod = beanMethods.find{method -> method.getName().equals(operation)}
 
+        List<Object> arguments = new LinkedList<>(asList(channelParts).subList(2, channelParts.length))
+
+        for(Map.Entry<String, Object> header : headers.entrySet()) {
+            if(header.getKey().startsWith("SMOLOK_ARG")) {
+                arguments.add(header.getValue());
+            }
+        }
+
         if (incomingPayload != null) {
             Object payload = incomingPayload;
             arguments.add(payload);
         }
+
+        def tenantPosition = operationMethod.parameterAnnotations.findIndexOf{ it.find{ it.annotationType() == Tenant.class } }
+        if(tenantPosition >= 0) {
+            arguments.addAll(tenantPosition, credentials.tenant())
+        }
+
         return new OperationBinding(service, operation, arguments, operationMethod);
     }
 

@@ -20,11 +20,12 @@ import org.junit.BeforeClass;
 import org.junit.Test
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
-import smolok.encoding.spi.PayloadEncoding
 import smolok.eventbus.client.EventBus
 
 import static org.assertj.core.api.Assertions.assertThat
@@ -33,6 +34,7 @@ import static smolok.eventbus.client.Header.arguments;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Smolok.class)
+@Configuration
 public class ServiceBindingTest {
 
     @Autowired
@@ -93,14 +95,38 @@ public class ServiceBindingTest {
         assertThat(received).isEqualTo('123')
     }
 
+    @Test
+    void shouldBindTenantToArgument() {
+        def received = eventBus.fromBus('echo.tenant', String.class)
+        assertThat(received).isEqualTo('tenant')
+    }
+
+    @Test
+    void shouldBindTenantBeforeBody() {
+        def received = eventBus.fromBus('echo.tenantBeforePayload', 'foo', String.class)
+        assertThat(received).isEqualTo('tenantfoo')
+    }
+
+    @Test
+    void shouldBindTenantBeforeHeader() {
+        def received = eventBus.fromBus('echo.tenantBeforePayload', String.class, arguments('foo'))
+        assertThat(received).isEqualTo('tenantfoo')
+    }
+
+    @Test
+    void shouldBindTenantBeforeChannelArgument() {
+        def received = eventBus.fromBus('echo.tenantBeforePayload.foo', String.class)
+        assertThat(received).isEqualTo('tenantfoo')
+    }
+
     // Beans fixtures
 
     @Component
     public static class EchoServiceBinding extends ServiceBinding {
 
         @Autowired
-        public EchoServiceBinding(PayloadEncoding payloadEncoding) {
-            super(payloadEncoding, "echo");
+        public EchoServiceBinding(AuthenticationProvider authenticationProvider) {
+            super(authenticationProvider, "echo");
         }
 
     }
@@ -115,7 +141,11 @@ public class ServiceBindingTest {
 
         long sizeOfMap(Map map);
 
-        String stringAndPojoToStringOperation(String string, Map<String, String> pojo);
+        String stringAndPojoToStringOperation(String string, Map<String, String> pojo)
+
+        String tenant(@Tenant String tenant)
+
+        String tenantBeforePayload(@Tenant String tenant, String payload)
 
     }
 
@@ -147,6 +177,21 @@ public class ServiceBindingTest {
             return string + pojo.size();
         }
 
+        @Override
+        String tenant(@Tenant String tenant) {
+            tenant
+        }
+
+        @Override
+        String tenantBeforePayload(@Tenant String tenant, String payload) {
+            tenant + payload
+        }
+
+    }
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        new MockAutenticationProvider('username', 'tenant')
     }
 
 }
