@@ -17,6 +17,11 @@ class CommandLineDocker implements Docker {
         this.processManager = processManager
     }
 
+    @Override
+    List<String> execute(Container container) {
+        processManager.execute(command(buildRunCommand(container, false)))
+    }
+
     ContainerStartupStatus createAndStart(Container container) {
         switch(status(container.name())) {
             case running: return alreadyRunning
@@ -24,7 +29,7 @@ class CommandLineDocker implements Docker {
                 processManager.execute(command("docker start ${container.name()}"))
                 return started
             case none:
-                processManager.execute(command("docker run -d --net=${container.net()} --name ${container.name()} -t ${container.image()} ${container.arguments().join(' ')}"))
+                processManager.execute(command(buildRunCommand(container, true)))
                 return ContainerStartupStatus.created
         }
     }
@@ -39,6 +44,23 @@ class CommandLineDocker implements Docker {
         } else {
             none
         }
+    }
+
+    // Helpers
+
+    static private String buildRunCommand(Container container, boolean daemon) {
+        def command = 'docker run'
+        if(daemon) {
+            command += ' -d'
+        }
+        if(container.name() != null) {
+            command += " --name=${container.name()}"
+        }
+        if(container.net() != null) {
+            command += " --net=${container.net()} "
+        }
+        command += " ${container.volumes().inject('') { volumes, volume -> "${volumes} -v ${volume.key}:${volume.value}"}}"
+        command + " -t ${container.image()} ${container.arguments().join(' ')}"
     }
 
 }

@@ -36,7 +36,7 @@ class DockerConfigurationTest {
 
     @Test
     void shouldStartCreatedContainer() {
-        def startupStatus = docker.createAndStart(new Container('ubuntu', containerName, 'host', command('top')))
+        def startupStatus = docker.createAndStart(new Container('ubuntu', containerName, 'host', [:], command('top')))
         def containerStatus = docker.status(containerName)
         assertThat(startupStatus).isEqualTo(created)
         assertThat(containerStatus).isEqualTo(ContainerStatus.running)
@@ -44,8 +44,8 @@ class DockerConfigurationTest {
 
     @Test
     void shouldNotStartContainerSecondTime() {
-        docker.createAndStart(new Container('ubuntu', containerName, 'host'))
-        def status = docker.createAndStart(new Container('ubuntu', containerName, 'host'))
+        docker.createAndStart(new Container('ubuntu', containerName, 'host', [:]))
+        def status = docker.createAndStart(new Container('ubuntu', containerName, 'host', [:]))
         assertThat(status).isEqualTo(alreadyRunning)
     }
 
