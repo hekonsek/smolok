@@ -16,7 +16,7 @@
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
-            <artifactId>smolok-lib-process</artifactId>
+            <artifactId>smolok-lib-docker</artifactId>
         </dependency>
         <dependency>
             <groupId>smolok</groupId>

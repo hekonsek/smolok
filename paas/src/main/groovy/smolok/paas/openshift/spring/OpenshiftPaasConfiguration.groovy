@@ -3,6 +3,7 @@ package smolok.paas.openshift.spring
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
@@ -19,8 +20,8 @@ class OpenshiftPaasConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    Paas paas(ProcessManager processManager, AmqpProbe amqpProbe) {
-        new OpenshiftPaas(processManager, amqpProbe)
+    Paas paas(Docker docker, ProcessManager processManager, AmqpProbe amqpProbe) {
+        new OpenshiftPaas(docker, processManager, amqpProbe)
     }
 
 }

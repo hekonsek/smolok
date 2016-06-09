@@ -1,6 +1,8 @@
 package smolok.paas.openshift
 
 import org.apache.commons.lang3.Validate
+import smolok.lib.docker.ContainerStatus
+import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
@@ -18,7 +20,7 @@ class OpenshiftPaas implements Paas {
 
     // Logging
 
-    private final static def LOG = getLogger(OpenshiftPaas.class)
+    private final static LOG = getLogger(OpenshiftPaas.class)
 
     // Docker commands constants
 
@@ -36,16 +38,17 @@ class OpenshiftPaas implements Paas {
 
     private final static OS_GET_SERVICES_COMMAND = 'exec openshift-server oc get service'
 
-    private final static DOCKER_PS_ALL = "ps -a -f name=openshift-server"
-
     // Collaborators
+
+    private final Docker docker
 
     private final ProcessManager processManager
 
     private final AmqpProbe amqpProbe
 
     // Constructors
-    OpenshiftPaas(ProcessManager processManager, AmqpProbe amqpProbe) {
+    OpenshiftPaas(Docker docker, ProcessManager processManager, AmqpProbe amqpProbe) {
+        this.docker = docker
         this.processManager = processManager
         this.amqpProbe = amqpProbe
     }
@@ -54,7 +57,9 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isProvisioned() {
-        dockerRun(DOCKER_PS_ALL).size() > 1
+        def status = docker.status('openshift-server')
+        LOG.debug('Status of OpenShift server: {}', status)
+        status != ContainerStatus.none
     }
 
     @Override
