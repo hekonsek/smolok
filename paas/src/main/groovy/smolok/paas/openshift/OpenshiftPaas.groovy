@@ -14,6 +14,7 @@ import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
+import static smolok.lib.docker.Container.container
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class OpenshiftPaas implements Paas {
@@ -31,8 +32,6 @@ class OpenshiftPaas implements Paas {
             openshift/origin:v1.2.0 start'''
 
     private final static OS_STATUS_COMMAND = 'exec openshift-server oc status'
-
-    private final static OS_START_COMMAND = 'start openshift-server'
 
     private final static OS_REMOVE_COMMAND = 'rm openshift-server'
 
@@ -78,7 +77,7 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                dockerRun(OS_START_COMMAND)
+                docker.createAndStart(container('openshift-server'))
             } else {
                 dockerRun(OS_PROVISION_COMMAND)
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
