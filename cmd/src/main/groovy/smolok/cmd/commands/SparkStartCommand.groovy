@@ -6,11 +6,12 @@ import smolok.cmd.OutputSink
 import smolok.lib.docker.Container
 import smolok.lib.docker.ContainerStartupStatus
 import smolok.lib.docker.Docker
-import smolok.lib.process.ProcessManager
 
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
-import static smolok.lib.process.ExecutorBasedProcessManager.command
 
+/**
+ * Starts Spark cluster consisting of single master and slave nodes.
+ */
 class SparkStartCommand implements Command {
 
     // Collaborators
@@ -39,7 +40,7 @@ class SparkStartCommand implements Command {
     }
 
     private void startSparkNode(OutputSink outputSink, String smolokVersion, String nodeType) {
-        switch(docker.createAndStart(new Container("smolok/spark-standalone-${nodeType}:${smolokVersion}", "spark-${nodeType}", 'host'))) {
+        switch(docker.createAndStart(new Container("smolok/spark-standalone-${nodeType}:${smolokVersion}", "spark-${nodeType}", 'host', [:]))) {
             case ContainerStartupStatus.alreadyRunning:
                 outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
