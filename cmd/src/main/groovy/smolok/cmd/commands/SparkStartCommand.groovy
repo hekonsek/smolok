@@ -1,18 +1,23 @@
 package smolok.cmd.commands
 
 import org.apache.commons.lang3.Validate
+import org.slf4j.LoggerFactory
 import smolok.cmd.Command
 import smolok.cmd.OutputSink
 import smolok.lib.docker.Container
-import smolok.lib.docker.ContainerStartupStatus
 import smolok.lib.docker.Docker
 
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
+import static smolok.lib.docker.ContainerStartupStatus.alreadyRunning
+import static smolok.lib.docker.ContainerStartupStatus.created
+import static smolok.lib.docker.ContainerStartupStatus.started
 
 /**
  * Starts Spark cluster consisting of single master and slave nodes.
  */
 class SparkStartCommand implements Command {
+
+    private static final LOG = LoggerFactory.getLogger(SparkStartCommand.class)
 
     // Collaborators
 
@@ -39,15 +44,20 @@ class SparkStartCommand implements Command {
         startSparkNode(outputSink, smolokVersion.get(), 'worker')
     }
 
+    // Private helpers
+
     private void startSparkNode(OutputSink outputSink, String smolokVersion, String nodeType) {
-        switch(docker.createAndStart(new Container("smolok/spark-standalone-${nodeType}:${smolokVersion}", "spark-${nodeType}", 'host', [:]))) {
-            case ContainerStartupStatus.alreadyRunning:
+        LOG.debug('Starting Spark node: {}', nodeType)
+        def container = new Container("smolok/spark-standalone-${nodeType}:${smolokVersion}", "spark-${nodeType}",
+                'host', ['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'])
+        switch(docker.createAndStart(container)) {
+            case alreadyRunning:
                 outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
-            case ContainerStartupStatus.started:
+            case started:
                 outputSink.out("Started existing Spark ${nodeType} instance.")
                 break
-            case ContainerStartupStatus.created:
+            case created:
                 outputSink.out("No Spark ${nodeType} found. New one created and started.")
                 break
         }
