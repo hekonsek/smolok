@@ -65,4 +65,4 @@ or installed, will be skipped from the process.
 In order to submit jar containing Spark job into the local Spark cluster, put your jar into `/var/smolok/spark/jobs`
 directory and execute the following command:
 
-    smolok spark submit my-job.jar
+    smolok spark submit --master=spark://localhost:7077 my-job.jar
