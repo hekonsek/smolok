@@ -59,3 +59,10 @@ together) on your machine, execute the following command:
 
 This command ensures that cluster is installed and properly started - components of the cluster that are already started
 or installed, will be skipped from the process.
+
+### Submitting job into Spark cluster
+
+In order to submit jar containing Spark job into the local Spark cluster, put your jar into `/var/smolok/spark/jobs`
+directory and execute the following command:
+
+    smolok spark submit my-job.jar
