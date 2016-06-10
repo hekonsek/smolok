@@ -13,6 +13,7 @@ import smolok.cmd.commands.CloudStartCommand
 import smolok.cmd.commands.CloudStatusCommand
 import smolok.cmd.commands.SdcardInstallRaspbianCommand
 import smolok.cmd.commands.SparkStartCommand
+import smolok.cmd.commands.SparkSubmitCommand
 import smolok.lib.common.DownloadManager
 import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
@@ -66,6 +67,11 @@ class CmdConfiguration {
     @Bean
     SparkStartCommand sparkStartCommand(Docker docker) {
         new SparkStartCommand(docker)
+    }
+
+    @Bean
+    SparkSubmitCommand sparkSubmitCommand(Docker docker) {
+        new SparkSubmitCommand(docker)
     }
 
 }
