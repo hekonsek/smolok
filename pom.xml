@@ -21,6 +21,7 @@
         <module>status</module>
         <module>cmd</module>
         <module>service</module>
+        <module>spark</module>
     </modules>
 
     <properties>
