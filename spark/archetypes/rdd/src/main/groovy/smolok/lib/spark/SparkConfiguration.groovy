@@ -1,4 +1,4 @@
-package smolok.spark.archetype.rdd
+package smolok.lib.spark
 
 import org.apache.spark.SparkConf
 import org.apache.spark.api.java.JavaSparkContext

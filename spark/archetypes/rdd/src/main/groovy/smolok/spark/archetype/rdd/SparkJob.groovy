@@ -4,15 +4,17 @@ import org.apache.spark.api.java.JavaSparkContext
 import org.apache.spark.api.java.function.Function2
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
+import smolok.lib.spark.BaseSparkJob
 
-import static org.slf4j.LoggerFactory.getLogger
+@SpringBootApplication(scanBasePackages = ['smolok', 'smolok.spark.archetype.rdd'])
+class SparkJob extends BaseSparkJob implements Serializable {
 
-@SpringBootApplication
-class SparkJob {
+    static void main(String... args) throws IOException, InterruptedException {
+        new SparkJob().execute()
+    }
 
-    private static final LOG = getLogger(SparkJob.class)
-
-    public static void main(String... args) throws IOException, InterruptedException {
+    @Override
+    void execute(String... args) {
         def app = new SpringApplicationBuilder(SparkJob.class).build().run(args)
 
         def rdd = app.getBean(JavaSparkContext.class).parallelize([1, 2, 3])
