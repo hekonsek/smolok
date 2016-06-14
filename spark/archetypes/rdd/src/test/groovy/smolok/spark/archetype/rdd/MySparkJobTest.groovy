@@ -1,27 +1,20 @@
 package smolok.spark.archetype.rdd
 
-import org.apache.spark.api.java.JavaSparkContext
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.lib.spark.SparkConfiguration
+import smolok.lib.spark.SparkJobRequest
 
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.spark.SparkJobRequest.onRequest
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SparkConfiguration.class)
-@IntegrationTest('spark.master=local[*]')
 class MySparkJobTest {
-
-    @Autowired
-    JavaSparkContext sparkContext
 
     @Test
     void shouldInjectSparkContext() {
-        assertThat(sparkContext).isNotNull()
+        System.setProperty('spark.master', 'local[*]')
+
+        onRequest { SparkJobRequest request ->
+            assertThat(request.sparkContext).isNotNull()
+        }
     }
 
 }
