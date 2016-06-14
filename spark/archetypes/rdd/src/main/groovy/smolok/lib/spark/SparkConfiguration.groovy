@@ -11,7 +11,7 @@ class SparkConfiguration {
 
     @Bean(destroyMethod = 'close')
     JavaSparkContext sparkContext(@Value('${spark.master:spark://localhost:7077}') String master) {
-        def sparkConfig = new SparkConf().setMaster(master).setAppName('SparkJob')
+        def sparkConfig = new SparkConf().setMaster(master).setAppName('MySparkJob')
         new JavaSparkContext(sparkConfig)
     }
 

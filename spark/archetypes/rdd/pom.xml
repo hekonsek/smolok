@@ -14,7 +14,7 @@
 
     <properties>
         <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
-        <mainClass>smolok.spark.archetype.rdd.SparkJob</mainClass>
+        <mainClass>smolok.spark.archetype.rdd.MySparkJob</mainClass>
     </properties>
 
     <dependencies>

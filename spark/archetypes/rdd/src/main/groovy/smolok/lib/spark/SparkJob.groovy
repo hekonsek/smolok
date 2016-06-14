@@ -5,7 +5,7 @@ import org.apache.spark.api.java.JavaSparkContext
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ApplicationContext
 
-class SparkJobContext {
+class SparkJob {
 
     static ApplicationContext applicationContext
 
@@ -21,10 +21,14 @@ class SparkJobContext {
         if(uri.startsWith('parallelize')) {
             def collection = uri.substring('parallelize'.length() + 1)
             def sc = applicationContext.getBean(JavaSparkContext.class)
-            def shell = new GroovyShell(SparkJobContext.class.classLoader)
+            def shell = new GroovyShell(SparkJob.class.classLoader)
             shell.setVariable('sc', sc)
             shell.evaluate("sc.parallelize([${collection}])")
         }
+    }
+
+    static void onRequest(Closure closure) {
+        closure(new SparkJobRequest())
     }
 
 }

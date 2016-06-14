@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SparkConfiguration.class)
 @IntegrationTest('spark.master=local[*]')
-class SparkJobTest {
+class MySparkJobTest {
 
     @Autowired
     JavaSparkContext sparkContext
