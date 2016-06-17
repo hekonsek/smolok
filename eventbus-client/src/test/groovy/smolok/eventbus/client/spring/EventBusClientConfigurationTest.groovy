@@ -3,6 +3,7 @@ package smolok.eventbus.client.spring
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import org.apache.camel.builder.RouteBuilder
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,11 +13,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
-import smolok.eventbus.client.Header
-import smolok.paas.Paas
 
 import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
+import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.eventbus.client.Header.arguments
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,13 +27,13 @@ class EventBusClientConfigurationTest {
     @Autowired
     EventBus eventBus
 
-    @Bean
-    RouteBuilder routeBuilder(Paas paas) {
-        paas.reset()
-        paas.start()
-        def amqpHost = paas.services().find{ it.name == 'eventbus' }.host
-        System.setProperty('amqp.host', amqpHost)
+    @BeforeClass
+    static void beforeClass() {
+        System.setProperty('amqp.port', "${findAvailableTcpPort()}")
+    }
 
+    @Bean
+    RouteBuilder routeBuilder() {
         new RouteBuilder() {
             @Override
             void configure() throws Exception {
