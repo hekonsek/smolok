@@ -12,10 +12,12 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
+import smolok.eventbus.client.Header
 import smolok.paas.Paas
 
 import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.eventbus.client.Header.arguments
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Smolok.class)
@@ -37,6 +39,8 @@ class EventBusClientConfigurationTest {
             void configure() throws Exception {
                 from('amqp:echo').log('echo')
 
+                from('amqp:echoArgument').setBody().header('SMOLOK_ARG0')
+
                 from('amqp:pojoResponse').setBody().constant(new ObjectMapper().writeValueAsBytes(new Response(body: 'foo')))
             }
         }
@@ -56,6 +60,15 @@ class EventBusClientConfigurationTest {
     }
 
     @Test
+    void shouldReceiveSmolokArgument() {
+        // When
+        def response = eventBus.fromBus('echoArgument', null, String.class, arguments('foo'))
+
+        // Then
+        assertThat(response).isEqualTo('foo')
+    }
+
+    @Test
     void shouldReceivePojoResponse() {
         // When
         def response = eventBus.fromBus('pojoResponse', payload, Response.class)
@@ -63,6 +76,8 @@ class EventBusClientConfigurationTest {
         // Then
         assertThat(response).isEqualTo(new Response(body: 'foo'))
     }
+
+    // Test classes
 
     @EqualsAndHashCode
     static class Response {

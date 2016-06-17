@@ -31,6 +31,7 @@ class EventBus {
     // Connector channels API
 
     void toBus(String channel, Object payload, Header... headers) {
+        LOG.debug('Sending payload {} to channel {} with headers {}', payload, channel, headers.toList())
         producerTemplate.sendBodyAndHeaders("amqp:${channel}", payload, arguments(headers))
     }
 
