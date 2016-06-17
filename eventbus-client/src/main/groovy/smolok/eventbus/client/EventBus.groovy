@@ -56,7 +56,7 @@ class EventBus {
     }
 
     def <T> T fromBus(String channel, Class<T> responseType, Header... headers) {
-        convertResponse(fromBus(channel, null, headers), responseType)
+        fromBus(channel, null, responseType, headers)
     }
 
     def <T> T pollChannel(String channel, Class<T> responseType) {
