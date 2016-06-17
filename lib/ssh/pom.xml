@@ -12,10 +12,13 @@
     <artifactId>smolok-lib-ssh</artifactId>
 
     <dependencies>
+        <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
         </dependency>
+
+        <!-- Non-Smolok dependencies -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
@@ -46,14 +49,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.bluetrainsoftware.maven</groupId>
-                <artifactId>groovydoc-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
