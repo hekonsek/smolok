@@ -1,11 +1,11 @@
 package smolok.lib.ssh.server
 
+import org.apache.sshd.server.auth.password.PasswordAuthenticator
+import org.apache.sshd.server.scp.ScpCommandFactory
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory
 import smolok.lib.ssh.client.SshClient
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory
-import org.apache.sshd.server.PasswordAuthenticator
-import org.apache.sshd.server.command.ScpCommandFactory
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
-import org.apache.sshd.server.sftp.SftpSubsystem
 
 import java.nio.file.Paths
 
@@ -30,13 +30,13 @@ class SshServer {
     // Life-cycle
 
     SshServer start() {
-        def sshd = org.apache.sshd.SshServer.setUpDefaultServer()
+        def sshd = org.apache.sshd.server.SshServer.setUpDefaultServer()
         sshd.setPort(port)
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(createTempFile('smolok', 'host_keys').absolutePath));
+        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(createTempFile('smolok', 'host_keys')))
         sshd.setPasswordAuthenticator(authenticator)
         sshd.setCommandFactory(new ScpCommandFactory())
-        sshd.setFileSystemFactory(new VirtualFileSystemFactory(root.absolutePath))
-        sshd.setSubsystemFactories([new SftpSubsystem.Factory()])
+        sshd.setFileSystemFactory(new VirtualFileSystemFactory(root.toPath()))
+        sshd.setSubsystemFactories([new SftpSubsystemFactory()])
         sshd.start()
 
         this

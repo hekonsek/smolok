@@ -16,14 +16,14 @@
  */
 package smolok.lib.ssh.server
 
-import org.apache.mina.util.AvailablePortFinder
-import org.apache.sshd.server.PasswordAuthenticator
+import org.apache.sshd.server.auth.password.PasswordAuthenticator
+import org.springframework.util.SocketUtils
 
 class SshServerBuilder {
 
     private PasswordAuthenticator authenticator = new AnyCredentialsPasswordAuthenticator()
 
-    private int port = AvailablePortFinder.nextAvailable
+    private int port = SocketUtils.findAvailableTcpPort()
 
     private File root = File.createTempDir()
 
