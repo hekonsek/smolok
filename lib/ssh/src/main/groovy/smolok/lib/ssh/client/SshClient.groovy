@@ -1,6 +1,7 @@
 package smolok.lib.ssh.client;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.*
+import org.apache.commons.lang3.Validate;
 
 import java.io.*;
 
@@ -78,7 +79,9 @@ class SshClient {
     }
 
     public void command(String command, SshClientOutputCollector outputCollector) {
-        executeSession("exec", new ChannelCallback() {
+        Validate.notBlank(command, 'Command should not be blank.')
+
+        executeSession('exec', new ChannelCallback() {
             @Override
             Object onChannel(Channel channel) {
                 ((ChannelExec) channel).setCommand(command);

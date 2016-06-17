@@ -20,6 +20,11 @@ class SshClientTest {
         ssh.checkConnection()
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    void shouldValidateEmptyCommand() {
+        ssh.command('')
+    }
+
     @Test
     void shouldExecuteCommand() {
         // Given
@@ -30,6 +35,8 @@ class SshClientTest {
         // Then
         assertThat(result).isEqualTo([command])
     }
+
+    // File transfer tests
 
     @Test
     void shouldHandleEmptyFile() {

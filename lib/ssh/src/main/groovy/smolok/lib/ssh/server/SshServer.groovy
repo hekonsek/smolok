@@ -10,9 +10,16 @@ import java.nio.file.Paths
 
 import static java.io.File.createTempFile
 
+/**
+ * Plugable SSH server which be used to expose Java services via SSH.
+ */
 class SshServer {
 
+    // Collaborators
+
     private final PasswordAuthenticator authenticator
+
+    // Configuration
 
     private final int port
 
