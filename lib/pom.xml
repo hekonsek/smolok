@@ -18,6 +18,7 @@
         <module>process</module>
         <module>docker</module>
         <module>vertx</module>
+        <module>ssh</module>
     </modules>
 
 </project>
