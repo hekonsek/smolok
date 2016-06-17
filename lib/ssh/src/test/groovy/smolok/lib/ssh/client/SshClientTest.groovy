@@ -21,6 +21,17 @@ class SshClientTest {
     }
 
     @Test
+    void shouldExecuteCommand() {
+        // Given
+        def command = 'some command'
+
+        // When
+        def result = ssh.command(command)
+        // Then
+        assertThat(result).isEqualTo([command])
+    }
+
+    @Test
     void shouldHandleEmptyFile() {
         assertThat(ssh.scp(file)).isNull()
     }

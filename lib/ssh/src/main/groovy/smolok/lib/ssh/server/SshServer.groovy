@@ -1,11 +1,10 @@
 package smolok.lib.ssh.server
 
+import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory
 import org.apache.sshd.server.auth.password.PasswordAuthenticator
-import org.apache.sshd.server.scp.ScpCommandFactory
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory
 import smolok.lib.ssh.client.SshClient
-import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory
-import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
 
 import java.nio.file.Paths
 
@@ -34,7 +33,7 @@ class SshServer {
         sshd.setPort(port)
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(createTempFile('smolok', 'host_keys')))
         sshd.setPasswordAuthenticator(authenticator)
-        sshd.setCommandFactory(new ScpCommandFactory())
+        sshd.setCommandFactory(new EchoCommandFactory())
         sshd.setFileSystemFactory(new VirtualFileSystemFactory(root.toPath()))
         sshd.setSubsystemFactories([new SftpSubsystemFactory()])
         sshd.start()
