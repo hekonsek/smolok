@@ -12,6 +12,7 @@
     <artifactId>smolok-service-binding</artifactId>
 
     <dependencies>
+        <!-- Smolok dependencies -->
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
@@ -31,6 +32,7 @@
             <artifactId>camel-groovy</artifactId>
         </dependency>
 
+        <!-- Optional Spring runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
