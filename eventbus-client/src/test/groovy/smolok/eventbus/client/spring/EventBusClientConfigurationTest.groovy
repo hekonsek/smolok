@@ -1,5 +1,7 @@
 package smolok.eventbus.client.spring
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.transform.EqualsAndHashCode
 import org.apache.camel.builder.RouteBuilder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,6 +36,8 @@ class EventBusClientConfigurationTest {
             @Override
             void configure() throws Exception {
                 from('amqp:echo').log('echo')
+
+                from('amqp:pojoResponse').setBody().constant(new ObjectMapper().writeValueAsBytes(new Response(body: 'foo')))
             }
         }
     }
@@ -49,6 +53,22 @@ class EventBusClientConfigurationTest {
 
         // Then
         assertThat(response).isEqualTo(payload)
+    }
+
+    @Test
+    void shouldReceivePojoResponse() {
+        // When
+        def response = eventBus.fromBus('pojoResponse', payload, Response.class)
+
+        // Then
+        assertThat(response).isEqualTo(new Response(body: 'foo'))
+    }
+
+    @EqualsAndHashCode
+    static class Response {
+
+        String body
+
     }
 
 }
