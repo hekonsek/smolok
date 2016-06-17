@@ -14,14 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.service.binding;
+package smolok.service.binding
 
-import org.apache.camel.builder.RouteBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.camel.builder.RouteBuilder
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory
 import smolok.service.binding.camel.CamelOperationBindingFactory
 
-import static java.lang.String.format;
+import static java.lang.String.format
+import static smolok.lib.common.Reflections.isContainer
+import static smolok.lib.common.Reflections.isPojo;
 
 /**
  * Service binding is a general purpose backend service which can be used to bind communication coming through Event Bus
@@ -60,18 +63,20 @@ class ServiceBinding extends RouteBuilder {
         from(fromChannel).process { exchange ->
             def credentials = authenticationProvider.authenticate(exchange)
 
-            def message = exchange.getIn()
-            def channel = message.getHeader('JMSDestination').toString()
-            def operationBinding = new CamelOperationBindingFactory(context.registry).operationBinding(credentials, channel, message.body, message.getHeaders())
+            def message = exchange.in
+            def channel = message.getHeader('JMSDestination', String.class)
+            def operationBinding = new CamelOperationBindingFactory(context.registry).operationBinding(credentials, channel, message.body, message.headers)
             exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
-            exchange.setProperty("RETURN_TYPE", operationBinding.operationMethod().getReturnType());
+            exchange.setProperty('BINDING', operationBinding)
             message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));
         }.toD(format('${property.%s}', TARGET_PROPERTY)).process { it ->
-            Class returnType = it.getProperty("RETURN_TYPE", Class.class);
+            def returnType = it.getProperty('BINDING', OperationBinding.class).operationMethod().returnType
             if (Void.TYPE == returnType) {
-                it.getIn().setBody(null);
+                it.getIn().setBody(null)
+                // This is workaround needed due to the fact that Qpid JMS client doesn't support nested maps.
+            } else if(isPojo(returnType) || isContainer(returnType)) {
+                it.in.body = new ObjectMapper().writeValueAsBytes(it.in.body)
             }
-            it.getIn().setBody(it.getIn().getBody())
         }
     }
 

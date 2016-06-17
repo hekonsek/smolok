@@ -6,6 +6,7 @@ import org.apache.camel.ProducerTemplate;
 
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.eventbus.client.Header.arguments
+import static smolok.lib.common.Reflections.isContainer
 import static smolok.lib.common.Reflections.isPojo
 
 class EventBus {
@@ -70,7 +71,7 @@ class EventBus {
      * This is workaround needed due to the fact that Qpid JMS client doesn't support nested maps.
      */
     private <T> T convertResponse(Object body, Class<T> responseType) {
-        if(body.class == byte[].class && (Map.class.isAssignableFrom(responseType) || isPojo(responseType))) {
+        if(body.class == byte[].class && (isContainer(responseType) || isPojo(responseType))) {
             mapper.readValue((byte[])body, responseType)
         } else {
             mapper.convertValue(body, responseType)

@@ -12,6 +12,11 @@
     <artifactId>smolok-service-binding</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-lib-common</artifactId>
+        </dependency>
+
         <!-- Non-Smolok dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -24,10 +29,6 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- Smolok testing dependencies -->
