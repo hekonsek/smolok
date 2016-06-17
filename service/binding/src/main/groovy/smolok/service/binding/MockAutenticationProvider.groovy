@@ -1,7 +1,5 @@
 package smolok.service.binding
 
-import org.apache.camel.Exchange
-
 class MockAutenticationProvider implements AuthenticationProvider {
 
     private final String username
@@ -14,7 +12,7 @@ class MockAutenticationProvider implements AuthenticationProvider {
     }
 
     @Override
-    Credentials authenticate(Exchange exchange) {
+    Credentials authenticate(ServiceEvent serviceEvent) {
         new Credentials(username, tenant)
     }
 

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.builder.RouteBuilder
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory
-import smolok.service.binding.camel.CamelOperationBindingFactory
 
 import static java.lang.String.format
 import static smolok.lib.common.Reflections.isContainer
@@ -42,7 +41,7 @@ class ServiceBinding extends RouteBuilder {
 
     // Member collaborators
 
-    protected final AuthenticationProvider authenticationProvider
+    protected final ServiceEventProcessor serviceEventProcessor
 
     // Member configuration
 
@@ -50,8 +49,8 @@ class ServiceBinding extends RouteBuilder {
 
     // Constructors
 
-    ServiceBinding(AuthenticationProvider authenticationProvider, String serviceChannel) {
-        this.authenticationProvider = authenticationProvider
+    ServiceBinding(ServiceEventProcessor serviceEventProcessor, String serviceChannel) {
+        this.serviceEventProcessor = serviceEventProcessor
         this.serviceChannel = serviceChannel
     }
 
@@ -61,11 +60,9 @@ class ServiceBinding extends RouteBuilder {
         LOG.debug("Starting route consuming from channel: {}", fromChannel);
 
         from(fromChannel).process { exchange ->
-            def credentials = authenticationProvider.authenticate(exchange)
-
             def message = exchange.in
             def channel = message.getHeader('JMSDestination', String.class)
-            def operationBinding = new CamelOperationBindingFactory(context.registry).operationBinding(credentials, channel, message.body, message.headers)
+            def operationBinding = serviceEventProcessor.process(new ServiceEvent(channel, message.body, message.headers))
             exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
             exchange.setProperty('BINDING', operationBinding)
             message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));
