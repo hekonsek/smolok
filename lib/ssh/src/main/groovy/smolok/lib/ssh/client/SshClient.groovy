@@ -1,4 +1,4 @@
-package io.rhiot.utils.ssh.client;
+package smolok.lib.ssh.client;
 
 import com.jcraft.jsch.*;
 

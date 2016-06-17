@@ -14,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.server
+package smolok.lib.ssh.client;
 
-import org.apache.sshd.server.PasswordAuthenticator
-import org.apache.sshd.server.session.ServerSession
+import com.jcraft.jsch.Channel;
 
-class NoneCredentialsPasswordAuthenticator implements PasswordAuthenticator {
+interface ChannelCallback<T> {
 
-    @Override
-    boolean authenticate(String username, String password, ServerSession session) {
-        false
-    }
+    T onChannel(Channel channel);
 
 }

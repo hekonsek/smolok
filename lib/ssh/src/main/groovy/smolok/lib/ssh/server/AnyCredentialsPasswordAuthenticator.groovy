@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.client;
+package smolok.lib.ssh.server
 
-public class StdoutSshClientOutputCollector implements SshClientOutputCollector {
+import org.apache.sshd.server.PasswordAuthenticator
+import org.apache.sshd.server.session.ServerSession
+
+class AnyCredentialsPasswordAuthenticator implements PasswordAuthenticator {
 
     @Override
-    public void collect(String line) {
-        System.out.println(line);
+    boolean authenticate(String username, String password, ServerSession session) {
+        true
     }
 
 }

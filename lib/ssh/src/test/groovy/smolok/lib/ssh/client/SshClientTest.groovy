@@ -14,24 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.client;
+package smolok.lib.ssh.client
 
-import com.google.common.collect.ImmutableList;
+import smolok.lib.ssh.server.SshServerBuilder
+import org.junit.Test
 
-import java.util.LinkedList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat
 
-public class ListSshClientOutputCollector implements SshClientOutputCollector {
+class SshClientTest {
 
-    private final List<String> lines = new LinkedList<>();
+    static sshd = new SshServerBuilder().build().start()
 
-    @Override
-    public void collect(String line) {
-        lines.add(line);
+    static ssh = sshd.client('foo', 'bar')
+
+    def file = new File("/parent/${UUID.randomUUID().toString()}")
+
+    @Test
+    void shouldCheckConnection() {
+        ssh.checkConnection()
     }
 
-    public List<String> lines() {
-        return ImmutableList.copyOf(lines);
+    @Test
+    void shouldHandleEmptyFile() {
+        assertThat(ssh.scp(file)).isNull()
+    }
+
+    @Test
+    void shouldSendFile() {
+        // Given
+        def text = 'foo'
+        ssh.scp(new ByteArrayInputStream(text.getBytes()), file)
+
+        // When
+        def received = new String(ssh.scp(file))
+
+        // Then
+        assertThat(received).isEqualTo(text)
     }
 
 }

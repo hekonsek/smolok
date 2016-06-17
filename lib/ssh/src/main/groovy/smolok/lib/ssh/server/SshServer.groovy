@@ -14,19 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.server
+package smolok.lib.ssh.server
 
-import io.rhiot.utils.ssh.client.SshClient
-import org.apache.sshd.common.KeyPairProvider
+import smolok.lib.ssh.client.SshClient
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory
-import org.apache.sshd.common.keyprovider.AbstractKeyPairProvider
 import org.apache.sshd.server.PasswordAuthenticator
 import org.apache.sshd.server.command.ScpCommandFactory
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
 import org.apache.sshd.server.sftp.SftpSubsystem
 
 import java.nio.file.Paths
-import java.security.KeyPair
 
 import static java.io.File.createTempFile
 

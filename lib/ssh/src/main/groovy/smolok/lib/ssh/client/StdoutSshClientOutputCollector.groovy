@@ -14,36 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.server
+package smolok.lib.ssh.client;
 
-import org.apache.mina.util.AvailablePortFinder
-import org.apache.sshd.server.PasswordAuthenticator
+public class StdoutSshClientOutputCollector implements SshClientOutputCollector {
 
-class SshServerBuilder {
-
-    private PasswordAuthenticator authenticator = new AnyCredentialsPasswordAuthenticator()
-
-    private int port = AvailablePortFinder.nextAvailable
-
-    private File root = File.createTempDir()
-
-    SshServer build() {
-        new SshServer(authenticator, port, root)
-    }
-
-    SshServerBuilder port(int port) {
-        this.port = port
-        this
-    }
-
-    SshServerBuilder root(File root) {
-        this.root = root
-        this
-    }
-
-    SshServerBuilder authenticator(PasswordAuthenticator authenticator) {
-        this.authenticator = authenticator
-        this
+    @Override
+    public void collect(String line) {
+        System.out.println(line);
     }
 
 }

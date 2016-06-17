@@ -14,16 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.server
+package smolok.lib.ssh.server
 
 import org.apache.sshd.server.PasswordAuthenticator
 import org.apache.sshd.server.session.ServerSession
 
-class AnyCredentialsPasswordAuthenticator implements PasswordAuthenticator {
+class FixedCredentialsPasswordAuthenticator implements PasswordAuthenticator {
+
+    String username
+
+    String password
+
+    FixedCredentialsPasswordAuthenticator(String username, String password) {
+        this.username = username
+        this.password = password
+    }
 
     @Override
     boolean authenticate(String username, String password, ServerSession session) {
-        true
+        username == this.username && password == this.password
     }
 
 }

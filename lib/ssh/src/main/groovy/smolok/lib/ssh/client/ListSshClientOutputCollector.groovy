@@ -14,12 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh.client;
+package smolok.lib.ssh.client;
 
-import com.jcraft.jsch.Channel;
+import com.google.common.collect.ImmutableList
 
-interface ChannelCallback<T> {
+public class ListSshClientOutputCollector implements SshClientOutputCollector {
 
-    T onChannel(Channel channel);
+    private final List<String> lines = new LinkedList<>();
+
+    @Override
+    public void collect(String line) {
+        lines.add(line);
+    }
+
+    public List<String> lines() {
+        return ImmutableList.copyOf(lines);
+    }
 
 }

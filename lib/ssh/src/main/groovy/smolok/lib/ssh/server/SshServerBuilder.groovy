@@ -14,42 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.rhiot.utils.ssh
+package smolok.lib.ssh.server
 
-import io.rhiot.utils.ssh.server.SshServerBuilder
-import org.junit.Test
+import org.apache.mina.util.AvailablePortFinder
+import org.apache.sshd.server.PasswordAuthenticator
 
-import static org.assertj.core.api.Assertions.assertThat
+class SshServerBuilder {
 
-class SshTest {
+    private PasswordAuthenticator authenticator = new AnyCredentialsPasswordAuthenticator()
 
-    static sshd = new SshServerBuilder().build().start()
+    private int port = AvailablePortFinder.nextAvailable
 
-    static ssh = sshd.client('foo', 'bar')
+    private File root = File.createTempDir()
 
-    def file = new File("/parent/${UUID.randomUUID().toString()}")
-
-    @Test
-    void shouldCheckConnection() {
-        ssh.checkConnection()
+    SshServer build() {
+        new SshServer(authenticator, port, root)
     }
 
-    @Test
-    void shouldHandleEmptyFile() {
-        assertThat(ssh.scp(file)).isNull()
+    SshServerBuilder port(int port) {
+        this.port = port
+        this
     }
 
-    @Test
-    void shouldSendFile() {
-        // Given
-        def text = 'foo'
-        ssh.scp(new ByteArrayInputStream(text.getBytes()), file)
+    SshServerBuilder root(File root) {
+        this.root = root
+        this
+    }
 
-        // When
-        def received = new String(ssh.scp(file))
-
-        // Then
-        assertThat(received).isEqualTo(text)
+    SshServerBuilder authenticator(PasswordAuthenticator authenticator) {
+        this.authenticator = authenticator
+        this
     }
 
 }
