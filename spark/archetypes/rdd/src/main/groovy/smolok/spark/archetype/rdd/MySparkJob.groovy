@@ -8,7 +8,7 @@ import static smolok.lib.spark.SparkJobRequest.onRequest
 
 class MySparkJob {
 
-    static void main(String... args) throws IOException, InterruptedException {
+    static void main(String... args) {
         onRequest { SparkJobRequest request ->
             def rdd = request.rdd('parallelize:1,2,3')
 
