@@ -1,4 +1,4 @@
-FROM java:8u66
+FROM java:8u91
 
 MAINTAINER Henryk Konsek <hekonsek@gmail.com>
 
