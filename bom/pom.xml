@@ -56,6 +56,11 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-docker-spark-base</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-encoding-camel</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
