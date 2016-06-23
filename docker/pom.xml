@@ -15,6 +15,7 @@
 
     <modules>
         <module>fatjar</module>
+        <module>spark-base</module>
     </modules>
 
 </project>
