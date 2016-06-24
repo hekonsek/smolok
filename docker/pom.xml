@@ -17,6 +17,7 @@
         <module>fatjar</module>
         <module>spark-base</module>
         <module>spark-standalone-master</module>
+        <module>spark-standalone-worker</module>
     </modules>
 
 </project>
