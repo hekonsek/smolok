@@ -58,7 +58,7 @@ class SparkStartCommand implements Command {
 
     private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType) {
         LOG.debug('Starting Spark node: {}', nodeType)
-        switch(new SparkNodeManager(docker).startSparkNode(imageVersion, nodeType)) {
+        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType)) {
             case alreadyRunning:
                 outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
@@ -71,11 +71,11 @@ class SparkStartCommand implements Command {
         }
     }
 
-    static class SparkNodeManager {
+    static class SparkClusterManager {
 
         private final Docker docker
 
-        SparkNodeManager(Docker docker) {
+        SparkClusterManager(Docker docker) {
             this.docker = docker
         }
 
