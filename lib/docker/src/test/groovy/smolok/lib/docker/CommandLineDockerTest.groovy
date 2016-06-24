@@ -9,7 +9,7 @@ class CommandLineDockerTest {
     @Test
     void shouldRunAsDaemon() {
         // Given
-        def container = Container.container('image')
+        def container = new ContainerBuilder('image').build()
 
         // When
         def command = CommandLineDocker.buildRunCommand(container, true)
@@ -21,7 +21,7 @@ class CommandLineDockerTest {
     @Test
     void shouldNotRunAsDaemon() {
         // Given
-        def container = Container.container('image')
+        def container = new ContainerBuilder('image').build()
 
         // When
         def command = CommandLineDocker.buildRunCommand(container, false)
@@ -33,7 +33,7 @@ class CommandLineDockerTest {
     @Test
     void shouldNotMountVolumes() {
         // Given
-        def container = Container.container('image')
+        def container = new ContainerBuilder('image').build()
 
         // When
         def command = CommandLineDocker.buildRunCommand(container, false)
@@ -45,13 +45,25 @@ class CommandLineDockerTest {
     @Test
     void shouldMountVolumes() {
         // Given
-        def container = new Container('image', null, null, [foo: 'bar'])
+        def container = new ContainerBuilder('image').volumes([foo: 'bar']).build()
 
         // When
         def command = CommandLineDocker.buildRunCommand(container, false)
 
         // Then
         assertThat(command).contains(' -v foo:bar ')
+    }
+
+    @Test
+    void shouldPassEnvironment() {
+        // Given
+        def container = new ContainerBuilder('image').environment([foo: 'bar']).build()
+
+        // When
+        def command = CommandLineDocker.buildRunCommand(container, false)
+
+        // Then
+        assertThat(command).contains(' -e foo=bar ')
     }
 
 }

@@ -60,6 +60,7 @@ class CommandLineDocker implements Docker {
             command += " --net=${container.net()} "
         }
         command += " ${container.volumes().inject('') { volumes, volume -> "${volumes} -v ${volume.key}:${volume.value}"}}"
+        command += " ${container.environment().inject('') { environment, variable -> "${environment} -e ${variable.key}=${variable.value}"}}"
         command + " -t ${container.image()} ${container.arguments().join(' ')}"
     }
 

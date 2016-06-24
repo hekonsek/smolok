@@ -7,6 +7,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.lib.docker.Container
+import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ContainerStatus
 import smolok.lib.docker.Docker
 
@@ -36,7 +37,7 @@ class DockerConfigurationTest {
 
     @Test
     void shouldStartCreatedContainer() {
-        def startupStatus = docker.createAndStart(new Container('ubuntu', containerName, 'host', [:], command('top')))
+        def startupStatus = docker.createAndStart(new ContainerBuilder('ubuntu').name(containerName).net('host').arguments('top').build())
         def containerStatus = docker.status(containerName)
         assertThat(startupStatus).isEqualTo(created)
         assertThat(containerStatus).isEqualTo(ContainerStatus.running)
@@ -44,8 +45,8 @@ class DockerConfigurationTest {
 
     @Test
     void shouldNotStartContainerSecondTime() {
-        docker.createAndStart(new Container('ubuntu', containerName, 'host', [:]))
-        def status = docker.createAndStart(new Container('ubuntu', containerName, 'host', [:]))
+        docker.createAndStart(new Container('ubuntu', containerName, 'host', [:], [:]))
+        def status = docker.createAndStart(new Container('ubuntu', containerName, 'host', [:], [:]))
         assertThat(status).isEqualTo(alreadyRunning)
     }
 

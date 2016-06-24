@@ -13,24 +13,27 @@ class Container {
 
     private final String net
 
-    private final Map volumes
+    private final Map<String, String> volumes
+
+    private final Map<String, String> environment
 
     private final String[] arguments
 
-    Container(String image, String name, String net, Map volumes, String[] arguments) {
+    Container(String image, String name, String net, Map<String, String> volumes, Map<String, String> environment, String[] arguments) {
         this.image = image
         this.name = name
         this.net = net
         this.volumes = volumes
+        this.environment = environment
         this.arguments = arguments
     }
 
     static Container container(String image, String name) {
-        new Container(image, name, null, [:])
+        new Container(image, name, null, [:], [:])
     }
 
     static Container container(String image) {
-        new Container(image, null, null, [:])
+        new Container(image, null, null, [:], [:])
     }
 
     // Getters
@@ -47,8 +50,12 @@ class Container {
         net
     }
 
-    Map volumes() {
+    Map<String, String> volumes() {
         volumes
+    }
+
+    Map<String, String> environment() {
+        return environment
     }
 
     List<String> arguments() {

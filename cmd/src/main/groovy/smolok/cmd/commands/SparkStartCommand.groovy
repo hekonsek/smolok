@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 import smolok.cmd.Command
 import smolok.cmd.OutputSink
 import smolok.lib.docker.Container
+import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ContainerStartupStatus
 import smolok.lib.docker.Docker
 
@@ -41,6 +42,11 @@ class SparkStartCommand implements Command {
         def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
+        def masterUrl = inputCommand.find{ it.startsWith('--master=') }
+        if(masterUrl != null) {
+            masterUrl = masterUrl.replaceFirst(/--master=/, '')
+        }
+
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
             startSparkNode(outputSink, smolokVersion.get(), 'master')
@@ -56,9 +62,9 @@ class SparkStartCommand implements Command {
 
     // Private helpers
 
-    private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType) {
+    private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType, String masterUrl) {
         LOG.debug('Starting Spark node: {}', nodeType)
-        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType)) {
+        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl)) {
             case alreadyRunning:
                 outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
@@ -79,10 +85,15 @@ class SparkStartCommand implements Command {
             this.docker = docker
         }
 
-        ContainerStartupStatus startSparkNode(String imageVersion, String nodeType) {
+        ContainerStartupStatus startSparkNode(String imageVersion, String nodeType, String masterUrl) {
             LOG.debug('Starting Spark node: {}', nodeType)
-            def container = new Container("smolok/spark-standalone-${nodeType}:${imageVersion}", "spark-${nodeType}",
-                    'host', ['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'])
+            def containerBuilder = new ContainerBuilder("smolok/spark-standalone-${nodeType}:${imageVersion}").
+                    name("spark-${nodeType}").net('host').
+                    volumes(['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'])
+            if(masterUrl != null) {
+                containerBuilder.environment([SPARK_MASTER: masterUrl])
+            }
+            def container = containerBuilder.build()
             docker.createAndStart(container)
         }
 
