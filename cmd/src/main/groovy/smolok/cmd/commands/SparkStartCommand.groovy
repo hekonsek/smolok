@@ -49,12 +49,12 @@ class SparkStartCommand implements Command {
 
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
-            startSparkNode(outputSink, smolokVersion.get(), 'master')
-            startSparkNode(outputSink, smolokVersion.get(), 'worker')
+            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl)
+            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl)
         } else if(inputCommand[2] == 'master') {
-            startSparkNode(outputSink, smolokVersion.get(), 'master')
+            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl)
         } else if(inputCommand[2] == 'worker') {
-            startSparkNode(outputSink, smolokVersion.get(), 'worker')
+            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl)
         } else {
             throw new RuntimeException("Unknown Spark node type: ${inputCommand[2]}")
         }
