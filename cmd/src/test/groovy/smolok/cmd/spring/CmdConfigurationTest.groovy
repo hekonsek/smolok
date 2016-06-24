@@ -149,4 +149,13 @@ class CmdConfigurationTest {
         assertThat(docker.status('spark-worker')).isIn(created, running)
     }
 
+    @Test
+    void shouldValidateInvalidSparkCluster() {
+        // When
+        commandHandler.handleCommand(command('spark start foo'))
+
+        // Then
+        assertThat(outputSink.output().first()).isEqualTo('Unknown Spark node type: foo')
+    }
+
 }
