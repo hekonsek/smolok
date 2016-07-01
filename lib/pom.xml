@@ -19,6 +19,7 @@
         <module>docker</module>
         <module>vertx</module>
         <module>ssh</module>
+        <module>ingester</module>
     </modules>
 
 </project>
