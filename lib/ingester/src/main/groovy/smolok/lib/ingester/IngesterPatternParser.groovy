@@ -10,18 +10,18 @@ class IngesterPatternParser {
         def columns = prototype.values().first() as Map<String, Object>
         columns.entrySet().each {
             if(it.value.toString().startsWith('randomString')) {
-                def randomSet = it.value.toString()
-                randomSet = randomSet.replaceFirst(/randomString\(/, '')
-                randomSet = randomSet.replaceFirst(/\)/, '')
-                columns[it.key] = new RandomStringIngesterPatternExpression(randomSet.toInteger())
+                columns[it.key] = new RandomStringIngesterPatternExpression(parseArguments(it.value.toString())[0].toInteger())
             } else if(it.value.toString().startsWith('groovy')) {
-                def expression = it.value.toString()
-                expression = expression.replaceFirst(/groovy\(/, '')
-                expression = expression.replaceFirst(/\)/, '')
-                columns[it.key] = new GroovyIngesterPatternExpression(expression)
+                columns[it.key] = new GroovyIngesterPatternExpression(parseArguments(it.value.toString())[0])
             }
         }
         ImmutableMap.copyOf(prototype)
+    }
+
+    private List<String> parseArguments(String function) {
+        def functionWithoutName = function.substring(function.indexOf('('))
+        def functionWithoutBracets = functionWithoutName.substring(1, functionWithoutName.length() - 1)
+        functionWithoutBracets.split(',').collect{ it.trim() }
     }
 
 }
