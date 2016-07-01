@@ -6,6 +6,13 @@ package smolok.lib.docker
  */
 interface Docker {
 
+    /**
+     * Starts defined container and returns output of the command. Used for executing and parsing short-living
+     * dockerized commands.
+     *
+     * @param container container definition.
+     * @return output of the container execution, one line per list element.
+     */
     List<String> execute(Container container)
 
     ServiceStartupStatus startService(Container container)
