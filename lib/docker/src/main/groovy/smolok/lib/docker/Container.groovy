@@ -1,10 +1,12 @@
 package smolok.lib.docker
 
 import com.google.common.collect.ImmutableList
+import groovy.transform.ToString
 
 /**
  * Represents CommandLineDocker container to be created.
  */
+@ToString
 class Container {
 
     private final String image

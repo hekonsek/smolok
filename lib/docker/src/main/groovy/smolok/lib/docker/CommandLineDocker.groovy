@@ -1,7 +1,9 @@
 package smolok.lib.docker
 
+import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 
+import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.docker.ContainerStartupStatus.alreadyRunning
 import static smolok.lib.docker.ContainerStartupStatus.started
 import static smolok.lib.docker.ContainerStatus.created
@@ -10,6 +12,8 @@ import static smolok.lib.docker.ContainerStatus.running
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class CommandLineDocker implements Docker {
+
+    private final static LOG = getLogger(CommandLineDocker.class)
 
     private final ProcessManager processManager
 
@@ -23,6 +27,10 @@ class CommandLineDocker implements Docker {
     }
 
     ContainerStartupStatus createAndStart(Container container) {
+        LOG.debug('About to execute container service: {}', container)
+
+        Validate.notBlank(container.name(), 'Container service name must not be empty.')
+
         switch(status(container.name())) {
             case running: return alreadyRunning
             case created:
