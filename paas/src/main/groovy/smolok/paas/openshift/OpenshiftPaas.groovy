@@ -77,7 +77,7 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                docker.createAndStart(container('openshift-server'))
+                docker.startService(container('openshift-server'))
             } else {
                 dockerRun(OS_PROVISION_COMMAND)
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)

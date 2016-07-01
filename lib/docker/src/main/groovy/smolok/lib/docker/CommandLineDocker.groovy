@@ -4,8 +4,8 @@ import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 
 import static org.slf4j.LoggerFactory.getLogger
-import static smolok.lib.docker.ContainerStartupStatus.alreadyRunning
-import static smolok.lib.docker.ContainerStartupStatus.started
+import static ServiceStartupStatus.alreadyRunning
+import static ServiceStartupStatus.started
 import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.none
 import static smolok.lib.docker.ContainerStatus.running
@@ -26,7 +26,7 @@ class CommandLineDocker implements Docker {
         processManager.execute(command(buildRunCommand(container, false)))
     }
 
-    ContainerStartupStatus createAndStart(Container container) {
+    ServiceStartupStatus startService(Container container) {
         LOG.debug('About to execute container service: {}', container)
 
         Validate.notBlank(container.name(), 'Container service name must not be empty.')
@@ -38,7 +38,7 @@ class CommandLineDocker implements Docker {
                 return started
             case none:
                 processManager.execute(command(buildRunCommand(container, true)))
-                return ContainerStartupStatus.created
+                return ServiceStartupStatus.created
         }
     }
 

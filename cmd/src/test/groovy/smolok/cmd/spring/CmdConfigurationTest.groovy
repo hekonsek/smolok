@@ -12,10 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.cmd.CommandDispatcher
 import smolok.cmd.InMemoryOutputSink
-import smolok.lib.docker.ContainerStartupStatus
-import smolok.lib.docker.ContainerStatus
 import smolok.lib.docker.Docker
-import smolok.lib.process.ExecutorBasedProcessManager
 import smolok.paas.Paas
 
 import static com.google.common.io.Files.createTempDir

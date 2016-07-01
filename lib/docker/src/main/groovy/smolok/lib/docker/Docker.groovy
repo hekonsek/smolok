@@ -8,8 +8,8 @@ interface Docker {
 
     List<String> execute(Container container)
 
-    ContainerStartupStatus createAndStart(Container container)
+    ServiceStartupStatus startService(Container container)
 
-    ContainerStatus status(String name);
+    ContainerStatus status(String name)
 
 }
