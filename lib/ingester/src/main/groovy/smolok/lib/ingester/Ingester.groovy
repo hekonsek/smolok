@@ -12,11 +12,8 @@ class Ingester {
         def row = new HashMap(pattern)
         def columns = row.values().first() as Map<String, Object>
         columns.entrySet().each {
-           if(it.value.toString().startsWith('RANDOM_STRING')) {
-               def randomSet = it.value.toString()
-               randomSet = randomSet.replaceFirst(/RANDOM_STRING\(/, '')
-               randomSet = randomSet.replaceFirst(/\)/, '')
-               columns[it.key] = new Random().nextInt(randomSet.toInteger()) + ''
+           if(it.value instanceof IngesterPatternExpression) {
+               columns[it.key] = ((IngesterPatternExpression) it.value).evaluate()
            }
         }
         row

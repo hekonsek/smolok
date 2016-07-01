@@ -1,6 +1,7 @@
 package smolok.lib.ingester
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.common.collect.ImmutableMap
 
 class IngesterPatternParser {
 
@@ -9,10 +10,13 @@ class IngesterPatternParser {
         def columns = prototype.values().first() as Map<String, Object>
         columns.entrySet().each {
             if(it.value.toString().startsWith('RANDOM_STRING')) {
-                //columns[it.key] = new RandomStringPatternExpression(randomSet.toInteger())
+                def randomSet = it.value.toString()
+                randomSet = randomSet.replaceFirst(/RANDOM_STRING\(/, '')
+                randomSet = randomSet.replaceFirst(/\)/, '')
+                columns[it.key] = new RandomStringIngesterPatternExpression(randomSet.toInteger())
             }
         }
-        prototype
+        ImmutableMap.copyOf(prototype)
     }
 
 }
