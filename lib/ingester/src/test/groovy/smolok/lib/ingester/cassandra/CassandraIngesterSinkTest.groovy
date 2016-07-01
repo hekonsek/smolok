@@ -32,7 +32,7 @@ class CassandraIngesterSinkTest {
         TimeUnit.SECONDS.sleep(60)
     }
 
-    def ingester = new Ingester('{"foo.bar": {"baz": "RANDOM_STRING(10)", "constant": 1000}}')
+    def ingester = new Ingester('{"foo.bar": {"baz": "randomString(10)", "constant": 1000}}')
 
     @Test
     void shouldInjectRecordIntoCassandra() {

@@ -9,9 +9,9 @@ class IngesterPatternParser {
         def prototype = new ObjectMapper().readValue(pattern, Map.class)
         def columns = prototype.values().first() as Map<String, Object>
         columns.entrySet().each {
-            if(it.value.toString().startsWith('RANDOM_STRING')) {
+            if(it.value.toString().startsWith('randomString')) {
                 def randomSet = it.value.toString()
-                randomSet = randomSet.replaceFirst(/RANDOM_STRING\(/, '')
+                randomSet = randomSet.replaceFirst(/randomString\(/, '')
                 randomSet = randomSet.replaceFirst(/\)/, '')
                 columns[it.key] = new RandomStringIngesterPatternExpression(randomSet.toInteger())
             }

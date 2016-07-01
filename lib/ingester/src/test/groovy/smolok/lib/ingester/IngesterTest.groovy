@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class IngesterTest {
 
-    def ingester = new Ingester('{"foo.bar": {"baz": "RANDOM_STRING(10)", "constant": 1000}}')
+    def ingester = new Ingester('{"foo.bar": {"baz": "randomString(10)", "constant": 1000}}')
 
     @Test
     void shouldInjectRandomString() {
