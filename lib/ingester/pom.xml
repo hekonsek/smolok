@@ -35,6 +35,13 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
 
+        <!-- Smolok testing dependencies -->
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-lib-docker</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -42,8 +49,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -52,18 +59,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-lib-docker</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
