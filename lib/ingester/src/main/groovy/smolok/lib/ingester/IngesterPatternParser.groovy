@@ -14,6 +14,11 @@ class IngesterPatternParser {
                 randomSet = randomSet.replaceFirst(/randomString\(/, '')
                 randomSet = randomSet.replaceFirst(/\)/, '')
                 columns[it.key] = new RandomStringIngesterPatternExpression(randomSet.toInteger())
+            } else if(it.value.toString().startsWith('groovy')) {
+                def expression = it.value.toString()
+                expression = expression.replaceFirst(/groovy\(/, '')
+                expression = expression.replaceFirst(/\)/, '')
+                columns[it.key] = new GroovyIngesterPatternExpression(expression)
             }
         }
         ImmutableMap.copyOf(prototype)
