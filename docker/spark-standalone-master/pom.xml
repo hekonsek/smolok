@@ -16,6 +16,7 @@
         <image.target>spark-standalone-master</image.target>
     </properties>
 
+    <!-- Enforce Docker images build order for concurrent builds. -->
     <dependencies>
         <dependency>
             <groupId>smolok</groupId>
