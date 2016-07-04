@@ -49,4 +49,17 @@ class DockerConfigurationTest {
         assertThat(status).isEqualTo(alreadyRunning)
     }
 
+    @Test
+    void shouldStopContainer() {
+        // Given
+        docker.startService(new ContainerBuilder('ubuntu').name(containerName).net('host').arguments('top').build())
+
+        // When
+        docker.stop(containerName)
+
+        // Then
+        def containerStatus = docker.status(containerName)
+        assertThat(containerStatus).isEqualTo(ContainerStatus.created)
+    }
+
 }

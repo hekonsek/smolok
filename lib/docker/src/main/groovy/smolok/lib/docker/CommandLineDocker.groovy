@@ -54,6 +54,11 @@ class CommandLineDocker implements Docker {
         }
     }
 
+    @Override
+    void stop(String name) {
+        processManager.execute(command("docker stop ${name}"))
+    }
+
     // Helpers
 
     static private String buildRunCommand(Container container, boolean daemon) {

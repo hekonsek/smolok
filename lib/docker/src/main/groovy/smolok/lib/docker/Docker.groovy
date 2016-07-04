@@ -19,4 +19,6 @@ interface Docker {
 
     ContainerStatus status(String name)
 
+    void stop(String name)
+
 }
