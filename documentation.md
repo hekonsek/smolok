@@ -68,6 +68,11 @@ If you would like to connect worker node to a certain Spark cluster, use `--mast
 
     smolok spark start worker --master=spark://mysparkmaster.com:7077
 
+You can also specify to which interface Spark master should bind to (default is `localhost`) by using `--master-interface`
+option:
+
+    smolok spark start master --master-interface=myspark.com
+
 ### Submitting job into Spark cluster
 
 In order to submit jar containing Spark job into the local Spark cluster, put your jar into `/var/smolok/spark/jobs`
