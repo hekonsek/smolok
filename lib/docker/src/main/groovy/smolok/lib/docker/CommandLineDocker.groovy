@@ -17,9 +17,13 @@ class CommandLineDocker implements Docker {
 
     private final ProcessManager processManager
 
+    // Constructor
+
     CommandLineDocker(ProcessManager processManager) {
         this.processManager = processManager
     }
+
+    // Operations implementation
 
     @Override
     List<String> execute(Container container) {
@@ -27,6 +31,7 @@ class CommandLineDocker implements Docker {
     }
 
     ServiceStartupStatus startService(Container container) {
+        Validate.notNull(container, 'Container cannot be null.')
         LOG.debug('About to execute container service: {}', container)
 
         Validate.notBlank(container.name(), 'Container service name must not be empty.')
@@ -56,6 +61,9 @@ class CommandLineDocker implements Docker {
 
     @Override
     void stop(String name) {
+        Validate.notBlank(name, 'Container name cannot be blank.')
+        LOG.debug('About to stop container: {}', name)
+
         processManager.execute(command("docker stop ${name}"))
     }
 

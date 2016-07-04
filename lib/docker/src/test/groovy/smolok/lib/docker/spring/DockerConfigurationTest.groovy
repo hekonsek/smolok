@@ -44,8 +44,9 @@ class DockerConfigurationTest {
 
     @Test
     void shouldNotStartContainerSecondTime() {
-        docker.startService(new Container('ubuntu', containerName, 'host', [:], [:]))
-        def status = docker.startService(new Container('ubuntu', containerName, 'host', [:], [:]))
+        def container = new ContainerBuilder('ubuntu').name(containerName).build()
+        docker.startService(container)
+        def status = docker.startService(container)
         assertThat(status).isEqualTo(alreadyRunning)
     }
 
