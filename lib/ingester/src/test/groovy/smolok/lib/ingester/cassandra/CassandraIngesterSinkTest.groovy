@@ -12,8 +12,6 @@ import smolok.lib.ingester.Ingester
 import smolok.lib.ingester.cassandra.spring.CassandraConfiguration
 import smolok.lib.process.DefaultProcessManager
 
-import java.util.concurrent.TimeUnit
-
 import static org.assertj.core.api.Assertions.assertThat
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,7 +27,7 @@ class CassandraIngesterSinkTest {
     @BeforeClass
     static void beforeClass() {
         new CommandLineDocker(new DefaultProcessManager()).startService(new ContainerBuilder('cassandra:3.7').name('cassandra').net('host').build())
-        TimeUnit.SECONDS.sleep(60)
+        new Cassandra().tryStart()
     }
 
     def ingester = new Ingester('{"foo.bar": {"baz": "randomString(10)", "constant": 1000}}')
