@@ -36,4 +36,17 @@ class Cassandra {
         cluster.connect()
     }
 
+    def <T> T session(CassandraSessionCallback sessionCallback) {
+        def session = session()
+        def result = sessionCallback.onSession(session)
+        session.close()
+        result
+    }
+
+    static interface CassandraSessionCallback {
+
+        def <T> T onSession(Session session)
+
+    }
+
 }
