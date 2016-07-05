@@ -34,11 +34,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-eventbus-client</artifactId>
             <scope>test</scope>
@@ -46,6 +41,18 @@
         <dependency>
             <groupId>smolok</groupId>
             <artifactId>smolok-eventbus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-paas</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Testing dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

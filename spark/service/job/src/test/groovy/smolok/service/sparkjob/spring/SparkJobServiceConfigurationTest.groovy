@@ -1,5 +1,6 @@
 package smolok.service.sparkjob.spring
 
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,6 +13,7 @@ import smolok.eventbus.client.EventBus
 import smolok.lib.spark.EchoSparkSubmit
 import smolok.lib.spark.SparkSubmit
 import smolok.lib.spark.SparkSubmitResult
+import smolok.paas.Paas
 
 import static org.assertj.core.api.Assertions.assertThat
 
@@ -26,6 +28,14 @@ class SparkJobServiceConfigurationTest {
     @Bean
     SparkSubmit sparkSubmit() {
         new EchoSparkSubmit()
+    }
+
+    @Autowired
+    Paas paas
+
+    @Before
+    void before() {
+        paas.reset()
     }
 
     @Test
