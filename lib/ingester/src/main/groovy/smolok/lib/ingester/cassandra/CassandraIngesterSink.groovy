@@ -3,16 +3,24 @@ package smolok.lib.ingester.cassandra
 import smolok.lib.cassandra.Cassandra
 import smolok.lib.ingester.IngesterSink
 
+import static org.slf4j.LoggerFactory.getLogger
+
 class CassandraIngesterSink implements IngesterSink {
 
-    Cassandra cassandra
+    private final static LOG = getLogger(CassandraIngesterSink.class)
+
+    private final Cassandra cassandra
 
     CassandraIngesterSink(Cassandra cassandra) {
         this.cassandra = cassandra
     }
 
+    // Operations
+
     @Override
     void consume(Map<String, Object> record) {
+        LOG.debug('About to consume record: {}', record)
+
         cassandra.session { session ->
             def table = record.keySet().first()
             def namespace = record.keySet().first().split(/\./)[0]
