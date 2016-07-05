@@ -19,10 +19,10 @@
             <artifactId>smolok-lib-common</artifactId>
         </dependency>
 
+        <!-- Non-Smolok dependencies -->
         <dependency>
             <groupId>com.datastax.cassandra</groupId>
             <artifactId>cassandra-driver-core</artifactId>
-            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
