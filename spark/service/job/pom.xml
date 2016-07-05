@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>smolok</groupId>
-        <artifactId>smolok-spark</artifactId>
+        <artifactId>smolok-spark-service</artifactId>
         <version>0.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
