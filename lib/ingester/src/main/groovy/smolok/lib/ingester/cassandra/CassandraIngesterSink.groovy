@@ -1,7 +1,6 @@
 package smolok.lib.ingester.cassandra
 
-import com.datastax.driver.core.Session
-import smolok.lib.ingester.Ingester
+import smolok.lib.cassandra.Cassandra
 import smolok.lib.ingester.IngesterSink
 
 class CassandraIngesterSink implements IngesterSink {

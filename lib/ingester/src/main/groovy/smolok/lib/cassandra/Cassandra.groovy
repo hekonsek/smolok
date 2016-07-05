@@ -1,4 +1,4 @@
-package smolok.lib.ingester.cassandra
+package smolok.lib.cassandra
 
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.Session

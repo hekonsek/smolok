@@ -2,7 +2,7 @@ package smolok.lib.ingester.cassandra.spring
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.lib.ingester.cassandra.Cassandra
+import smolok.lib.cassandra.Cassandra
 import smolok.lib.ingester.cassandra.CassandraIngesterSink
 
 @Configuration
