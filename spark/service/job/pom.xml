@@ -43,11 +43,6 @@
             <artifactId>smolok-eventbus</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-paas</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Testing dependencies -->
         <dependency>
