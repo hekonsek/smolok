@@ -21,6 +21,7 @@ class Cassandra {
         Awaitility.await().atMost(2, MINUTES).until({
             try {
                 start()
+                session{}
                 true
             } catch (Exception e) {
                 false
