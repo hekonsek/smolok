@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -z "${MASTER_INTERFACE}" ]; then
-  MASTER_INTERFACE='localhost'
+if [ -z "${INTERFACE}" ]; then
+  INTERFACE='localhost'
 fi
 
-/opt/spark/sbin/start-master.sh -i ${MASTER_INTERFACE}
+/opt/spark/sbin/start-master.sh -h ${INTERFACE}
 /bin/bash
