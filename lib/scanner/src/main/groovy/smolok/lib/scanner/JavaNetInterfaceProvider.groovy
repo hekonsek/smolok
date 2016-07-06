@@ -28,9 +28,10 @@ class JavaNetInterfaceProvider implements InterfacesProvider {
     List<NetworkInterface> interfaces() {
         LOG.debug("Found network interfaces : " + getNetworkInterfaces().findAll())
 
-        getNetworkInterfaces().findAll { def iface = it.displayName
-            iface.startsWith("wlan") || iface.startsWith("eth") || iface.startsWith("en") || iface.startsWith("docker") || iface.startsWith("wlp")}.
-                collect { java.net.NetworkInterface it ->
+        getNetworkInterfaces().findAll{ java.net.NetworkInterface it ->
+            def ipv4Address = it.interfaceAddresses.find{ it.getAddress().getHostAddress().length() < 15 }
+            ipv4Address != null && ipv4Address.broadcast != null
+        }.collect { java.net.NetworkInterface it ->
                     def ipv4Address = it.interfaceAddresses.find{ it.getAddress().getHostAddress().length() < 15 }
                     LOG.debug("Checking ipv4Address " + ipv4Address)
                     def broadcast = ipv4Address.broadcast.hostName
