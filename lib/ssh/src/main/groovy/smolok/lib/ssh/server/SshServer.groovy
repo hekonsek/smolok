@@ -5,6 +5,7 @@ import org.apache.sshd.server.auth.password.PasswordAuthenticator
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory
 import smolok.lib.ssh.client.SshClient
+import org.apache.sshd.server.SshServer as ApacheSshServer
 
 import java.nio.file.Paths
 
@@ -18,6 +19,10 @@ class SshServer {
     // Collaborators
 
     private final PasswordAuthenticator authenticator
+
+    // Internal collaborators
+
+    private ApacheSshServer internalServer
 
     // Configuration
 
@@ -36,16 +41,20 @@ class SshServer {
     // Life-cycle
 
     SshServer start() {
-        def sshd = org.apache.sshd.server.SshServer.setUpDefaultServer()
-        sshd.setPort(port)
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(createTempFile('smolok', 'host_keys')))
-        sshd.setPasswordAuthenticator(authenticator)
-        sshd.setCommandFactory(new EchoCommandFactory())
-        sshd.setFileSystemFactory(new VirtualFileSystemFactory(root.toPath()))
-        sshd.setSubsystemFactories([new SftpSubsystemFactory()])
-        sshd.start()
+        internalServer = ApacheSshServer.setUpDefaultServer()
+        internalServer.port = port
+        internalServer.keyPairProvider = new SimpleGeneratorHostKeyProvider(createTempFile('smolok', 'host_keys'))
+        internalServer.setPasswordAuthenticator(authenticator)
+        internalServer.setCommandFactory(new EchoCommandFactory())
+        internalServer.setFileSystemFactory(new VirtualFileSystemFactory(root.toPath()))
+        internalServer.setSubsystemFactories([new SftpSubsystemFactory()])
+        internalServer.start()
 
         this
+    }
+
+    void stop() {
+        internalServer.stop()
     }
 
     // Factory methods
