@@ -4,9 +4,9 @@ if [ -z "${SPARK_MASTER}" ]; then
   SPARK_MASTER='spark://localhost:7077'
 fi
 
-if [ -z "${INTERFACE}" ]; then
-  INTERFACE='localhost'
+if [ -z "${HOST}" ]; then
+  HOST='localhost'
 fi
 
-/opt/spark/sbin/start-slave.sh ${SPARK_MASTER} -h ${INTERFACE}
+/opt/spark/sbin/start-slave.sh ${SPARK_MASTER} -h ${HOST}
 /bin/bash

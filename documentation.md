@@ -49,6 +49,9 @@ If there are issues with some components of Smolok, it will be reported to the s
 
 ## Spark support
 
+Smolok comes with a first-class citizen support for Apache Spark. Spark is usually used to analyze data sent through
+Smolok and exchanged between devices.
+
 ### Installing and starting standalone Apache Spark cluster
 
 In order to install and start standalone Apache Spark cluster (dockerized Spark master and worker nodes connected
@@ -68,10 +71,14 @@ If you would like to connect worker node to a certain Spark cluster, use `--mast
 
     smolok spark start worker --master=spark://mysparkmaster.com:7077
 
-You can also specify to which interface Spark master should bind to (default is `localhost`) by using `--master-interface`
-option:
+You can also use `--host` option to specify the hostname on which given Spark node should listen on
+(default is `localhost`):
 
-    smolok spark start master --master-interface=myspark.com
+    smolok spark start master --host=myspark.com
+
+The same option works for worker nodes as well:
+
+        smolok spark start worker --master=spark://mysparkmaster.com:7077 --host=myworkernode.com
 
 ### Submitting job into Spark cluster
 
