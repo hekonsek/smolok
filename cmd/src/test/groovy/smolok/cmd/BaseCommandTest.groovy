@@ -41,7 +41,7 @@ class BaseCommandTest {
     static class TestCommand extends BaseCommand {
 
         TestCommand() {
-            super('this', 'is', 'my', 'command')
+            super(['this', 'is', 'my', 'command'] as String[])
         }
 
         @Override
