@@ -20,6 +20,7 @@
         <module>vertx</module>
         <module>ssh</module>
         <module>ingester</module>
+        <module>scanner</module>
     </modules>
 
 </project>
