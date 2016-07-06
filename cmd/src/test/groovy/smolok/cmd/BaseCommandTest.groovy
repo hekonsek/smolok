@@ -15,6 +15,12 @@ class BaseCommandTest {
     }
 
     @Test
+    void shouldSupportCommandWithArgument() {
+        def supports = command.supports('this', 'is', 'my', 'command', 'argument')
+        assertThat(supports).isTrue()
+    }
+
+    @Test
     void shouldNotSupportPartialCommand() {
         def supports = command.supports('this', 'is', 'my')
         assertThat(supports).isFalse()

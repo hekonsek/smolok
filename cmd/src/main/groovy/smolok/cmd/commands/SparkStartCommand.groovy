@@ -27,7 +27,7 @@ class SparkStartCommand extends BaseCommand {
     // Constructors
 
     SparkStartCommand(Docker docker) {
-        super('spark', 'start')
+        super(['spark', 'start'] as String[])
         this.docker = docker
     }
 
@@ -40,16 +40,16 @@ class SparkStartCommand extends BaseCommand {
 
         def masterUrl = option(inputCommand, 'master')
 
-        def masterInterface = option(inputCommand, 'master-interface', 'localhost')
+        def iface = option(inputCommand, 'interface', 'localhost')
 
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
-            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, masterInterface)
-            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, masterInterface)
+            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, iface)
+            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, iface)
         } else if(inputCommand[2] == 'master') {
-            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, masterInterface)
+            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, iface)
         } else if(inputCommand[2] == 'worker') {
-            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, masterInterface)
+            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, iface)
         } else {
             throw new RuntimeException("Unknown Spark node type: ${inputCommand[2]}")
         }
@@ -80,16 +80,19 @@ class SparkStartCommand extends BaseCommand {
             this.docker = docker
         }
 
-        ServiceStartupStatus startSparkNode(String imageVersion, String nodeType, String masterUrl, String masterInterface) {
+        ServiceStartupStatus startSparkNode(String imageVersion, String nodeType, String masterUrl, String iface) {
             LOG.debug('Starting Spark node: {}', nodeType)
             def containerBuilder = new ContainerBuilder("smolok/spark-standalone-${nodeType}:${imageVersion}").
                     name("spark-${nodeType}").net('host').
                     volumes(['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'])
+            def environment = [:]
             if(masterUrl != null) {
-                containerBuilder.environment([SPARK_MASTER: masterUrl])
-            } else if(masterInterface != null) {
-                containerBuilder.environment([MASTER_INTERFACE: masterInterface])
+                environment['SPARK_MASTER'] = masterUrl
             }
+            if(iface != null) {
+                environment['INTERFACE'] = iface
+            }
+            containerBuilder.environment(environment)
             def container = containerBuilder.build()
             docker.startService(container)
         }

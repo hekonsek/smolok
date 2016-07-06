@@ -4,7 +4,7 @@ abstract class BaseCommand implements Command {
 
     private final String[] commandPrefix
 
-    BaseCommand(String... commandPrefix) {
+    BaseCommand(String[] commandPrefix) {
         this.commandPrefix = commandPrefix
     }
 
