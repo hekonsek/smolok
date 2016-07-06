@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>smolok</groupId>
+            <artifactId>smolok-lib-ssh</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <optional>true</optional>
@@ -25,13 +30,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.truth</groupId>
-            <artifactId>truth</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>smolok</groupId>
-            <artifactId>smolok-lib-ssh</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
