@@ -89,6 +89,7 @@ class SimplePortScanningDeviceDetector implements DeviceDetector {
 
         List<Inet4Address> addressesToScan = newLinkedList()
         networkInterfaces.each {
+            LOG.debug('Populating addresses for interface: {}', it)
             def address = it.broadcast
             int lastDot = address.lastIndexOf('.') + 1;
             def addressBase = address.substring(0, lastDot);
