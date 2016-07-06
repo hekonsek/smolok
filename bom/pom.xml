@@ -102,6 +102,11 @@
             </dependency>
             <dependency>
                 <groupId>smolok</groupId>
+                <artifactId>smolok-lib-ssh</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>smolok</groupId>
                 <artifactId>smolok-lib-vertx</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
