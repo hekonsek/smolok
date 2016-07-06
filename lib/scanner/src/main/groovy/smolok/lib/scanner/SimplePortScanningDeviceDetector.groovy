@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException
 
 import static com.google.common.base.MoreObjects.firstNonNull
 import static com.google.common.collect.Lists.newLinkedList
+import static java.net.NetworkInterface.getNetworkInterfaces
 import static java.util.Collections.emptyList
 import static java.util.concurrent.Executors.newCachedThreadPool
 import static java.util.concurrent.TimeUnit.SECONDS
@@ -46,29 +47,22 @@ class SimplePortScanningDeviceDetector implements DeviceDetector {
 
     // Collaborators
 
-    private final InterfacesProvider interfacesProvider
-
     private final executor = newCachedThreadPool()
 
     // Constructors
 
-    SimplePortScanningDeviceDetector(InterfacesProvider interfacesProvider, String username, String password, int timeout) {
-        this.interfacesProvider = interfacesProvider
+    SimplePortScanningDeviceDetector(String username, String password, int timeout) {
         this.username = firstNonNull(username, 'pi')
         this.password = firstNonNull(password, 'raspberry')
         this.timeout = timeout
     }
 
     SimplePortScanningDeviceDetector(int timeout) {
-        this(new JavaNetInterfaceProvider(), null, null, timeout)
+        this(null, null, timeout)
     }
 
     SimplePortScanningDeviceDetector() {
         this(DEFAULT_PING_TIMEOUT);
-    }
-
-    SimplePortScanningDeviceDetector(InterfacesProvider interfacesProvider) {
-        this(interfacesProvider, null, null, DEFAULT_PING_TIMEOUT)
     }
 
     // Lifecycle
@@ -82,7 +76,13 @@ class SimplePortScanningDeviceDetector implements DeviceDetector {
     List<Device> detectDevices(int port) {
         if(port <= 0)
             port = 22;
-        def networkInterfaces = interfacesProvider.interfaces()
+
+        def networkInterfaces = getNetworkInterfaces().collect {
+            it.interfaceAddresses.find { Inet4Address.class.isAssignableFrom(it.getAddress().class) }
+        }.findAll {
+            it != null && it.broadcast != null
+        }.collect { it.broadcast.hostAddress }
+
         if (networkInterfaces.isEmpty()) {
             return emptyList();
         }
@@ -90,7 +90,7 @@ class SimplePortScanningDeviceDetector implements DeviceDetector {
         List<Inet4Address> addressesToScan = newLinkedList()
         networkInterfaces.each {
             LOG.debug('Populating addresses for interface: {}', it)
-            def address = it.broadcast
+            def address = it
             int lastDot = address.lastIndexOf('.') + 1;
             def addressBase = address.substring(0, lastDot);
             def addressesNumber = address.substring(lastDot).toInteger()
