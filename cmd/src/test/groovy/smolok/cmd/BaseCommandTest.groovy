@@ -6,15 +6,18 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class BaseCommandTest {
 
-    def command = new BaseCommand() {
-        @Override
-        boolean supports(String... command) {
-            return false
-        }
+    def command = new TestCommand()
 
-        @Override
-        void handle(OutputSink outputSink, String... command) {
-        }
+    @Test
+    void shouldSupportCommand() {
+        def supports = command.supports('this', 'is', 'my', 'command')
+        assertThat(supports).isTrue()
+    }
+
+    @Test
+    void shouldNotSupportPartialCommand() {
+        def supports = command.supports('this', 'is', 'my')
+        assertThat(supports).isFalse()
     }
 
     @Test
@@ -27,6 +30,19 @@ class BaseCommandTest {
     void shouldProvideDefaultValueForOption() {
         def fooValue = command.option([''] as String[], 'foo', 'bar')
         assertThat(fooValue).isEqualTo('bar')
+    }
+
+    static class TestCommand extends BaseCommand {
+
+        TestCommand() {
+            super('this', 'is', 'my', 'command')
+        }
+
+        @Override
+        void handle(OutputSink outputSink, String... command) {
+
+        }
+
     }
 
 }

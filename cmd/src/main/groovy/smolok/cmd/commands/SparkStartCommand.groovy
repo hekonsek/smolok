@@ -3,7 +3,6 @@ package smolok.cmd.commands
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory
 import smolok.cmd.BaseCommand
-import smolok.cmd.Command
 import smolok.cmd.OutputSink
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ServiceStartupStatus
@@ -26,16 +25,13 @@ class SparkStartCommand extends BaseCommand {
     private final Docker docker
 
     // Constructors
+
     SparkStartCommand(Docker docker) {
+        super('spark', 'start')
         this.docker = docker
     }
 
     // Command operations
-
-    @Override
-    boolean supports(String... command) {
-        command[0] == 'spark' && command[1] == 'start'
-    }
 
     @Override
     void handle(OutputSink outputSink, String... inputCommand) {
