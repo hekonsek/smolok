@@ -2,6 +2,7 @@ package smolok.cmd.commands
 
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory
+import smolok.cmd.BaseCommand
 import smolok.cmd.Command
 import smolok.cmd.OutputSink
 import smolok.lib.docker.ContainerBuilder
@@ -16,7 +17,7 @@ import static ServiceStartupStatus.started
 /**
  * Starts Spark cluster consisting of single master and slave nodes.
  */
-class SparkStartCommand implements Command {
+class SparkStartCommand extends BaseCommand {
 
     private static final LOG = LoggerFactory.getLogger(SparkStartCommand.class)
 
@@ -41,15 +42,9 @@ class SparkStartCommand implements Command {
         def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
-        def masterUrl = inputCommand.find{ it.startsWith('--master=') }
-        if(masterUrl != null) {
-            masterUrl = masterUrl.replaceFirst(/--master=/, '')
-        }
+        def masterUrl = option(inputCommand, 'master')
 
-        def masterInterface = inputCommand.find{ it.startsWith('--master-interface=') }
-        if(masterInterface == null) {
-            masterInterface = 'localhost'
-        }
+        def masterInterface = option(inputCommand, 'master-interface', 'localhost')
 
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
@@ -66,9 +61,9 @@ class SparkStartCommand implements Command {
 
     // Private helpers
 
-    private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType, String masterUrl, String masterInterface) {
+    private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType, Optional<String> masterUrl, String masterInterface) {
         LOG.debug('Starting Spark node: {}', nodeType)
-        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl, masterInterface)) {
+        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl.orElse(null), masterInterface)) {
             case alreadyRunning:
                 outputSink.out("Spark ${nodeType} is already running. No need to start it.")
                 break
