@@ -33,7 +33,7 @@ class JavaNetInterfaceProvider implements InterfacesProvider {
                     def ipv4Address = ipv4address(it)
                     LOG.debug("Checking ipv4Address " + ipv4Address)
                     def broadcast = ipv4Address.get().broadcast.hostName
-                    new NetworkInterface(ipv4Address: ipv4Address, broadcast: broadcast)
+                    new NetworkInterface(ipv4Address: ipv4Address.get(), broadcast: broadcast)
                 }
     }
 
