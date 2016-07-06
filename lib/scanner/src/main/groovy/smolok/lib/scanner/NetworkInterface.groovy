@@ -21,8 +21,6 @@ import groovy.transform.Immutable
 @Immutable
 class NetworkInterface {
 
-    String ipv4Address
-
     String broadcast
 
 }
