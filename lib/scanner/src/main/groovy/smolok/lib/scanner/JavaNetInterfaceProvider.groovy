@@ -18,7 +18,7 @@ package smolok.lib.scanner
 
 import org.slf4j.LoggerFactory
 
-import static java.net.NetworkInterface.getNetworkInterfaces
+import static java.net.NetworkInterface.networkInterfaces
 
 class JavaNetInterfaceProvider implements InterfacesProvider {
 
@@ -26,17 +26,19 @@ class JavaNetInterfaceProvider implements InterfacesProvider {
 
     @Override
     List<NetworkInterface> interfaces() {
-        LOG.debug("Found network interfaces : " + getNetworkInterfaces().findAll())
-
-        getNetworkInterfaces().findAll{ java.net.NetworkInterface it ->
-            def ipv4Address = it.interfaceAddresses.find{ it.getAddress().getHostAddress().length() < 15 }
-            ipv4Address != null && ipv4Address.broadcast != null
+        getNetworkInterfaces().findAll {
+            def ipv4Address = ipv4address(it)
+            ipv4Address.present && ipv4Address.get().broadcast != null
         }.collect { java.net.NetworkInterface it ->
-                    def ipv4Address = it.interfaceAddresses.find{ it.getAddress().getHostAddress().length() < 15 }
+                    def ipv4Address = ipv4address(it)
                     LOG.debug("Checking ipv4Address " + ipv4Address)
-                    def broadcast = ipv4Address.broadcast.hostName
+                    def broadcast = ipv4Address.get().broadcast.hostName
                     new NetworkInterface(ipv4Address: ipv4Address, broadcast: broadcast)
                 }
+    }
+
+    private Optional<InterfaceAddress> ipv4address(java.net.NetworkInterface iface) {
+        Optional.ofNullable(iface.interfaceAddresses.find{ Inet4Address.class.isAssignableFrom(it.getAddress().class) })
     }
 
 }
