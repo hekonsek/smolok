@@ -1,6 +1,5 @@
 package smolok.lib.scanner
 
-import io.rhiot.scanner.SimplePortScanningDeviceDetector
 import org.junit.Assert
 import org.junit.Test
 import smolok.lib.ssh.server.NoneCredentialsPasswordAuthenticator
