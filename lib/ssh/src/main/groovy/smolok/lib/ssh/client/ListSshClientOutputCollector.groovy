@@ -18,7 +18,7 @@ package smolok.lib.ssh.client;
 
 import com.google.common.collect.ImmutableList
 
-public class ListSshClientOutputCollector implements SshClientOutputCollector {
+class ListSshClientOutputCollector implements SshClientOutputCollector {
 
     private final List<String> lines = new LinkedList<>();
 

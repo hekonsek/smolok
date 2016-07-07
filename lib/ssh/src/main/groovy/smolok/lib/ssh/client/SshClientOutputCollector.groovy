@@ -16,7 +16,7 @@
  */
 package smolok.lib.ssh.client;
 
-public interface SshClientOutputCollector {
+interface SshClientOutputCollector {
 
     void collect(String line);
 

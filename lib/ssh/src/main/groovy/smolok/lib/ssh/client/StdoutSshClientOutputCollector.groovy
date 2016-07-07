@@ -16,7 +16,7 @@
  */
 package smolok.lib.ssh.client;
 
-public class StdoutSshClientOutputCollector implements SshClientOutputCollector {
+class StdoutSshClientOutputCollector implements SshClientOutputCollector {
 
     @Override
     public void collect(String line) {
