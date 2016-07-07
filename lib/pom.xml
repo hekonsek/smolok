@@ -21,6 +21,7 @@
         <module>ssh</module>
         <module>ingester</module>
         <module>scanner</module>
+        <module>drools</module>
     </modules>
 
 </project>
