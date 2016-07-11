@@ -20,9 +20,9 @@
         <dependency>
             <groupId>org.kie.server</groupId>
             <artifactId>kie-server-client</artifactId>
-            <version>6.4.0.Final</version>
         </dependency>
 
+        <!-- Optional Spring runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>

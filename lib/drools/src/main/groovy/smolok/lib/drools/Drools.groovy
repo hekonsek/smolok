@@ -9,6 +9,8 @@ import org.kie.server.api.model.ServiceResponse
 import org.kie.server.client.KieServicesClient
 import org.kie.server.client.RuleServicesClient
 
+import static org.kie.server.api.model.ServiceResponse.ResponseType.FAILURE
+
 class Drools {
 
     private final KieServicesClient kieServicesClient
@@ -17,21 +19,17 @@ class Drools {
         this.kieServicesClient = kieServicesClient
     }
 
-    Drools() {
-        this(DroolsConfigurer.newServicesClient())
-    }
-
     void createContainer(String id) {
         def container = new KieContainerResource()
         container.releaseId = new ReleaseId('gr', 'art', '1.0')
         def createResponse = kieServicesClient.createContainer(id, container)
-        if(createResponse.getType() == ServiceResponse.ResponseType.FAILURE) {
+        if(createResponse.getType() == FAILURE) {
             throw new RuntimeException(createResponse.msg)
         }
     }
 
     void insert(String container, Object fact) {
-        RuleServicesClient rulesClient = kieServicesClient.getServicesClient(RuleServicesClient.class);
+        def rulesClient = kieServicesClient.getServicesClient(RuleServicesClient.class);
         KieCommands commandsFactory = KieServices.Factory.get().getCommands();
         Command<?> insert = commandsFactory.newInsert(fact);
         ServiceResponse<String> executeResponse = rulesClient.executeCommands(container, insert);
@@ -45,8 +43,9 @@ class Drools {
     }
 
     public static void main(String[] args) {
-        new Drools().createContainer('hello')
-        new Drools().insert('hello', "foo")
+        def drools = new Drools(DroolsConfigurer.newServicesClient())
+        drools.createContainer('hello')
+        drools.insert('hello', "foo")
     }
 
 }
