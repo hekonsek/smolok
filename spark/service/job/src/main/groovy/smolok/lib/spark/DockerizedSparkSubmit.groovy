@@ -16,7 +16,7 @@ class DockerizedSparkSubmit implements SparkSubmit {
 
     @Override
     SparkSubmitResult submit(SparkSubmitCommand command) {
-        def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-lib-common')
+        def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-lib-common')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
         def path = command.path

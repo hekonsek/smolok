@@ -28,7 +28,7 @@ class SparkSubmitCommand implements Command {
 
     @Override
     void handle(OutputSink outputSink, String... inputCommand) {
-        def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
+        def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
         def arguments = inputCommand[2..inputCommand.length - 1].toArray(new String[0])

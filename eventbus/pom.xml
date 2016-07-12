@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>smolok</groupId>
+        <groupId>net.smolok</groupId>
         <artifactId>smolok-bom</artifactId>
         <version>0.0.0-SNAPSHOT</version>
         <relativePath>../bom</relativePath>
@@ -19,7 +19,7 @@
     <dependencies>
         <!-- Smolok dependencies -->
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
         </dependency>
 

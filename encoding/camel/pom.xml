@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>smolok</groupId>
+        <groupId>net.smolok</groupId>
         <artifactId>smolok-encoding</artifactId>
         <version>0.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-encoding-spi</artifactId>
         </dependency>
 
@@ -35,7 +35,7 @@
 
         <!-- Testing -->
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
         </dependency>
         <dependency>
@@ -49,7 +49,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-encoding-json</artifactId>
             <scope>test</scope>
         </dependency>

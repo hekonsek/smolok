@@ -35,7 +35,7 @@ class SparkStartCommand extends BaseCommand {
 
     @Override
     void handle(OutputSink outputSink, String... inputCommand) {
-        def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
+        def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
         def masterUrl = option(inputCommand, 'master')

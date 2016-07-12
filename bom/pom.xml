@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>smolok</groupId>
+        <groupId>net.smolok</groupId>
         <artifactId>smolok</artifactId>
         <version>0.0.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
@@ -47,77 +47,77 @@
 
             <!-- Smolok dependencies -->
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-bootstrap</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-cmd</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-docker-spark-base</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-encoding-camel</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-encoding-json</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-encoding-spi</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-eventbus</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-eventbus-client</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-common</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-docker</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-process</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-ssh</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-vertx</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-paas</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
-                <groupId>smolok</groupId>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-status</artifactId>
                 <version>${smolok.version}</version>
             </dependency>

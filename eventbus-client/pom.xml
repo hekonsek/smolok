@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>smolok</groupId>
+        <groupId>net.smolok</groupId>
         <version>0.0.0-SNAPSHOT</version>
         <artifactId>smolok-bom</artifactId>
         <relativePath>../bom</relativePath>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
         </dependency>
         <dependency>
@@ -34,12 +34,12 @@
 
         <!-- Smolok testing dependencies -->
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>smolok</groupId>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-eventbus</artifactId>
             <scope>test</scope>
         </dependency>

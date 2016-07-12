@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>smolok</groupId>
+    <groupId>net.smolok</groupId>
     <artifactId>smolok</artifactId>
     <version>0.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>

@@ -81,7 +81,7 @@ class OpenshiftPaas implements Paas {
             } else {
                 dockerRun(OS_PROVISION_COMMAND)
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
-                def smolokVersion = artifactVersionFromDependenciesProperties('smolok', 'smolok-paas')
+                def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 dockerRun("exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}")
             }
