@@ -67,6 +67,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Enforcing tests ordering -->
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-cmd</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
