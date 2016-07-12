@@ -7,8 +7,9 @@ class DroolsTest {
 
     public static void main(String[] args) {
         def drools = new SpringApplicationBuilder(DroolsConfiguration.class).run(args).getBean(Drools.class)
-        drools.createContainer('hello', 'foo', 'bar', '1.0')
-        drools.insert('hello', "foo")
+        def containerId = System.currentTimeMillis() + ''
+        drools.createContainer(containerId, 'smolok', 'smolok-lib-drools-sample', '0.0.0-SNAPSHOT')
+        drools.insert(containerId, "foo")
     }
 
 }
