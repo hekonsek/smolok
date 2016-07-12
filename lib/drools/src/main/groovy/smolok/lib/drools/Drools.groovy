@@ -2,12 +2,12 @@ package smolok.lib.drools
 
 import org.kie.api.KieServices
 import org.kie.api.command.Command
+import org.kie.api.runtime.ExecutionResults
 import org.kie.server.api.model.KieContainerResource
 import org.kie.server.api.model.ReleaseId
 import org.kie.server.api.model.ServiceResponse
 import org.kie.server.client.KieServicesClient
 import org.kie.server.client.RuleServicesClient
-import smolok.lib.drools.spring.DroolsConfiguration
 
 import static org.kie.server.api.model.ServiceResponse.ResponseType.FAILURE
 
@@ -32,7 +32,7 @@ class Drools {
         def rulesClient = kieServicesClient.getServicesClient(RuleServicesClient.class)
         def commandsFactory = KieServices.Factory.get().getCommands()
         Command<?> insert = commandsFactory.newInsert(fact)
-        ServiceResponse<String> executeResponse = rulesClient.executeCommands(container, insert);
+        ServiceResponse<ExecutionResults> executeResponse = rulesClient.executeCommandsWithResults(container, insert);
         if(executeResponse.getType() == FAILURE) {
             throw new RuntimeException(executeResponse.getMsg())
         }
