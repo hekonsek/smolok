@@ -2,12 +2,12 @@ package smolok.lib.drools
 
 import org.kie.api.KieServices
 import org.kie.api.command.Command
-import org.kie.api.command.KieCommands
 import org.kie.server.api.model.KieContainerResource
 import org.kie.server.api.model.ReleaseId
 import org.kie.server.api.model.ServiceResponse
 import org.kie.server.client.KieServicesClient
 import org.kie.server.client.RuleServicesClient
+import smolok.lib.drools.spring.DroolsConfiguration
 
 import static org.kie.server.api.model.ServiceResponse.ResponseType.FAILURE
 
@@ -19,9 +19,9 @@ class Drools {
         this.kieServicesClient = kieServicesClient
     }
 
-    void createContainer(String id) {
+    void createContainer(String id, String groupId, String artifactId, String version) {
         def container = new KieContainerResource()
-        container.releaseId = new ReleaseId('gr', 'art', '1.0')
+        container.releaseId = new ReleaseId(groupId, artifactId, version)
         def createResponse = kieServicesClient.createContainer(id, container)
         if(createResponse.getType() == FAILURE) {
             throw new RuntimeException(createResponse.msg)
@@ -29,23 +29,13 @@ class Drools {
     }
 
     void insert(String container, Object fact) {
-        def rulesClient = kieServicesClient.getServicesClient(RuleServicesClient.class);
-        KieCommands commandsFactory = KieServices.Factory.get().getCommands();
-        Command<?> insert = commandsFactory.newInsert(fact);
+        def rulesClient = kieServicesClient.getServicesClient(RuleServicesClient.class)
+        def commandsFactory = KieServices.Factory.get().getCommands()
+        Command<?> insert = commandsFactory.newInsert(fact)
         ServiceResponse<String> executeResponse = rulesClient.executeCommands(container, insert);
-        if(executeResponse.getType() == ServiceResponse.ResponseType.SUCCESS) {
-            System.out.println("Commands executed with success! Response: ");
-            System.out.println(executeResponse.getResult());
-        }
-        else {
+        if(executeResponse.getType() == FAILURE) {
             throw new RuntimeException(executeResponse.getMsg())
         }
-    }
-
-    public static void main(String[] args) {
-        def drools = new Drools(DroolsConfigurer.newServicesClient())
-        drools.createContainer('hello')
-        drools.insert('hello', "foo")
     }
 
 }

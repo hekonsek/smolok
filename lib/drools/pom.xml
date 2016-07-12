@@ -13,6 +13,11 @@
     <artifactId>smolok-lib-drools</artifactId>
 
     <dependencies>
+        <!-- Non-Smolok dependencies -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
