@@ -15,6 +15,7 @@
 
     <modules>
         <module>eventbus</module>
+        <module>paas</module>
         <module>status</module>
     </modules>
 
