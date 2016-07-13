@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.smolok</groupId>
         <artifactId>smolok-bom</artifactId>
-        <version>0.0.0-SNAPSHOT</version>
+        <version>0.0.0</version>
         <relativePath>../bom</relativePath>
     </parent>
     <artifactId>smolok-docker</artifactId>
@@ -21,21 +21,23 @@
     </modules>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <configuration>
-                    <images>
-                        <image>
-                            <build>
-                                <dockerFile>Dockerfile</dockerFile>
-                            </build>
-                        </image>
-                    </images>
-                </configuration>
-            </plugin>
-        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <configuration>
+                        <images>
+                            <image>
+                                <build>
+                                    <dockerFile>Dockerfile</dockerFile>
+                                </build>
+                            </image>
+                        </images>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>
