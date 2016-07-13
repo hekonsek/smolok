@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.smolok</groupId>
+        <artifactId>smolok-bom</artifactId>
+        <version>0.0.0-SNAPSHOT</version>
+        <relativePath>../bom</relativePath>
+    </parent>
+    <artifactId>smolok-platform</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>eventbus</module>
+        <module>status</module>
+        <module>cmd</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <configuration>
+                        <images>
+                            <image>
+                                <name>smolok/${image.target}</name>
+                                <build>
+                                    <assembly>
+                                        <basedir>/app</basedir>
+                                        <inline>
+                                            <fileSets>
+                                                <fileSet>
+                                                    <directory>${project.build.directory}</directory>
+                                                    <includes>
+                                                        <include>*-fat.jar</include>
+                                                    </includes>
+                                                    <outputDirectory>/</outputDirectory>
+                                                </fileSet>
+                                            </fileSets>
+                                        </inline>
+                                    </assembly>
+                                </build>
+                            </image>
+                        </images>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

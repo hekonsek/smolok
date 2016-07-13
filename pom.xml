@@ -13,12 +13,10 @@
         <module>docker</module>
         <module>lib</module>
         <module>bootstrap</module>
-        <module>eventbus</module>
+        <module>platform</module>
         <module>eventbus-client</module>
         <module>encoding</module>
         <module>paas</module>
-        <module>status</module>
-        <module>cmd</module>
         <module>service</module>
         <module>spark</module>
     </modules>
@@ -86,20 +84,6 @@
                                         <tag>${project.version}</tag>
                                         <tag>${timestamp}</tag>
                                     </tags>
-                                    <assembly>
-                                        <basedir>/app</basedir>
-                                        <inline>
-                                            <fileSets>
-                                                <fileSet>
-                                                    <directory>${project.build.directory}</directory>
-                                                    <includes>
-                                                        <include>*-fat.jar</include>
-                                                    </includes>
-                                                    <outputDirectory>/</outputDirectory>
-                                                </fileSet>
-                                            </fileSets>
-                                        </inline>
-                                    </assembly>
                                 </build>
                             </image>
                         </images>
