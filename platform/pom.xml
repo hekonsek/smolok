@@ -14,9 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>eventbus</module>
-        <module>status</module>
         <module>cmd</module>
+        <module>ops</module>
     </modules>
 
     <build>
