@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>lib</module>
         <module>cmd</module>
         <module>ops</module>
     </modules>
