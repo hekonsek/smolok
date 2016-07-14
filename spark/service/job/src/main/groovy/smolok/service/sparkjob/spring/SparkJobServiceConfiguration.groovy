@@ -4,8 +4,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import smolok.lib.docker.Docker
-import smolok.service.binding.AuthenticationProvider
-import smolok.service.binding.MockAutenticationProvider
 import smolok.service.binding.ServiceBinding
 import smolok.service.binding.ServiceEventProcessor
 import smolok.service.sparkjob.DefaultSparkJobService

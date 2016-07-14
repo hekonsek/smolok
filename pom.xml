@@ -34,7 +34,6 @@
         <module>platform</module>
         <module>eventbus-client</module>
         <module>encoding</module>
-        <module>service</module>
         <module>spark</module>
     </modules>
 
