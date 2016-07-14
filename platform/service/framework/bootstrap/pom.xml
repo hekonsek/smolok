@@ -5,9 +5,9 @@
 
     <parent>
         <groupId>net.smolok</groupId>
-        <artifactId>smolok-bom</artifactId>
+        <artifactId>smolok-platform-service-framework</artifactId>
         <version>0.0.0-SNAPSHOT</version>
-        <relativePath>../bom</relativePath>
+        <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-bootstrap</artifactId>
     <name>${artifactId}</name>

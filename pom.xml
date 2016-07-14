@@ -30,7 +30,6 @@
     <modules>
         <module>bom</module>
         <module>docker</module>
-        <module>bootstrap</module>
         <module>platform</module>
         <module>eventbus-client</module>
         <module>encoding</module>

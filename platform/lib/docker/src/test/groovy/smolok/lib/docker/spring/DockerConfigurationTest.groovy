@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
-import smolok.lib.docker.Container
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ContainerStatus
 import smolok.lib.docker.Docker
