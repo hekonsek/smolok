@@ -9,7 +9,7 @@
     <version>0.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>smolok</name>
+    <name>${artifactId}</name>
     <description>smolok</description>
     <url>https://github.com/smolok/smolok</url>
 

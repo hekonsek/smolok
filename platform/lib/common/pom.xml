@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-lib-common</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <dependency>

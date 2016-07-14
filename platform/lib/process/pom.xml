@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-lib-process</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <!-- Smolok dependencies -->

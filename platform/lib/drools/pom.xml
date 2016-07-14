@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-lib-drools</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <!-- Non-Smolok dependencies -->

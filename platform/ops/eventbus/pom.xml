@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-eventbus</artifactId>
+    <name>${artifactId}</name>
 
     <properties>
         <image.target>eventbus</image.target>

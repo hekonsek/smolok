@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-service-binding</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <!-- Smolok dependencies -->

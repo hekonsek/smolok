@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-status</artifactId>
+    <name>${artifactId}</name>
 
     <properties>
         <image.target>status</image.target>

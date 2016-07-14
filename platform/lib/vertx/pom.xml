@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-lib-vertx</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <!-- Smolok dependencies -->

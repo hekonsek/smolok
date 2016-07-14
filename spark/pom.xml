@@ -10,6 +10,7 @@
         <relativePath>../bom</relativePath>
     </parent>
     <artifactId>smolok-spark</artifactId>
+    <name>${artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>

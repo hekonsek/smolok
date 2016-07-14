@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>smolok-spark-archetypes-rdd</artifactId>
+    <name>${artifactId}</name>
 
     <properties>
         <maven-shade-plugin.version>2.3</maven-shade-plugin.version>

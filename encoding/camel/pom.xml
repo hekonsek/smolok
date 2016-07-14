@@ -10,6 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-encoding-camel</artifactId>
+    <name>${artifactId}</name>
 
     <dependencies>
         <dependency>
