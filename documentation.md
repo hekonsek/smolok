@@ -89,6 +89,16 @@ directory and execute the following command:
 
     smolok spark submit --master=spark://localhost:7077 my-job.jar
 
+For example to submit Smolok [RDD job archetype](https://github.com/smolok/smolok/tree/master/spark/archetypes/rdd)
+to the local Spark cluster, copy `smolok-spark-archetypes-rdd-0.0.0-SNAPSHOT.jar` file into `/var/smolok/spark/jobs`
+directory and execute the following command:
+
+    smolok spark submit --master=spark://localhost:7077 smolok-spark-archetypes-rdd-0.0.0-SNAPSHOT.jar
+
+You can also specify Spark `deploy-mode` when submitting the task:
+
+    smolok spark submit --deploy-mode=cluster --master=spark://localhost:7077 smolok-spark-archetypes-rdd-0.0.0-SNAPSHOT.jar
+
 ## Raspberry Pi support
 
 Smolok comes with a dedicated support for Raspberry Pi 3 which makes it easier to connect IoT gateways based on this
