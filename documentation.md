@@ -62,6 +62,8 @@ together) on your machine, execute the following command:
 This command ensures that cluster is installed and properly started - components of the cluster that are already started
 or installed, will be skipped from the process.
 
+#### Installing and starting master/worker node only
+
 You can also choose to start master or worker node only:
 
     smolok spark start master
