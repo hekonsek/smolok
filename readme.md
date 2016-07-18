@@ -9,7 +9,7 @@ messaging infrastructure and so forth.
 
 ## Getting started
 
-[![Version](https://img.shields.io/badge/smolok-0.0.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/smolok-0.0.0-blue.svg)](https://github.com/smolok/smolok)
 
 In order to get started with Smolok you have to install Docker client on your computer. This is the only real
 requirement to start playing with Smolok and IoT.
