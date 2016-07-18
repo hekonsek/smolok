@@ -23,6 +23,7 @@
         <drools.version>6.4.0.Final</drools.version>
         <jsch.version>0.1.53</jsch.version>
         <smolok.version>0.0.0-SNAPSHOT</smolok.version>
+        <spark.version>2.0.0-preview</spark.version>
         <sshd.version>1.2.0</sshd.version>
         <vertx.version>3.2.0</vertx.version>
     </properties>
@@ -157,6 +158,16 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.11</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-streaming_2.11</artifactId>
+                <version>${spark.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.sshd</groupId>
