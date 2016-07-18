@@ -2,7 +2,6 @@ package smolok.spark.archetype.streaming
 
 import com.google.common.io.Files
 import org.junit.Test
-import smolok.lib.spark.streaming.MySparkJob
 
 class MySparkJobTest implements Serializable {
 

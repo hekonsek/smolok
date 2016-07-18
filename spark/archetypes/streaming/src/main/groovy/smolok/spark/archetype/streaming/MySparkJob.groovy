@@ -1,4 +1,4 @@
-package smolok.lib.spark.streaming
+package smolok.spark.archetype.streaming
 
 import org.apache.spark.api.java.function.Function
 
