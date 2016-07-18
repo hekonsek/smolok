@@ -15,7 +15,7 @@ requirement to start playing with Smolok and IoT.
 Smolok Cloud can be installed using Smolok command line tool. You can install command line too by executing the
 following command:
 
-    $ bash <(curl -sL https://goo.gl/vEyGhF)
+    $ bash <(curl -sL https://goo.gl/cLVVCF)
 
 Now when we have Smolok command line tool installed on our local machine, we can install and start Smolok Cloud:
 
