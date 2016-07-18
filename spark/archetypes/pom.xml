@@ -15,6 +15,7 @@
 
     <modules>
         <module>rdd</module>
+        <module>streaming</module>
     </modules>
 
 </project>
