@@ -1,4 +1,4 @@
-FROM smolok/spark-base:0.0.0-SNAPSHOT
+FROM smolok/spark-base:${project.version}
 
 MAINTAINER Henryk Konsek <hekonsek@gmail.com>
 

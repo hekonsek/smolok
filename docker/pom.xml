@@ -22,6 +22,12 @@
     </modules>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/docker</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -31,7 +37,7 @@
                         <images>
                             <image>
                                 <build>
-                                    <dockerFile>Dockerfile</dockerFile>
+                                    <dockerFile>${project.basedir}/target/classes/Dockerfile</dockerFile>
                                 </build>
                             </image>
                         </images>
