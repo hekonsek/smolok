@@ -37,7 +37,7 @@
                         <images>
                             <image>
                                 <build>
-                                    <dockerFile>${project.basedir}/target/classes/Dockerfile</dockerFile>
+                                    <dockerFile>Dockerfile</dockerFile>
                                 </build>
                             </image>
                         </images>
