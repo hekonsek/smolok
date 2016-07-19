@@ -32,8 +32,9 @@ class SparkSubmitCommand implements Command {
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
         def arguments = inputCommand[2..inputCommand.length - 1].toArray(new String[0])
-        if(!arguments.last().startsWith('/')) {
-            arguments[arguments.length - 1] = "/var/smolok/spark/jobs/${arguments.last()}".toString()
+        def indexOfJobArtifact = arguments.findIndexOf { !it.startsWith('-') }
+        if(!arguments[indexOfJobArtifact].startsWith('/')) {
+            arguments[indexOfJobArtifact] = "/var/smolok/spark/jobs/${arguments[indexOfJobArtifact]}".toString()
         }
         docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', ['/var/smolok/spark': '/var/smolok/spark'], [:], arguments)).each {
             outputSink.out(it)
