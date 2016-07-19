@@ -19,6 +19,14 @@ Smolok command line tool, execute the following command:
 
 The requirement for using Smolok command line tool is to have Docker client available in the path.
 
+### Enforcing Smolok version
+
+You can tell Spark command line tool to use given Smolok version by setting `SMOLOK_VERSION` environment variable.
+This option is particularly useful for development purposes. For example in order to tell Smolok to use version
+`1.2.3-SNAPSHOT` execute the following command:
+
+    SMOLOK_VERSION=1.2.3-SNAPSHOT smolok cloud start
+
 ## Smolok Cloud
 
 Smolok Cloud is an actual backend platform used by Smolok to enable inter-devices communication. It is a set of backend
