@@ -10,7 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-docker-fatjar</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
 
     <properties>
         <image.target>fatjar</image.target>

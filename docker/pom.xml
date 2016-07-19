@@ -10,7 +10,7 @@
         <relativePath>../bom</relativePath>
     </parent>
     <artifactId>smolok-docker</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>
