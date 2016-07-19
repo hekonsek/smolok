@@ -35,7 +35,7 @@ class SparkSubmitCommand implements Command {
         if(!arguments.last().startsWith('/')) {
             arguments[arguments.length - 1] = "/var/smolok/spark/jobs/${arguments.last()}".toString()
         }
-        docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', ['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'], [:], arguments)).each {
+        docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', ['/var/smolok/spark': '/var/smolok/spark'], [:], arguments)).each {
             outputSink.out(it)
         }
     }
