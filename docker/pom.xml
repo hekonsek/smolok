@@ -18,6 +18,7 @@
         <module>spark-base</module>
         <module>spark-standalone-master</module>
         <module>spark-standalone-worker</module>
+        <module>spark-submit</module>
     </modules>
 
     <build>
