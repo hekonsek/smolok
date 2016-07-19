@@ -84,7 +84,7 @@ class SparkStartCommand extends BaseCommand {
             LOG.debug('Starting Spark node: {}', nodeType)
             def containerBuilder = new ContainerBuilder("smolok/spark-standalone-${nodeType}:${imageVersion}").
                     name("spark-${nodeType}").net('host').
-                    volumes(['/var/smolok/spark/jobs': '/var/smolok/spark/jobs'])
+                    volumes(['/var/smolok/spark': '/var/smolok/spark'])
             def environment = [:]
             if(masterUrl != null) {
                 environment['SPARK_MASTER'] = masterUrl
