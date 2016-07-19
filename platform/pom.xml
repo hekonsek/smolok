@@ -31,6 +31,7 @@
                             <image>
                                 <name>smolok/${image.target}</name>
                                 <build>
+                                    <from>smolok/fatjar:${project.version}</from>
                                     <assembly>
                                         <basedir>/app</basedir>
                                         <inline>
