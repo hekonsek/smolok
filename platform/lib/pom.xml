@@ -23,6 +23,7 @@
         <module>scanner</module>
         <module>drools-sample</module>
         <module>drools</module>
+        <module>spark</module>
     </modules>
 
 </project>
