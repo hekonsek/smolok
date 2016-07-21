@@ -14,4 +14,10 @@ class MySparkJobTest {
         assertThat(context).isNotNull()
     }
 
+    @Test
+    void shouldExecuteJob() {
+        enableTesting()
+        MySparkJob.main()
+    }
+
 }

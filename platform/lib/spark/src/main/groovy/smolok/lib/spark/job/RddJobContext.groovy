@@ -15,7 +15,11 @@ class RddJobContext {
 
     private final String[] arguments
 
+    // Member collaborators
+
     private final JavaSparkContext sparkContext
+
+    // Constructors
 
     RddJobContext(String... arguments) {
         this.arguments = arguments
@@ -31,7 +35,7 @@ class RddJobContext {
         sparkContext = new JavaSparkContext(sparkConfig)
     }
 
-    // Sources
+    // Data sources
 
     JavaRDD source(String uri) {
         if(uri.startsWith('parallelize')) {
@@ -44,7 +48,7 @@ class RddJobContext {
             if(testing) {
                 def testFile = createTempFile('smolok', 'test-file')
                 def data = getClass().getResourceAsStream(path)
-                Validate.notNull(data, 'No data file found in a classpath.')
+                Validate.notNull(data, "No data file found in a classpath: ${path}")
                 def out = new FileOutputStream(testFile)
                 IOUtils.copy(data, out)
                 out.close()
