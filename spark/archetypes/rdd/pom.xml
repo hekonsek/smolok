@@ -20,6 +20,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-lib-spark</artifactId>
+        </dependency>
+
         <!-- Spark dependencies -->
         <dependency>
             <groupId>org.apache.spark</groupId>

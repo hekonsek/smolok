@@ -4,10 +4,10 @@ import org.junit.BeforeClass
 import org.junit.Test
 
 import static org.assertj.core.api.Assertions.assertThat
-import static smolok.lib.spark.job.RddSparkJob.OPTION_TESTING
-import static smolok.lib.spark.job.RddSparkJob.enableTesting
+import static RddJobContext.OPTION_TESTING
+import static RddJobContext.enableTesting
 
-class RddSparkJobTest {
+class RddJobContextTest {
 
     @BeforeClass
     static void beforeClass() {
@@ -18,13 +18,13 @@ class RddSparkJobTest {
 
     @Test
     void shouldEnableTesting() {
-        def testing = new RddSparkJob().option(OPTION_TESTING)
+        def testing = new RddJobContext().option(OPTION_TESTING)
         assertThat(testing).is('true')
     }
 
     @Test
     void shouldLoadTestFile() {
-        def job = new RddSparkJob()
+        def job = new RddJobContext()
         def count = job.source('text-file:/var/data/foo.txt').count()
         assertThat(count).isEqualTo(3)
     }

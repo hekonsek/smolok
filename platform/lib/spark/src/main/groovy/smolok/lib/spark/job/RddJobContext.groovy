@@ -9,7 +9,7 @@ import org.apache.spark.api.java.JavaSparkContext
 import static java.io.File.createTempFile
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 
-class RddSparkJob {
+class RddJobContext {
 
     public static final String OPTION_TESTING = 'testing'
 
@@ -17,7 +17,7 @@ class RddSparkJob {
 
     private final JavaSparkContext sparkContext
 
-    RddSparkJob(String... arguments) {
+    RddJobContext(String... arguments) {
         this.arguments = arguments
 
         def master = option('spark.master', testing ? 'local[*]' : 'spark://localhost:7077')
@@ -36,7 +36,7 @@ class RddSparkJob {
     JavaRDD source(String uri) {
         if(uri.startsWith('parallelize')) {
             def collection = uri.substring('parallelize'.length() + 1)
-            def shell = new GroovyShell(RddSparkJob.class.classLoader)
+            def shell = new GroovyShell(RddJobContext.class.classLoader)
             shell.setVariable('sc', sparkContext)
             shell.evaluate("sc.parallelize([${collection}])")
         } else if(uri.startsWith('text-file')) {
