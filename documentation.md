@@ -81,6 +81,8 @@ If you would like to connect worker node to a certain Spark cluster, use `--mast
 
     smolok spark start worker --master=spark://mysparkmaster.com:7077
 
+#### Setting up Spark node network
+
 You can also use `--host` option to specify the hostname on which given Spark node should listen on
 (default is `localhost`):
 
@@ -88,7 +90,16 @@ You can also use `--host` option to specify the hostname on which given Spark no
 
 The same option works for worker nodes as well:
 
-        smolok spark start worker --master=spark://mysparkmaster.com:7077 --host=myworkernode.com
+    smolok spark start worker --master=spark://mysparkmaster.com:7077 --host=myworkernode.com
+
+If you would like to specify master IP and local IP of the master node, use `--masterIP` and `--localIP` options
+respectively:
+
+    smolok spark start master --host=myspark.com --masterIP=192.168.1.1 --localIP=192.168.1.1
+
+You can also use `localIP` option for worker node:
+
+    smolok spark start worker --host=myspark.com --localIP=192.168.1.2
 
 ### Submitting job into Spark cluster
 
