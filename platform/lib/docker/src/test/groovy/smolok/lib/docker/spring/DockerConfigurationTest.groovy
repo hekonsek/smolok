@@ -52,7 +52,7 @@ class DockerConfigurationTest {
     @Test
     void shouldStopContainer() {
         // Given
-        docker.startService(new ContainerBuilder('ubuntu').name(containerName).net('host').arguments('top').build())
+        docker.startService(new ContainerBuilder('ubuntu').name(containerName).arguments('top').build())
 
         // When
         docker.stop(containerName)
@@ -60,6 +60,30 @@ class DockerConfigurationTest {
         // Then
         def containerStatus = docker.status(containerName)
         assertThat(containerStatus).isEqualTo(ContainerStatus.created)
+    }
+
+    @Test
+    void shouldInspectContainer() {
+        // Given
+        docker.startService(new ContainerBuilder('ubuntu').name(containerName).arguments('top').build())
+
+        // When
+        def inspectResults = docker.inspect(containerName)
+
+        // Then
+        assertThat(inspectResults.environment()).isNotNull()
+    }
+
+    @Test
+    void shouldSetEnvironmentOnContainer() {
+        // Given
+        docker.startService(new ContainerBuilder('ubuntu').name(containerName).environment([foo: 'bar']).arguments('top').build())
+
+        // When
+        def inspectResults = docker.inspect(containerName)
+
+        // Then
+        assertThat(inspectResults.environment()).containsEntry('foo', 'bar')
     }
 
 }

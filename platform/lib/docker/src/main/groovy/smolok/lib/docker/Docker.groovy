@@ -21,4 +21,6 @@ interface Docker {
 
     void stop(String name)
 
+    InspectResults inspect(String containerId)
+
 }

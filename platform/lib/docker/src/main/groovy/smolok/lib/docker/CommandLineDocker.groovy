@@ -1,5 +1,6 @@
 package smolok.lib.docker
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 
@@ -14,6 +15,8 @@ import static smolok.lib.process.ExecutorBasedProcessManager.command
 class CommandLineDocker implements Docker {
 
     private final static LOG = getLogger(CommandLineDocker.class)
+
+    private final static MAPPER = new ObjectMapper()
 
     private final ProcessManager processManager
 
@@ -65,6 +68,13 @@ class CommandLineDocker implements Docker {
         LOG.debug('About to stop container: {}', name)
 
         processManager.execute(command("docker stop ${name}"))
+    }
+
+    @Override
+    InspectResults inspect(String containerId) {
+        def commandOutput = processManager.execute(command("docker inspect ${containerId}")).join(' ')
+        def trimmedCommandOutput = commandOutput.substring(1, commandOutput.length() - 1)
+        new InspectResults(MAPPER.readValue(trimmedCommandOutput, Map.class))
     }
 
     // Helpers

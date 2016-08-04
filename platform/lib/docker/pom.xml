@@ -13,26 +13,33 @@
     <name>${artifactId}</name>
 
     <dependencies>
-        <!-- Smolok dependencies -->
+        <!-- Internal dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-process</artifactId>
         </dependency>
 
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Optional Spring runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Smolok testing dependencies -->
+        <!-- Internal testing dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Testing dependencies -->
+        <!-- External dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
