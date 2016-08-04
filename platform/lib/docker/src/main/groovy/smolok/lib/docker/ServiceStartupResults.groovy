@@ -1,5 +1,5 @@
 package smolok.lib.docker
 
-enum ServiceStartupStatus {
+enum ServiceStartupResults {
     created, started, alreadyRunning
 }

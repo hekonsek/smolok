@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory
 import smolok.cmd.BaseCommand
 import smolok.cmd.OutputSink
 import smolok.lib.docker.ContainerBuilder
-import smolok.lib.docker.ServiceStartupStatus
+import smolok.lib.docker.ServiceStartupResults
 import smolok.lib.docker.Docker
 
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
-import static ServiceStartupStatus.alreadyRunning
-import static ServiceStartupStatus.created
-import static ServiceStartupStatus.started
+import static ServiceStartupResults.alreadyRunning
+import static ServiceStartupResults.created
+import static ServiceStartupResults.started
 
 /**
  * Starts Spark cluster consisting of single master and slave nodes.
@@ -84,7 +84,7 @@ class SparkStartCommand extends BaseCommand {
             this.docker = docker
         }
 
-        ServiceStartupStatus startSparkNode(String imageVersion, String nodeType, Optional<String> masterUrl, String host, String masterIP, String localIP) {
+        ServiceStartupResults startSparkNode(String imageVersion, String nodeType, Optional<String> masterUrl, String host, String masterIP, String localIP) {
             LOG.debug('Starting Spark node: {}', nodeType)
             def containerBuilder = new ContainerBuilder("smolok/spark-standalone-${nodeType}:${imageVersion}").
                     name("spark-${nodeType}").net('host').

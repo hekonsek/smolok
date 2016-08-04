@@ -15,7 +15,17 @@ interface Docker {
      */
     List<String> execute(Container container)
 
-    ServiceStartupStatus startService(Container container)
+    /**
+     * Assures that service container is created and started. Service is long running singleton container identifiable by name.
+     *
+     * If the operation is executed and the service is already running, then nothing happens. If the service has been
+     * already created, then it is started. If service container doesn't exist, it is created and then started.
+     *
+     * @param container container definition
+     * @throws IllegalArgumentException if container definition doesn't contain 'name', which is required by service
+     * @return results of the service startup
+     */
+    ServiceStartupResults startService(Container container)
 
     ContainerStatus status(String name)
 

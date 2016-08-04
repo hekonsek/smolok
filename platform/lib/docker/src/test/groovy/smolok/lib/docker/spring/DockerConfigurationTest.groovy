@@ -13,8 +13,8 @@ import smolok.lib.docker.Docker
 import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.docker.Container.container
-import static smolok.lib.docker.ServiceStartupStatus.alreadyRunning
-import static smolok.lib.docker.ServiceStartupStatus.created
+import static smolok.lib.docker.ServiceStartupResults.alreadyRunning
+import static smolok.lib.docker.ServiceStartupResults.created
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Smolok.class)

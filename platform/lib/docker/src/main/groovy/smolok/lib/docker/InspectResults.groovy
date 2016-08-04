@@ -1,14 +1,17 @@
 package smolok.lib.docker
 
-import com.google.common.collect.ImmutableMap
+import groovy.transform.ToString
 
+@ToString
 class InspectResults {
 
     private final Map<String, Object> results
 
     InspectResults(Map<String, Object> results) {
-        this.results = new HashMap<>(results)
+        this.results = new HashMap<>(results).asImmutable()
     }
+
+    // Results accessors
 
     Map<String, Object> results() {
         new HashMap<>(results)
