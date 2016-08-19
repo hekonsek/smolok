@@ -16,7 +16,7 @@
         <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
         <mainClass>smolok.spark.archetype.streaming.MySparkJob</mainClass>
 
-        <fasterxml.jackson.version>2.5.3</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.6.7</fasterxml.jackson.version>
     </properties>
 
     <dependencies>

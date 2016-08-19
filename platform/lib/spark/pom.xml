@@ -13,7 +13,7 @@
     <name>${artifactId}</name>
 
     <properties>
-        <fasterxml.jackson.version>2.5.3</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.6.7</fasterxml.jackson.version>
     </properties>
 
     <dependencies>
