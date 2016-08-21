@@ -8,13 +8,15 @@ import static java.lang.String.format
 import static org.apache.commons.lang3.SystemUtils.USER_HOME
 import static org.slf4j.LoggerFactory.getLogger
 
+import java.util.Properties as JProperties
+
 final class Mavens {
 
     private static final DEPENDENCIES_PROPERTIES_PATH = "META-INF/maven/dependencies.properties"
 
     // Static collaborators
 
-    private static final VERSIONS = new Properties()
+    private static final VERSIONS = new JProperties()
 
     private static final LOG = getLogger(Mavens.class)
 
