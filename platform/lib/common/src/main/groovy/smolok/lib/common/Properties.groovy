@@ -1,6 +1,7 @@
-package smolok.lib.utils
+package smolok.lib.common
 
 import groovy.transform.CompileStatic
+
 import java.lang.ThreadLocal as JThreadLocal
 import java.util.Properties as JProperties
 
@@ -90,7 +91,7 @@ final class Properties {
 
     static Optional<Long> longProperty(String key) {
         def property = stringProperty(key)
-        property == null ? Optional.empty() : Optional.of(property.toLong())
+        property == null ? Optional.<Long>empty() : Optional.of(property.toLong())
     }
 
     static void setLongProperty(String key, long value) {

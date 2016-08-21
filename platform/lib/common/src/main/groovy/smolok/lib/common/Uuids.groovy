@@ -1,4 +1,4 @@
-package smolok.lib.utils
+package smolok.lib.common
 
 import static java.util.UUID.randomUUID;
 

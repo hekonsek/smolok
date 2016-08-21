@@ -1,11 +1,11 @@
-package smolok.lib.utils
+package smolok.lib.common
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import static smolok.lib.utils.Properties.intProperty
-import static java.net.NetworkInterface.getNetworkInterfaces;
+import static java.net.NetworkInterface.getNetworkInterfaces
 import static java.util.Optional.empty
-import static org.slf4j.LoggerFactory.getLogger;
+import static org.slf4j.LoggerFactory.getLogger
+import static Properties.intProperty
 
 /**
  * IP networking related utilities.

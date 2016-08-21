@@ -24,7 +24,6 @@
         <module>drools-sample</module>
         <module>drools</module>
         <module>spark</module>
-        <module>utils</module>
     </modules>
 
 </project>

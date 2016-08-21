@@ -1,19 +1,10 @@
-package smolok.lib.utils
+package smolok.lib.common
 
 import org.junit.Test
 
-import static com.google.common.truth.Truth.assertThat
-import static smolok.lib.utils.Properties.booleanProperty
-import static smolok.lib.utils.Properties.restoreSystemProperties
-import static smolok.lib.utils.Properties.setBooleanProperty
-import static smolok.lib.utils.Properties.stringProperty
-import static smolok.lib.utils.Properties.setThreadIntProperty
-import static smolok.lib.utils.Properties.setThreadStringProperty
-import static smolok.lib.utils.Properties.intProperty
-
+import static org.assertj.core.api.Assertions.assertThat
 import static org.slf4j.LoggerFactory.getLogger
-import static smolok.lib.utils.Uuids.uuid;
-
+import static smolok.lib.common.Uuids.uuid
 
 class PropertiesTest {
 	
@@ -28,7 +19,7 @@ class PropertiesTest {
         System.setProperty(property, value)
 
         // When
-        def valueRead = stringProperty(property)
+        def valueRead = Properties.stringProperty(property)
 
         // Then
         assertThat(valueRead).isEqualTo(value)
@@ -36,49 +27,49 @@ class PropertiesTest {
 
     @Test
     void shouldReadPropertyFromFile() {
-        assertThat(stringProperty('fromApp')).isEqualTo('I am from app!')
+        assertThat(Properties.stringProperty('fromApp')).isEqualTo('I am from app!')
     }
 
     @Test
     void shouldRestoreProperties() {
         // Given
         def property = 'property'
-        setBooleanProperty(property, true)
+        Properties.setBooleanProperty(property, true)
 
         // When
-        restoreSystemProperties()
+        Properties.restoreSystemProperties()
 
         // Then
-        assertThat(booleanProperty(property, false)).isFalse()
+        assertThat(Properties.booleanProperty(property, false)).isFalse()
     }
 	
 	@Test
 	void shouldReadThreadProperty() {
 		// Given
-		def property = uuid()
-		def value = uuid()
+		def property = Uuids.uuid()
+		def value = Uuids.uuid()
 
 		LOG.debug(property + " " +value)
 
-		setThreadStringProperty(property, value)
+		Properties.setThreadStringProperty(property, value)
 
 		// When
-		def valueRead = stringProperty(property)
+		def valueRead = Properties.stringProperty(property)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
 
-		property = uuid()
-		value = uuid()
+		property = Uuids.uuid()
+		value = Uuids.uuid()
 
-		valueRead = setThreadStringProperty(property,value)
+		valueRead = Properties.setThreadStringProperty(property,value)
 		LOG.debug(property + " " +value)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
 
 		def thread = Thread.start {
-			def anotherThreadRead = stringProperty(property)
+			def anotherThreadRead = Properties.stringProperty(property)
 			LOG.debug(property + " " +anotherThreadRead)
 
 			assertThat(null).isEqualTo(anotherThreadRead);
@@ -91,30 +82,30 @@ class PropertiesTest {
 	@Test
 	void shouldReadIntThreadProperty() {
 		// Given
-		def property = uuid()
+		def property = Uuids.uuid()
 		def value = 123
 
 		LOG.debug(property + " " +value)
 
-		setThreadIntProperty(property, value)
+		Properties.setThreadIntProperty(property, value)
 
 		// When
-		def valueRead = intProperty(property)
+		def valueRead = Properties.intProperty(property)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
 
-		property = uuid()
+		property = Uuids.uuid()
 		value = 345
 
-		valueRead = setThreadIntProperty(property,value)
+		valueRead = Properties.setThreadIntProperty(property,value)
 		LOG.debug( property + " " +value)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
 
 		def thread = Thread.start {
-			def anotherThreadRead = intProperty(property)
+			def anotherThreadRead = Properties.intProperty(property)
 			LOG.debug(property + " " +anotherThreadRead)
 
 			assertThat(null).isEqualTo(anotherThreadRead);
