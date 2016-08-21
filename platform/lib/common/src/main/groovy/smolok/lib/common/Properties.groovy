@@ -13,7 +13,13 @@ final class Properties {
     // Members
 
     private static final JProperties applicationPropertiesFile = new JProperties()
-	private static final JThreadLocal threadLocalProperties = new ThreadLocal<JProperties>()
+
+	private static final JThreadLocal<JProperties> threadLocalProperties = new ThreadLocal<JProperties>() {
+        @Override
+        protected JProperties initialValue() {
+            new JProperties()
+        }
+    }
 	
     private static JProperties propertiesSnapshot
     static {
@@ -127,21 +133,13 @@ final class Properties {
 
 	// ThreadLocal properties
 	
-	static JProperties getThreadLocalJProperties() {
-		def prop = threadLocalProperties.get();
-		
-		prop == null ? threadLocalProperties.set(new JProperties()) : void ;
-		
-		threadLocalProperties.get();
-	}
-	
 	static String setThreadStringProperty(String key, String value) {
-		getThreadLocalJProperties().put(key,value);
+		threadLocalProperties.get().put(key,value);
 		threadStringProperty(key)
 	}
 	
 	static String threadStringProperty(String key) {
-		getThreadLocalJProperties().get(key);
+        threadLocalProperties.get().get(key);
 	}
 	
 	static int setThreadIntProperty(String key, int value) {

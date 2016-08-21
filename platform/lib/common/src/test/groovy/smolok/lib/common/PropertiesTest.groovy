@@ -9,7 +9,8 @@ import static smolok.lib.common.Uuids.uuid
 class PropertiesTest {
 	
 	private static final def LOG = getLogger(Networks.class)
-	
+
+	// Tests
 
     @Test
     void shouldReadSystemProperty() {
@@ -58,24 +59,6 @@ class PropertiesTest {
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
-
-		property = Uuids.uuid()
-		value = Uuids.uuid()
-
-		valueRead = Properties.setThreadStringProperty(property,value)
-		LOG.debug(property + " " +value)
-
-		// Then
-		assertThat(valueRead).isEqualTo(value)
-
-		def thread = Thread.start {
-			def anotherThreadRead = Properties.stringProperty(property)
-			LOG.debug(property + " " +anotherThreadRead)
-
-			assertThat(null).isEqualTo(anotherThreadRead);
-
-		}
-		Thread.sleep(2000)
 	}
 
 
@@ -103,15 +86,6 @@ class PropertiesTest {
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
-
-		def thread = Thread.start {
-			def anotherThreadRead = Properties.intProperty(property)
-			LOG.debug(property + " " +anotherThreadRead)
-
-			assertThat(null).isEqualTo(anotherThreadRead);
-			
-		}
-		Thread.sleep(2000)
 	}
 
 }
