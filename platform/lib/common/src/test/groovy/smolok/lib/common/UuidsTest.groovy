@@ -1,11 +1,13 @@
 package smolok.lib.common
 
-import org.junit.Assert
 import org.junit.Test
 
+import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Uuids.uuid
 
-class UuidsTest extends Assert {
+class UuidsTest {
+
+    // Tests
 
     @Test
     void shouldGenerateUuidString() {
@@ -16,7 +18,7 @@ class UuidsTest extends Assert {
         def parsedUuid = UUID.fromString(uuidString)
 
         // Then
-        assertEquals(uuidString, parsedUuid.toString())
+        assertThat(uuidString).isEqualTo(parsedUuid.toString())
     }
 
 }
