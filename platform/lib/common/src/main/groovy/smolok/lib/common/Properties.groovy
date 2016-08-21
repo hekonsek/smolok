@@ -106,9 +106,9 @@ final class Properties {
 
     // Boolean properties
 
-    static Boolean booleanProperty(String key) {
+    static Optional<Boolean> booleanProperty(String key) {
         def property = stringProperty(key)
-        property == null ? null : property.toBoolean()
+        property == null ? Optional.<Boolean>empty() : Optional.of(property.toBoolean())
     }
 
     static boolean booleanProperty(String key, boolean defaultValue) {
@@ -116,8 +116,12 @@ final class Properties {
         property == null ? defaultValue : property.toBoolean()
     }
 
-    static void setBooleanProperty(String key, boolean value) {
+    static void setSystemBooleanProperty(String key, boolean value) {
         System.setProperty(key, "${value}")
+    }
+
+    static boolean setThreadBooleanProperty(String key, boolean value) {
+        setThreadStringProperty(key,"${value}").toBoolean();
     }
 	
 	// Import/export
@@ -145,11 +149,7 @@ final class Properties {
 	static int setThreadIntProperty(String key, int value) {
 		setThreadStringProperty(key,"${value}").toInteger();
 	}
-		
-	static boolean setThreadBooleanProperty(String key, boolean value) {
-		setThreadStringProperty(key,"${value}").toBoolean();
-	}
-	
+
 	static long setThreadLongProperty(String key, long value) {
 		setThreadStringProperty(key,"${value}").toLong();
 	}

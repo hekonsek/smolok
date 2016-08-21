@@ -4,6 +4,10 @@ import org.junit.Test
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Properties.booleanProperty
+import static smolok.lib.common.Properties.setSystemBooleanProperty
+import static smolok.lib.common.Properties.setThreadBooleanProperty
+import static smolok.lib.common.Properties.stringProperty
 import static smolok.lib.common.Uuids.uuid
 
 class PropertiesTest {
@@ -12,30 +16,56 @@ class PropertiesTest {
 
 	// Tests
 
-    @Test
-    void shouldReadSystemProperty() {
-        // Given
-        def property = uuid()
-        def value = uuid()
-        System.setProperty(property, value)
+	@Test
+	void shouldReturnSystemBooleanProperty() {
+		// Given
+		def property = uuid()
+		def value = true
+		setSystemBooleanProperty(property, value)
 
-        // When
-        def valueRead = Properties.stringProperty(property)
+		// When
+		def valueRead = booleanProperty(property)
 
-        // Then
-        assertThat(valueRead).isEqualTo(value)
-    }
+		// Then
+		assertThat(valueRead).contains(value)
+	}
+
+	@Test
+	void shouldReturnThreadBooleanProperty() {
+		// Given
+		def property = uuid()
+		def value = true
+		setThreadBooleanProperty(property, value)
+
+		// When
+		def valueRead = booleanProperty(property)
+
+		// Then
+		assertThat(valueRead).contains(value)
+	}
+
+	@Test
+	void shouldReturnEmptyBooleanProperty() {
+		// Given
+		def property = uuid()
+
+		// When
+		def valueRead = booleanProperty(property)
+
+		// Then
+		assertThat(valueRead).isEmpty()
+	}
 
     @Test
     void shouldReadPropertyFromFile() {
-        assertThat(Properties.stringProperty('fromApp')).isEqualTo('I am from app!')
+        assertThat(stringProperty('fromApp')).isEqualTo('I am from app!')
     }
 
     @Test
     void shouldRestoreProperties() {
         // Given
         def property = 'property'
-        Properties.setBooleanProperty(property, true)
+        setSystemBooleanProperty(property, true)
 
         // When
         Properties.restoreSystemProperties()
@@ -55,7 +85,7 @@ class PropertiesTest {
 		Properties.setThreadStringProperty(property, value)
 
 		// When
-		def valueRead = Properties.stringProperty(property)
+		def valueRead = stringProperty(property)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)
