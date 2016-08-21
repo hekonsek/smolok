@@ -13,6 +13,12 @@ final class Properties {
     // Members
 
     private static final JProperties applicationPropertiesFile = new JProperties()
+    static {
+        def propertiesStream = Properties.class.getResourceAsStream('/application.properties')
+        if(propertiesStream != null) {
+            applicationPropertiesFile.load(propertiesStream)
+        }
+    }
 
 	private static final JThreadLocal<JProperties> threadLocalProperties = new ThreadLocal<JProperties>() {
         @Override
@@ -24,13 +30,6 @@ final class Properties {
     private static JProperties propertiesSnapshot
     static {
         saveSystemProperties()
-    }
-
-    static {
-        def propertiesStream = Properties.class.getResourceAsStream('/application.properties')
-        if(propertiesStream != null) {
-            applicationPropertiesFile.load(propertiesStream)
-        }
     }
 
     // Constructors
