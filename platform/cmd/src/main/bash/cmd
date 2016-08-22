@@ -16,7 +16,7 @@
 #!/usr/bin/env bash
 
 if [ -z "${SMOLOK_VERSION}" ]; then
-  SMOLOK_VERSION='0.0.1'
+  SMOLOK_VERSION='0.0.2'
 fi
 
 docker run --privileged -v /dev:/host/dev -v ${HOME}/.smolok/downloads:/root/.smolok/downloads \
