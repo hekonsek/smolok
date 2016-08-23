@@ -37,7 +37,7 @@
                         <images>
                             <image>
                                 <build>
-                                    <dockerFile>Dockerfile</dockerFile>
+                                    <dockerFile>${build.directory}/classes/Dockerfile</dockerFile>
                                 </build>
                             </image>
                         </images>
