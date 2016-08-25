@@ -155,4 +155,13 @@ class CmdConfigurationTest {
         assertThat(outputSink.output().first()).isEqualTo('Unknown Spark node type: foo')
     }
 
+    @Test
+    void shouldHandleEmptyCommand() {
+        // When
+        commandHandler.handleCommand()
+
+        // Then
+        assertThat(outputSink.output().first()).matches('Cannot execute empty command.')
+    }
+
 }

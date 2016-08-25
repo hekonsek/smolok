@@ -25,6 +25,11 @@ class CommandDispatcher {
     // Operations
 
     void handleCommand(String... command) {
+        if (command.length == 0) {
+            outputSink.out('Cannot execute empty command.')
+            return
+        }
+
         def flatCommand = command.join(' ')
         LOG.debug('About to execute command {}', flatCommand)
         try {
