@@ -19,6 +19,6 @@ if [ -z "${SMOLOK_VERSION}" ]; then
   SMOLOK_VERSION='0.0.2'
 fi
 
-docker run --privileged -v /dev:/host/dev -v ${HOME}/.smolok/downloads:/root/.smolok/downloads \
+docker run --privileged --rm -v /dev:/host/dev -v ${HOME}/.smolok/downloads:/root/.smolok/downloads \
   -v /var/smolok/spark/jobs:/var/smolok/spark/jobs \
   -v /var/run/docker.sock:/run/docker.sock -it smolok/cmd:${SMOLOK_VERSION} "$@"
