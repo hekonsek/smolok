@@ -14,7 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger
  * Boostraps Spring Boot application capable of connecting to the Smolok event bus. The application loads all Smolok
  * modules available in a classpath.
  */
-@SpringBootApplication(scanBasePackages = 'smolok')
+@SpringBootApplication(scanBasePackages = ['smolok', 'net.smolok'])
 class Smolok {
 
     protected final log = getLogger(getClass())
