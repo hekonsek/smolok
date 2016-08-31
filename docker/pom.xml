@@ -19,6 +19,7 @@
         <module>spark-standalone-master</module>
         <module>spark-standalone-worker</module>
         <module>spark-submit</module>
+        <module>zeppelin</module>
     </modules>
 
     <build>
