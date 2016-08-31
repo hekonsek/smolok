@@ -7,6 +7,10 @@ The idea behind Smolok is to deliver a scalable backend PaaS platform providing 
 devices. List of such services includes device management, telemetry reading/writing, big data analytics and IoT-scale
 messaging infrastructure and so forth.
 
+Smolok is based on the top of the leading open source projects including [Eclipse IoT stack](http://iot.eclipse.org)
+(particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project),
+[Red Hat software stack](https://www.redhat.com/en) and [Apache Spark](http://spark.apache.org).
+
 ## Getting started
 
 [![Version](https://img.shields.io/badge/smolok-0.0.0-blue.svg)](https://github.com/smolok/smolok)
