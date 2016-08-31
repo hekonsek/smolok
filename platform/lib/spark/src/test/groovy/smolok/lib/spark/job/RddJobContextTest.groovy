@@ -6,6 +6,7 @@ import org.junit.Test
 import static org.assertj.core.api.Assertions.assertThat
 import static RddJobContext.OPTION_TESTING
 import static RddJobContext.enableTesting
+import static smolok.lib.common.Properties.setStringProperty
 
 class RddJobContextTest {
 
@@ -33,6 +34,19 @@ class RddJobContextTest {
     void shouldCreateNewList() {
         def job = new RddJobContext()
         def count = job.source('list:1,2,3,4,5').count()
+        assertThat(count).isEqualTo(5)
+    }
+
+    @Test
+    void shouldLoadSourceFromSystemProperty() {
+        // Given
+        setStringProperty('mysource', 'list:1,2,3,4,5')
+        def job = new RddJobContext()
+
+        // When
+        def count = job.source('mysource').count()
+
+        // Then
         assertThat(count).isEqualTo(5)
     }
 

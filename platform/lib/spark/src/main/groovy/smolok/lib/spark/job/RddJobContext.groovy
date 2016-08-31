@@ -9,6 +9,7 @@ import org.apache.spark.api.java.JavaSparkContext
 
 import static java.io.File.createTempFile
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import static smolok.lib.common.Properties.stringProperty
 
 /**
  * Context class around RDD job execution providing helper methods to simplify working with RDD data sets.
@@ -71,15 +72,18 @@ class RddJobContext {
             } else {
                 sparkContext.textFile(path)
             }
+        } else {
+            def sourceFromOption = option(uri)
+            sourceFromOption.isPresent() ? source(sourceFromOption.get()) : null
         }
     }
 
     // Options operations
 
     Optional<String> option(String name) {
-        def fromSystem = System.getProperty(name)
-        if(fromSystem != null) {
-            return Optional.of(fromSystem)
+        def fromResolver = stringProperty(name)
+        if(fromResolver != null) {
+            return Optional.of(fromResolver)
         }
         Optional.ofNullable(arguments.find{ name.startsWith(/--${name}=/) })
     }
