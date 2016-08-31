@@ -5,6 +5,7 @@ import org.junit.Test
 import static org.assertj.core.api.Assertions.assertThat
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Properties.booleanProperty
+import static smolok.lib.common.Properties.intProperty
 import static smolok.lib.common.Properties.setSystemBooleanProperty
 import static smolok.lib.common.Properties.setThreadBooleanProperty
 import static smolok.lib.common.Properties.stringProperty
@@ -95,7 +96,7 @@ class PropertiesTest {
 	@Test
 	void shouldReadIntThreadProperty() {
 		// Given
-		def property = Uuids.uuid()
+		def property = uuid()
 		def value = 123
 
 		LOG.debug(property + " " +value)
@@ -103,16 +104,7 @@ class PropertiesTest {
 		Properties.setThreadIntProperty(property, value)
 
 		// When
-		def valueRead = Properties.intProperty(property)
-
-		// Then
-		assertThat(valueRead).isEqualTo(value)
-
-		property = Uuids.uuid()
-		value = 345
-
-		valueRead = Properties.setThreadIntProperty(property,value)
-		LOG.debug( property + " " +value)
+		def valueRead = intProperty(property)
 
 		// Then
 		assertThat(valueRead).isEqualTo(value)

@@ -12,7 +12,7 @@ import smolok.eventbus.client.EventBus
 import static java.io.File.createTempFile
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.eventbus.client.Header.arguments
-import static smolok.lib.common.Properties.setStringProperty
+import static smolok.lib.common.Properties.setSystemStringProperty
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner.class)
@@ -26,7 +26,7 @@ class FileSystemConfigurationServiceTest {
 
     @BeforeClass
     static void beforeClass() {
-        setStringProperty('configuration.file', createTempFile('smolok', 'test').absolutePath)
+        setSystemStringProperty('configuration.file', createTempFile('smolok', 'test').absolutePath)
     }
 
     @Test

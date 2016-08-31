@@ -45,7 +45,7 @@ final class Properties {
 
     static String stringProperty(String key, String defaultValue) {
 		// lookup the thread local
-		def property = threadStringProperty(key)
+		def property = threadLocalProperties.get().getProperty(key)
 		if (property != null) {
 			return property
 		}
@@ -67,8 +67,12 @@ final class Properties {
         stringProperty(key, null)
     }
 
-    static String setStringProperty(String key, String value) {
+    static String setSystemStringProperty(String key, String value) {
         System.setProperty(key, value)
+    }
+
+    static void setThreadStringProperty(String key, String value) {
+        threadLocalProperties.get().put(key,value);
     }
 
     // Integer properties
@@ -119,8 +123,8 @@ final class Properties {
         System.setProperty(key, "${value}")
     }
 
-    static boolean setThreadBooleanProperty(String key, boolean value) {
-        setThreadStringProperty(key,"${value}").toBoolean();
+    static void setThreadBooleanProperty(String key, boolean value) {
+        setThreadStringProperty(key,"${value}")
     }
 	
 	// Import/export
@@ -136,21 +140,12 @@ final class Properties {
 
 	// ThreadLocal properties
 	
-	static String setThreadStringProperty(String key, String value) {
-		threadLocalProperties.get().put(key,value);
-		threadStringProperty(key)
-	}
-	
-	static String threadStringProperty(String key) {
-        threadLocalProperties.get().get(key);
-	}
-	
-	static int setThreadIntProperty(String key, int value) {
-		setThreadStringProperty(key,"${value}").toInteger();
+	static void setThreadIntProperty(String key, int value) {
+		setThreadStringProperty(key,"${value}")
 	}
 
-	static long setThreadLongProperty(String key, long value) {
-		setThreadStringProperty(key,"${value}").toLong();
+	static void setThreadLongProperty(String key, long value) {
+		setThreadStringProperty(key,"${value}")
 	}
 
 }

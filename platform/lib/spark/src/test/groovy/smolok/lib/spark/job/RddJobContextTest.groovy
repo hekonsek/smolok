@@ -6,7 +6,7 @@ import org.junit.Test
 import static org.assertj.core.api.Assertions.assertThat
 import static RddJobContext.OPTION_TESTING
 import static RddJobContext.enableTesting
-import static smolok.lib.common.Properties.setStringProperty
+import static smolok.lib.common.Properties.setSystemStringProperty
 
 class RddJobContextTest {
 
@@ -40,7 +40,7 @@ class RddJobContextTest {
     @Test
     void shouldLoadSourceFromSystemProperty() {
         // Given
-        setStringProperty('mysource', 'list:1,2,3,4,5')
+        setSystemStringProperty('mysource', 'list:1,2,3,4,5')
         def job = new RddJobContext()
 
         // When
