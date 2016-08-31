@@ -29,4 +29,11 @@ class RddJobContextTest {
         assertThat(count).isEqualTo(3)
     }
 
+    @Test
+    void shouldCreateNewList() {
+        def job = new RddJobContext()
+        def count = job.source('list:1,2,3,4,5').count()
+        assertThat(count).isEqualTo(5)
+    }
+
 }

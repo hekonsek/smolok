@@ -3,15 +3,21 @@ package smolok.lib.spark.job
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.Validate
 import org.apache.spark.SparkConf
+import org.apache.spark.SparkContext
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.api.java.JavaSparkContext
 
 import static java.io.File.createTempFile
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 
+/**
+ * Context class around RDD job execution providing helper methods to simplify working with RDD data sets.
+ */
 class RddJobContext {
 
     public static final String OPTION_TESTING = 'testing'
+
+    // Members
 
     private final String[] arguments
 
@@ -20,6 +26,15 @@ class RddJobContext {
     private final JavaSparkContext sparkContext
 
     // Constructors
+
+    RddJobContext(JavaSparkContext sparkContext, String... arguments) {
+        this.arguments = arguments
+        this.sparkContext = sparkContext
+    }
+
+    RddJobContext(SparkContext sparkContext, String... arguments) {
+        this(new JavaSparkContext(sparkContext), arguments)
+    }
 
     RddJobContext(String... arguments) {
         this.arguments = arguments
@@ -38,8 +53,8 @@ class RddJobContext {
     // Data sources
 
     JavaRDD source(String uri) {
-        if(uri.startsWith('parallelize')) {
-            def collection = uri.substring('parallelize'.length() + 1)
+        if(uri.startsWith('list')) {
+            def collection = uri.substring('list'.length() + 1)
             def shell = new GroovyShell(RddJobContext.class.classLoader)
             shell.setVariable('sc', sparkContext)
             shell.evaluate("sc.parallelize([${collection}])")
