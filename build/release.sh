@@ -15,4 +15,9 @@
 
 #!/usr/bin/env bash
 
-mvn -Darguments='-Dmaven.test.skip=true' release:prepare release:perform
+mvn -Darguments='-Dmaven.test.skip=true' release:prepare release:perform &&
+
+OLD_VERSION=0.0.2 &&
+NEW_VERSION=0.0.3 &&
+
+sed -i -e "s/${OLD_VERSION}/${NEW_VERSION}/g" readme.md
