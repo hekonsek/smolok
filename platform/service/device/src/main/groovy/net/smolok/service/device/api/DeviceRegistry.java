@@ -25,9 +25,9 @@ public interface DeviceRegistry {
 
     Device get(String deviceId);
 
-    List<Device> list();
+    List<Device> findByQuery(QueryBuilder queryBuilder);
 
-    List<String> disconnected();
+    long countByQuery(QueryBuilder queryBuilder);
 
     /**
      * Registers a given device. Registering device with the same `deviceId` twice should update the device, instead
