@@ -16,6 +16,7 @@
     <modules>
         <module>framework</module>
         <module>configuration</module>
+        <module>device</module>
     </modules>
 
 </project>
