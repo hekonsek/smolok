@@ -14,6 +14,8 @@ public class Device {
 
     private Date lastUpdate;
 
+    private boolean disconnected;
+
     private Map<String, Object> properties = new HashMap<>();
 
     // Constructors
@@ -21,10 +23,11 @@ public class Device {
     public Device() {
     }
 
-    public Device(String deviceId, Date registrationDate, Date lastUpdate, Map<String, Object> properties) {
+    public Device(String deviceId, Date registrationDate, Date lastUpdate, boolean disconnected, Map<String, Object> properties) {
         this.deviceId = deviceId;
         this.registrationDate = registrationDate;
         this.lastUpdate = lastUpdate;
+        this.disconnected = disconnected;
         this.properties = properties;
     }
 
@@ -35,6 +38,7 @@ public class Device {
     }
 
     // Getters and setters
+
 
     public String getDeviceId() {
         return deviceId;
@@ -58,6 +62,14 @@ public class Device {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
+    }
+
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
     }
 
     public Map<String, Object> getProperties() {
