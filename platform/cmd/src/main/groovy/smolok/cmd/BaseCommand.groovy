@@ -1,5 +1,7 @@
 package smolok.cmd
 
+import org.apache.commons.lang3.ArrayUtils
+
 abstract class BaseCommand implements Command {
 
     private final String[] commandPrefix
@@ -38,6 +40,10 @@ abstract class BaseCommand implements Command {
 
     protected String[] removeOption(String[] commands, String optionName) {
         commands.toList().findAll { !it.startsWith("--${optionName}") } as String[]
+    }
+
+    protected String[] putOptionAt(String[] commands, int index, String option) {
+        ArrayUtils.add(commands, index, option)
     }
 
 }

@@ -27,6 +27,14 @@ class SparkSubmitCommand extends BaseCommand {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
+        if (!hasOption(inputCommand, 'master')) {
+            if (option(inputCommand, 'deploy-mode', '').equalsIgnoreCase('cluster')) {
+                inputCommand = putOptionAt(inputCommand, 2, '--master=spark://localhost:6066')
+            } else {
+                inputCommand = putOptionAt(inputCommand, 2, '--master=spark://localhost:7077')
+            }
+        }
+
         def keepLogs = 'keep-logs'
         def cleanUp = !hasOption(inputCommand, keepLogs)
         inputCommand = removeOption(inputCommand, keepLogs)

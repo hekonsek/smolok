@@ -119,6 +119,8 @@ You can also specify Spark `deploy-mode` when submitting the task:
 
     smolok spark submit --deploy-mode=cluster --master=spark://localhost:7077 smolok-spark-archetypes-rdd-0.0.3-SNAPSHOT.jar
 
+Default value for `--master` in `client` deploy mode is `spark://localhost:7077` and for `cluster` deploy mode it is `spark://localhost:6066`
+
 After job submission docker container is automatically removed, but this can be disabled using `--keep-logs` option.
 
 ## Raspberry Pi support

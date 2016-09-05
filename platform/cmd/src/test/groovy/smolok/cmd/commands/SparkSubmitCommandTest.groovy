@@ -27,7 +27,7 @@ class SparkSubmitCommandTest {
 
         // Then
         def container = containerCaptor.value
-        assertThat(container.arguments()).isEqualTo(['/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+        assertThat(container.arguments()).isEqualTo(['--master=spark://localhost:7077', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
     }
 
     @Test
@@ -72,5 +72,47 @@ class SparkSubmitCommandTest {
         def container = containerCaptor.value
         assertThat(container.cleanUp()).isEqualTo(false)
         assertThat(container.arguments()).isEqualTo(['--master=foo', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+    }
+
+    @Test
+    void shouldUseDefaultMasterUrl() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommand(docker)
+
+        // When
+        cmd.handle(null, command('spark submit artifact argument1 argument2'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.arguments()).isEqualTo(['--master=spark://localhost:7077', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+    }
+
+    @Test
+    void shouldUseDefaultMasterUrlForClientMode() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommand(docker)
+
+        // When
+        cmd.handle(null, command('spark submit --deploy-mode=client artifact argument1 argument2'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.arguments()).isEqualTo(['--master=spark://localhost:7077', '--deploy-mode=client', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+    }
+
+    @Test
+    void shouldUseDefaultMasterUrlForClusterMode() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommand(docker)
+
+        // When
+        cmd.handle(null, command('spark submit --deploy-mode=cluster artifact argument1 argument2'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.arguments()).isEqualTo(['--master=spark://localhost:6066', '--deploy-mode=cluster', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
     }
 }
