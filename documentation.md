@@ -119,6 +119,8 @@ You can also specify Spark `deploy-mode` when submitting the task:
 
     smolok spark submit --deploy-mode=cluster --master=spark://localhost:7077 smolok-spark-archetypes-rdd-0.0.3-SNAPSHOT.jar
 
+After job submission docker container is automatically removed, but this can be disabled using `--keep-logs` option.
+
 ## Raspberry Pi support
 
 Smolok comes with a dedicated support for Raspberry Pi 3 which makes it easier to connect IoT gateways based on this
