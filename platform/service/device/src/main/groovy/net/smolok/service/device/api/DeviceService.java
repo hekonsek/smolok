@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Backend service used to manage devices connecting to the system.
  */
-public interface DeviceRegistry {
+public interface DeviceService {
 
     Device get(String deviceId);
 
