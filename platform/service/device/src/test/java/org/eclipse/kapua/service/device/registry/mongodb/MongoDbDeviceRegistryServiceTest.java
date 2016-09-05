@@ -2,6 +2,7 @@ package org.eclipse.kapua.service.device.registry.mongodb;
 
 
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -15,6 +16,7 @@ import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
 import org.eclipse.kapua.service.device.registry.KapuaException;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import smolok.lib.common.Networks;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,16 +25,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MongoDbDeviceRegistryServiceTest {
 
-    DeviceRegistryService registryService = new MongoDbDeviceRegistryService(new Mongo(), "xxx", "yyy");
+    static int mongoPort = Networks.findAvailableTcpPort();
+
+    DeviceRegistryService registryService = new MongoDbDeviceRegistryService(new MongoClient("localhost", mongoPort), "xxx", "yyy");
 
     @BeforeClass
     public static void beforeClass() throws IOException {
         MongodStarter starter = MongodStarter.getDefaultInstance();
 
-        int port = 27017;
         IMongodConfig mongodConfig = new MongodConfigBuilder()
                 .version(Version.Main.PRODUCTION)
-                .net(new Net(port, Network.localhostIsIPv6()))
+                .net(new Net(mongoPort, Network.localhostIsIPv6()))
                 .build();
 
         MongodExecutable mongodExecutable = null;

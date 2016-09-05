@@ -16,6 +16,8 @@
  */
 package net.smolok.service.device.api;
 
+import smolok.service.binding.Tenant;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ import java.util.List;
  */
 public interface DeviceService {
 
-    Device get(String deviceId);
+    Device get(@Tenant String tenant, String deviceId);
 
     List<Device> findByQuery(QueryBuilder queryBuilder);
 

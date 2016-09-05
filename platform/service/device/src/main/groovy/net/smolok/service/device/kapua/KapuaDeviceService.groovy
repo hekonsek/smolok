@@ -4,6 +4,8 @@ import net.smolok.service.device.api.Device
 import net.smolok.service.device.api.DeviceService
 import net.smolok.service.device.api.QueryBuilder
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
+import org.eclipse.kapua.service.device.registry.KapuaEid
+import smolok.service.binding.Tenant
 
 class KapuaDeviceService implements DeviceService {
 
@@ -14,8 +16,11 @@ class KapuaDeviceService implements DeviceService {
     }
 
     @Override
-    Device get(String deviceId) {
-        kapuaService.query(null)
+    Device get(@Tenant String tenant, String deviceId) {
+        def kapuaDevice = kapuaService.findByClientId(new KapuaEid(tenant.toBigDecimal().toBigInteger()), deviceId)
+        def device = new Device()
+        device.deviceId = kapuaDevice.clientId
+        device
     }
 
     @Override
