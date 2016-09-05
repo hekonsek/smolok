@@ -125,10 +125,14 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-binding</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-status</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
-
             <!-- Non-Smolok dependencies -->
             <dependency>
                 <groupId>com.datastax.cassandra</groupId>
