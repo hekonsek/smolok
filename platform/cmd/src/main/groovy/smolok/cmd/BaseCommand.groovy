@@ -32,4 +32,12 @@ abstract class BaseCommand implements Command {
         Optional.ofNullable(option(command, optionName, null))
     }
 
+    protected Boolean hasOption(String[] command, String optionName) {
+        command.find{ it.startsWith("--${optionName}") } ? true : false
+    }
+
+    protected String[] removeOption(String[] commands, String optionName) {
+        commands.toList().findAll { !it.startsWith("--${optionName}") } as String[]
+    }
+
 }

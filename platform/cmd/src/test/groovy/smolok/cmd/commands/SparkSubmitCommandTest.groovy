@@ -44,4 +44,33 @@ class SparkSubmitCommandTest {
         assertThat(container.arguments()).isEqualTo(['--master=foo', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
     }
 
+    @Test
+    void shouldCleanUpContainerByDefault() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommand(docker)
+
+        // When
+        cmd.handle(null, command('spark submit --master=foo artifact argument1 argument2'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.cleanUp()).isEqualTo(true)
+        assertThat(container.arguments()).isEqualTo(['--master=foo', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+    }
+
+    @Test
+    void shouldHandleKeepLogsOption() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommand(docker)
+
+        // When
+        cmd.handle(null, command('spark submit --master=foo --keep-logs artifact argument1 argument2'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.cleanUp()).isEqualTo(false)
+        assertThat(container.arguments()).isEqualTo(['--master=foo', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
+    }
 }

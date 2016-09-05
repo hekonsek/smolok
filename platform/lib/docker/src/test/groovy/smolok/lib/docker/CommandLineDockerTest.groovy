@@ -66,4 +66,28 @@ class CommandLineDockerTest {
         assertThat(command).contains(' -e foo=bar ')
     }
 
+    @Test
+    void shouldNotRunCleanUpWhenRunAsDaemon() {
+        // Given
+        def container = new ContainerBuilder('image').cleanUp(true).build()
+
+        // When
+        def command = CommandLineDocker.buildRunCommand(container, true)
+
+        // Then
+        assertThat(command).contains(' -d ')
+        assertThat(command).doesNotContain(' --rm ')
+    }
+
+    @Test
+    void shouldRunCleanUp() {
+        // Given
+        def container = new ContainerBuilder('image').cleanUp(true).build()
+
+        // When
+        def command = CommandLineDocker.buildRunCommand(container, false)
+
+        // Then
+        assertThat(command).contains(' --rm ')
+    }
 }

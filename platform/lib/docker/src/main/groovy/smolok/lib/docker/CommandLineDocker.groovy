@@ -83,6 +83,10 @@ class CommandLineDocker implements Docker {
         def command = 'docker run'
         if(daemon) {
             command += ' -d'
+        } else {
+            if (container.cleanUp()) {
+                command += ' --rm'
+            }
         }
         if(container.name() != null) {
             command += " --name=${container.name()}"

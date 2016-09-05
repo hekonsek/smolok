@@ -8,6 +8,8 @@ class ContainerBuilder {
 
     private String net
 
+    private Boolean cleanUp
+
     private Map<String, String> volumes = [:]
 
     private Map<String, String> environment = [:]
@@ -19,7 +21,7 @@ class ContainerBuilder {
     }
 
     Container build() {
-        new Container(image, name, net, volumes, environment, arguments)
+        new Container(image, name, net, cleanUp, volumes, environment, arguments)
     }
 
     ContainerBuilder name(String name) {
@@ -29,6 +31,11 @@ class ContainerBuilder {
 
     ContainerBuilder net(String net) {
         this.net = net
+        this
+    }
+
+    ContainerBuilder cleanUp(Boolean cleanUp) {
+        this.cleanUp = cleanUp
         this
     }
 
