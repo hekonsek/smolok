@@ -7,6 +7,8 @@ import com.mongodb.*;
 import org.bson.types.ObjectId;
 import org.eclipse.kapua.service.device.registry.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
@@ -30,12 +32,9 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     private final String collection;
 
-    private final long disconnectionPeriod;
-
     // Constructors
 
-    public MongoDbDeviceRegistryService(Mongo mongo, String db, String collection, long disconnectionPeriod) {
-        this.disconnectionPeriod = disconnectionPeriod;
+    public MongoDbDeviceRegistryService(Mongo mongo, String db, String collection) {
         this.mongo = mongo;
         this.db = db;
         this.collection = collection;
@@ -45,10 +44,17 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device create(DeviceCreator deviceCreator) throws KapuaException {
+        long id = new Random().nextLong();
+
         DBObject device = new BasicDBObject();
-        device.put("kapuaId", new Random().nextLong());
+        device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
+        device.put("id", id);
         devicesCollection().save(device);
-        return null;
+
+        DeviceImpl result = new DeviceImpl();
+        result.setScopeId(deviceCreator.getScopeId().getId());
+        result.setId(BigInteger.valueOf(id));
+        return result;
     }
 
     @Override
@@ -62,7 +68,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device find(KapuaId scopeId, KapuaId entityId) throws KapuaException {
-        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("kapuaId", entityId.getId())));
+        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "id", entityId.getId().longValue())));
         if(devices.hasNext()) {
             return dbObjectToDevice(devices.next());
         }
@@ -107,7 +113,6 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     private Device dbObjectToDevice(DBObject dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
         deviceMap.putAll(dbObject.toMap());
-        deviceMap.put("id", dbObject.get("_id").toString());
         return objectMapper.convertValue(deviceMap, DeviceImpl.class);
     }
 

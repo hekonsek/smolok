@@ -1,16 +1,19 @@
 package org.eclipse.kapua.service.device.registry.mongodb;
 
-import org.eclipse.kapua.service.device.registry.*;
+import org.eclipse.kapua.service.device.registry.DeviceCreator;
+import org.eclipse.kapua.service.device.registry.DeviceCredentialsMode;
+import org.eclipse.kapua.service.device.registry.KapuaEid;
+import org.eclipse.kapua.service.device.registry.KapuaId;
 
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.Properties;
 
-public class DeviceImpl implements Device {
+public class DeviceCreatorImpl implements DeviceCreator {
 
-    private BigInteger scopeId;
+    private final BigInteger scopeId;
 
-    private BigInteger kapuaId;
+    public DeviceCreatorImpl(BigInteger scopeId) {
+        this.scopeId = scopeId;
+    }
 
     @Override
     public String getClientId() {
@@ -23,42 +26,12 @@ public class DeviceImpl implements Device {
     }
 
     @Override
-    public DeviceStatus getStatus() {
-        return null;
-    }
-
-    @Override
-    public void setStatus(DeviceStatus status) {
-
-    }
-
-    @Override
     public String getDisplayName() {
         return null;
     }
 
     @Override
-    public void setDisplayName(String diplayName) {
-
-    }
-
-    @Override
-    public Date getLastEventOn() {
-        return null;
-    }
-
-    @Override
-    public void setLastEventOn(Date lastEventOn) {
-
-    }
-
-    @Override
-    public DeviceEventType getLastEventType() {
-        return null;
-    }
-
-    @Override
-    public void setLastEventType(DeviceEventType lastEventType) {
+    public void setDisplayName(String displayName) {
 
     }
 
@@ -278,61 +251,8 @@ public class DeviceImpl implements Device {
     }
 
     @Override
-    public void setPreferredUserId(KapuaId deviceUserId) {
+    public void setPreferredUserId(KapuaId preferredUserId) {
 
-    }
-
-    @Override
-    public Date getModifiedOn() {
-        return null;
-    }
-
-    @Override
-    public KapuaId getModifiedBy() {
-        return null;
-    }
-
-    @Override
-    public int getOptlock() {
-        return 0;
-    }
-
-    @Override
-    public void setOptlock(int optlock) {
-
-    }
-
-    @Override
-    public Properties getEntityAttributes() throws KapuaException {
-        return null;
-    }
-
-    @Override
-    public void setEntityAttributes(Properties props) throws KapuaException {
-
-    }
-
-    @Override
-    public Properties getEntityProperties() throws KapuaException {
-        return null;
-    }
-
-    @Override
-    public void setEntityProperties(Properties props) throws KapuaException {
-
-    }
-
-    void setId(BigInteger kapuaId) {
-        this.kapuaId = kapuaId;
-    }
-
-    @Override
-    public KapuaId getId() {
-        return new KapuaEid(kapuaId);
-    }
-
-    public void setScopeId(BigInteger scopeId) {
-        this.scopeId = scopeId;
     }
 
     @Override
@@ -340,13 +260,4 @@ public class DeviceImpl implements Device {
         return new KapuaEid(scopeId);
     }
 
-    @Override
-    public Date getCreatedOn() {
-        return null;
-    }
-
-    @Override
-    public KapuaId getCreatedBy() {
-        return null;
-    }
 }
