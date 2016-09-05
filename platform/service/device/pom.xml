@@ -10,7 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-service-device</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
 
     <dependencies>
         <!-- Smolok dependencies -->
@@ -36,6 +36,10 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-groovy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
         </dependency>
 
         <!-- Optional Spring runtime -->
