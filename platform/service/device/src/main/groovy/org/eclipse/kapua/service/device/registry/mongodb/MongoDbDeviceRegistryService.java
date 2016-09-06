@@ -15,7 +15,6 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
-
     // disconnection
     // heartbeat
     // register or update
@@ -58,10 +57,11 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device update(Device device) throws KapuaException {
-        Device existingDevice = find(device.getScopeId(), device.getPreferredUserId());
-        Map existingDeviceMap = objectMapper.convertValue(existingDevice, Map.class);
+        Device existingDevice = find(device.getScopeId(), device.getId());
+        Map<String, Object> existingDeviceMap = objectMapper.convertValue(existingDevice, Map.class);
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
-        devicesCollection().save(deviceToDbObject(objectMapper.convertValue(existingDeviceMap, Device.class)));
+        normalize(existingDeviceMap);
+        devicesCollection().save(new BasicDBObject(existingDeviceMap));
         return new DeviceImpl();
     }
 
@@ -115,12 +115,13 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         return objectMapper.convertValue(deviceMap, DeviceImpl.class);
     }
 
-    private DBObject deviceToDbObject(Device device) {
-        Map<String, Object> deviceMap = objectMapper.convertValue(device, Map.class);
-//        if(device.getId() != null) {
-//            deviceMap.put("_id", new ObjectId(device.getId()));
-//        }
-        return new BasicDBObject(deviceMap);
+    private void normalize(Map<String, Object> device) {
+        for(String key : device.keySet()) {
+            if(key.equals("id") || key.equals("scopeId")) {
+                Map<String, Object> value = (Map<String, Object>) device.get(key);
+                device.put(key, ((BigInteger) value.get("id")).longValue());
+            }
+        }
     }
 
 }

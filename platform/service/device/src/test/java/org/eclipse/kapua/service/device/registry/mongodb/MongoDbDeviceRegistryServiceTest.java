@@ -77,4 +77,19 @@ public class MongoDbDeviceRegistryServiceTest {
         assertThat(deviceFound).isNotNull();
     }
 
+    @Test
+    public void shouldUpdateDevice() throws KapuaException {
+        // Given
+        DeviceCreatorImpl deviceCreator = new DeviceCreatorImpl(BigInteger.TEN);
+        Device device = registryService.create(deviceCreator);
+        device.setClientId("clientId");
+        registryService.update(device);
+
+        // When
+        Device deviceFound = registryService.find(device.getScopeId(), device.getId());
+
+        // Then
+        assertThat(deviceFound.getClientId()).isEqualTo(device.getClientId());
+    }
+
 }
