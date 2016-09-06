@@ -11,18 +11,20 @@ public class DeviceCreatorImpl implements DeviceCreator {
 
     private final BigInteger scopeId;
 
+    private String clientId;
+
     public DeviceCreatorImpl(BigInteger scopeId) {
         this.scopeId = scopeId;
     }
 
     @Override
     public String getClientId() {
-        return null;
+        return clientId;
     }
 
     @Override
     public void setClientId(String clientId) {
-
+        this.clientId = clientId;
     }
 
     @Override

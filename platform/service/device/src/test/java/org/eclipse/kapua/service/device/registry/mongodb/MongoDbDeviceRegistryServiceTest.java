@@ -1,7 +1,5 @@
 package org.eclipse.kapua.service.device.registry.mongodb;
 
-
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
@@ -16,18 +14,18 @@ import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
 import org.eclipse.kapua.service.device.registry.KapuaException;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import smolok.lib.common.Networks;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static smolok.lib.common.Networks.findAvailableTcpPort;
 
 public class MongoDbDeviceRegistryServiceTest {
 
-    static int mongoPort = Networks.findAvailableTcpPort();
+    static int mongoPort = findAvailableTcpPort();
 
-    DeviceRegistryService registryService = new MongoDbDeviceRegistryService(new MongoClient("localhost", mongoPort), "xxx", "yyy");
+    DeviceRegistryService registryService = new MongoDbDeviceRegistryService(new MongoClient("localhost", mongoPort), "smolok", "devices");
 
     @BeforeClass
     public static void beforeClass() throws IOException {
@@ -60,6 +58,20 @@ public class MongoDbDeviceRegistryServiceTest {
 
         // When
         Device deviceFound = registryService.find(device.getScopeId(), device.getId());
+
+        // Then
+        assertThat(deviceFound).isNotNull();
+    }
+
+    @Test
+    public void shouldFindByClientId() throws KapuaException {
+        // Given
+        DeviceCreatorImpl deviceCreator = new DeviceCreatorImpl(BigInteger.TEN);
+        deviceCreator.setClientId("clientId");
+        Device device = registryService.create(deviceCreator);
+
+        // When
+        Device deviceFound = registryService.findByClientId(device.getScopeId(), deviceCreator.getClientId());
 
         // Then
         assertThat(deviceFound).isNotNull();

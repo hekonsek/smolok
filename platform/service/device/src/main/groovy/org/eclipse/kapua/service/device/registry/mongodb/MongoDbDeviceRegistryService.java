@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.*;
-import org.bson.types.ObjectId;
 import org.eclipse.kapua.service.device.registry.*;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
@@ -49,6 +47,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         DBObject device = new BasicDBObject();
         device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
         device.put("id", id);
+        device.put("clientId", deviceCreator.getClientId());
         devicesCollection().save(device);
 
         DeviceImpl result = new DeviceImpl();
@@ -97,7 +96,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device findByClientId(KapuaId scopeId, String clientId) throws KapuaException {
-        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("clientId", clientId)));
+        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "clientId", clientId)));
         if(devices.hasNext()) {
             return dbObjectToDevice(devices.next());
         }
