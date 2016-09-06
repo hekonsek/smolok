@@ -6,7 +6,11 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Properties;
 
-public class DeviceImpl implements Device {
+public class SimpleDevice implements Device {
+
+    private String clientId;
+
+    private DeviceStatus status;
 
     private BigInteger scopeId;
 
@@ -14,22 +18,22 @@ public class DeviceImpl implements Device {
 
     @Override
     public String getClientId() {
-        return null;
+        return clientId;
     }
 
     @Override
     public void setClientId(String clientId) {
-
+        this.clientId = clientId;
     }
 
     @Override
     public DeviceStatus getStatus() {
-        return null;
+        return status;
     }
 
     @Override
     public void setStatus(DeviceStatus status) {
-
+        this.status = status;
     }
 
     @Override

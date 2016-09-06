@@ -49,7 +49,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         device.put("clientId", deviceCreator.getClientId());
         devicesCollection().save(device);
 
-        DeviceImpl result = new DeviceImpl();
+        SimpleDevice result = new SimpleDevice();
         result.setScopeId(deviceCreator.getScopeId().getId());
         result.setId(BigInteger.valueOf(id));
         return result;
@@ -57,12 +57,13 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device update(Device device) throws KapuaException {
-        Device existingDevice = find(device.getScopeId(), device.getId());
-        Map<String, Object> existingDeviceMap = objectMapper.convertValue(existingDevice, Map.class);
+        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "id", device.getId().getId().longValue())));
+        DBObject existingDevice =  devices.next();
+        Map<String, Object> existingDeviceMap = existingDevice.toMap();
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
         normalize(existingDeviceMap);
         devicesCollection().save(new BasicDBObject(existingDeviceMap));
-        return new DeviceImpl();
+        return new SimpleDevice();
     }
 
     @Override
@@ -112,7 +113,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     private Device dbObjectToDevice(DBObject dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
         deviceMap.putAll(dbObject.toMap());
-        return objectMapper.convertValue(deviceMap, DeviceImpl.class);
+        return objectMapper.convertValue(deviceMap, SimpleDevice.class);
     }
 
     private void normalize(Map<String, Object> device) {

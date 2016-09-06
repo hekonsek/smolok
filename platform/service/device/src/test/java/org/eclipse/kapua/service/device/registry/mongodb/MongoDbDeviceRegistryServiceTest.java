@@ -30,16 +30,15 @@ public class MongoDbDeviceRegistryServiceTest {
     @BeforeClass
     public static void beforeClass() throws IOException {
         MongodStarter starter = MongodStarter.getDefaultInstance();
-
         IMongodConfig mongodConfig = new MongodConfigBuilder()
                 .version(Version.Main.PRODUCTION)
                 .net(new Net(mongoPort, Network.localhostIsIPv6()))
                 .build();
 
-        MongodExecutable mongodExecutable = null;
-            mongodExecutable = starter.prepare(mongodConfig);
-            MongodProcess mongod = mongodExecutable.start();
+        starter.prepare(mongodConfig).start();
     }
+
+    // Tests
 
     @Test
     public void shouldReturnDeviceWithScopedId() throws KapuaException {
