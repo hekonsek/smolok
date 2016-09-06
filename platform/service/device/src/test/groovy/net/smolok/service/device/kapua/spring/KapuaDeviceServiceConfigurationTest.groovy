@@ -16,6 +16,8 @@
  */
 package net.smolok.service.device.kapua.spring
 
+import net.smolok.service.device.api.Device
+import org.assertj.core.api.Assertions
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +28,7 @@ import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 
 import static java.lang.System.setProperty
-import static org.assertj.core.api.Assertions.assertThat
+import static net.smolok.service.device.api.Device.minimalDevice
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 
 @RunWith(SpringRunner)
@@ -42,8 +44,15 @@ class KapuaDeviceServiceConfigurationTest {
     }
 
     @Test
-    void shouldRegisterDevice() {
-        assertThat(eventBus).isNotNull()
+    void shouldRegisterAndGetDevice() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+
+        // When
+        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+
+        // Then
+        Assertions.assertThat(device.deviceId).isEqualTo('myDevice')
     }
 
 }

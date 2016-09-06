@@ -18,7 +18,7 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     Device get(@Tenant String tenant, String deviceId) {
-        def kapuaDevice = kapuaService.findByClientId(new KapuaEid(tenant.toBigDecimal().toBigInteger()), deviceId)
+        def kapuaDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), deviceId)
         def device = new Device()
         device.deviceId = kapuaDevice.clientId
         device
@@ -36,7 +36,7 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     void register(@Tenant String tenant, Device device) {
-        def deviceCreator = new DeviceCreatorImpl(tenant.toBigDecimal().toBigInteger())
+        def deviceCreator = new DeviceCreatorImpl(tenant.hashCode().toBigInteger())
         deviceCreator.clientId = device.deviceId
         kapuaService.create(deviceCreator)
     }
