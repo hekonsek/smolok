@@ -5,6 +5,7 @@ import net.smolok.service.device.api.DeviceService
 import net.smolok.service.device.api.QueryBuilder
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.KapuaEid
+import org.eclipse.kapua.service.device.registry.mongodb.DeviceCreatorImpl
 import smolok.service.binding.Tenant
 
 class KapuaDeviceService implements DeviceService {
@@ -34,8 +35,10 @@ class KapuaDeviceService implements DeviceService {
     }
 
     @Override
-    void register(Device device) {
-
+    void register(@Tenant String tenant, Device device) {
+        def deviceCreator = new DeviceCreatorImpl(tenant.toBigDecimal().toBigInteger())
+        deviceCreator.clientId = device.deviceId
+        kapuaService.create(deviceCreator)
     }
 
     @Override

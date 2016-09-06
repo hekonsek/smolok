@@ -37,7 +37,7 @@ public interface DeviceService {
      *
      * @param device device to be registered.
      */
-    void register(Device device);
+    void register(@Tenant String tenant, Device device);
 
     void update(Device device);
 

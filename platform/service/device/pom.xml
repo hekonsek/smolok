@@ -44,6 +44,17 @@
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-eventbus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-eventbus-client</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Non-Smolok testing dependencies -->

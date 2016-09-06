@@ -7,6 +7,8 @@ import org.eclipse.kapua.service.device.registry.mongodb.MongoDbDeviceRegistrySe
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import smolok.service.binding.ServiceBinding
+import smolok.service.binding.ServiceEventProcessor
 
 @Configuration
 class KapuaDeviceServiceConfiguration {
@@ -21,6 +23,11 @@ class KapuaDeviceServiceConfiguration {
                                                 @Value('${device.database:smolok}') String db,
                                                 @Value('${device.collection:devices}') String collection) {
         new MongoDbDeviceRegistryService(mongo, db, collection)
+    }
+
+    @Bean
+    ServiceBinding serviceBinding(ServiceEventProcessor serviceEventProcessor) {
+        new ServiceBinding(serviceEventProcessor, 'device')
     }
 
 }
