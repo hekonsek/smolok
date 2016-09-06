@@ -29,7 +29,7 @@ class OpenshiftPaas implements Paas {
             '''run -d --name openshift-server --privileged --pid=host --net=host
             -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys -v /var/lib/docker:/var/lib/docker:rw
             -v /var/lib/origin/openshift.local.volumes:/var/lib/origin/openshift.local.volumes
-            openshift/origin:v1.2.0 start'''
+            openshift/origin:v1.2.1 start'''
 
     private final static OS_STATUS_COMMAND = 'exec openshift-server oc status'
 
