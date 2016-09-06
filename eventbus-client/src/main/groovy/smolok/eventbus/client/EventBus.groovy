@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.camel.ConsumerTemplate
 import org.apache.camel.ProducerTemplate
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.eventbus.client.Header.arguments
 import static smolok.lib.common.Reflections.isContainer
@@ -25,7 +26,7 @@ class EventBus {
 
     private final ConsumerTemplate consumerTemplate
 
-    private final mapper = new ObjectMapper()
+    private final mapper = new ObjectMapper().setSerializationInclusion(NON_NULL)
 
     // Constructors
 
