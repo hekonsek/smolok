@@ -2,13 +2,17 @@ package smolok.eventbus.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.camel.ConsumerTemplate
-import org.apache.camel.ProducerTemplate;
+import org.apache.camel.ProducerTemplate
 
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.eventbus.client.Header.arguments
 import static smolok.lib.common.Reflections.isContainer
 import static smolok.lib.common.Reflections.isPojo
 
+/**
+ * Java client for Smolok event bus. Provides higher-level library on the top of the AMQP communication used by Smolok event
+ * bus. It can be used to consume and interact with Smolok Cloud public APIs.
+ */
 class EventBus {
 
     // Logger
@@ -24,6 +28,7 @@ class EventBus {
     private final mapper = new ObjectMapper()
 
     // Constructors
+
     EventBus(ProducerTemplate producerTemplate, ConsumerTemplate consumerTemplate) {
         this.producerTemplate = producerTemplate
         this.consumerTemplate = consumerTemplate
@@ -33,7 +38,7 @@ class EventBus {
 
     void toBus(String channel, Object payload, Header... headers) {
         LOG.debug('Sending payload {} to channel {} with headers {}', payload, channel, headers.toList())
-        producerTemplate.sendBodyAndHeaders("amqp:${channel}", payload, arguments(headers))
+        producerTemplate.sendBodyAndHeaders("amqp:${channel}", serializePayload(payload), arguments(headers))
     }
 
     void toBus(String channel, Header... headers) {
@@ -46,7 +51,7 @@ class EventBus {
         for(Header header : headers) {
             collectedHeaders[header.key()] = header.value()
         }
-        producerTemplate.requestBodyAndHeaders("amqp:" + channel, payload, collectedHeaders)
+        producerTemplate.requestBodyAndHeaders("amqp:" + channel, serializePayload(payload), collectedHeaders)
     }
 
     void toBusAndWait(String channel) {
@@ -54,7 +59,7 @@ class EventBus {
     }
 
     def <T> T fromBus(String channel, Object payload, Class<T> responseType, Header... headers) {
-        convertResponse(producerTemplate.requestBodyAndHeaders("amqp:" + channel, payload, arguments(headers)), responseType)
+        convertResponse(producerTemplate.requestBodyAndHeaders("amqp:" + channel, serializePayload(payload), arguments(headers)), responseType)
     }
 
     def <T> T fromBus(String channel, Class<T> responseType, Header... headers) {
@@ -66,11 +71,16 @@ class EventBus {
         convertResponse(consumerTemplate.receiveBody("amqp:${channel}"), responseType)
     }
 
-    // Helpers
+    // Those are workarounds needed due to the fact that Qpid JMS client doesn't support nested maps and collections
 
-    /**
-     * This is workaround needed due to the fact that Qpid JMS client doesn't support nested maps.
-     */
+    private Object serializePayload(Object payload) {
+        if(payload != null && (isContainer(payload.class) || isPojo(payload.class))) {
+            mapper.writeValueAsBytes(payload)
+        } else {
+            payload
+        }
+    }
+
     private <T> T convertResponse(Object body, Class<T> responseType) {
         if(body.class == byte[].class && (isContainer(responseType) || isPojo(responseType))) {
             mapper.readValue((byte[])body, responseType)

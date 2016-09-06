@@ -14,10 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 
-import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.eventbus.client.Header.arguments
+import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Smolok.class)
@@ -46,9 +46,18 @@ class EventBusClientConfigurationTest {
         }
     }
 
-    def payload = randomUUID().toString()
+    def payload = uuid()
 
     // Tests
+
+    @Test
+    void shouldSendPojoRequest() {
+        // When
+        def response = eventBus.fromBus('echo', new Request(payload: payload), Request.class)
+
+        // Then
+        assertThat(response).isEqualTo(new Request(payload: payload))
+    }
 
     @Test
     void shouldReceiveResponse() {
@@ -78,6 +87,13 @@ class EventBusClientConfigurationTest {
     }
 
     // Test classes
+
+    @EqualsAndHashCode
+    static class Request {
+
+        String payload
+
+    }
 
     @EqualsAndHashCode
     static class Response {

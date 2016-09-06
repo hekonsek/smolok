@@ -1,5 +1,6 @@
 package smolok.service.binding.camel
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.camel.spi.Registry
 import org.apache.commons.lang3.Validate
 import smolok.service.binding.Credentials
@@ -11,6 +12,8 @@ import java.lang.reflect.Method
 
 import static java.util.Arrays.asList
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Reflections.isContainer
+import static smolok.lib.common.Reflections.isPojo
 
 class CamelOperationBindingFactory implements OperationBindingFactory {
 
@@ -52,8 +55,11 @@ class CamelOperationBindingFactory implements OperationBindingFactory {
         }
 
         if (incomingPayload != null) {
-            Object payload = incomingPayload;
-            arguments.add(payload);
+            def expectedPayloadType = operationMethod.parameterTypes.last()
+            if(incomingPayload.class == byte[].class && (isContainer(expectedPayloadType) || isPojo(expectedPayloadType))) {
+                incomingPayload = new ObjectMapper().readValue(incomingPayload, expectedPayloadType)
+            }
+            arguments.add(incomingPayload)
         }
 
         def tenantPosition = operationMethod.parameterAnnotations.findIndexOf {
