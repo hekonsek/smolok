@@ -74,7 +74,7 @@ class EventBus {
     // Those are workarounds needed due to the fact that Qpid JMS client doesn't support nested maps and collections
 
     private Object serializePayload(Object payload) {
-        if(payload != null && (isContainer(payload.class) || isPojo(payload.class))) {
+        if(payload != null && (isContainer(payload.getClass()) || isPojo(payload.getClass()))) {
             mapper.writeValueAsBytes(payload)
         } else {
             payload
