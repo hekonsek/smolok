@@ -41,9 +41,10 @@ class EventBus {
     }
 
     void toBusAndWait(String channel, Object payload, Header... headers) {
-        Map<String, Object> collectedHeaders = new HashMap<>();
+        LOG.debug('Payload {} has been sent to bus channel {} with wait request.', payload, channel)
+        def collectedHeaders = [:]
         for(Header header : headers) {
-            collectedHeaders.put(header.key(), header.value());
+            collectedHeaders[header.key()] = header.value()
         }
         producerTemplate.requestBodyAndHeaders("amqp:" + channel, payload, collectedHeaders)
     }
