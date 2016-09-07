@@ -1,6 +1,7 @@
 package smolok.status.spring
 
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = [Smolok.class, StatusResolverConfigurationTest.class])
 class StatusResolverConfigurationTest {
