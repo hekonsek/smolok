@@ -15,10 +15,6 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
-    // disconnection
-    // heartbeat
-    // register or update
-
     private final ObjectMapper objectMapper = new ObjectMapper().
             configure(FAIL_ON_UNKNOWN_PROPERTIES, false).
             setSerializationInclusion(JsonInclude.Include.NON_NULL);
