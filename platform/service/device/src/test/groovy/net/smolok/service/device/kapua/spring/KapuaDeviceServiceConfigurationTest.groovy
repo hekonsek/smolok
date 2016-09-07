@@ -17,7 +17,7 @@
 package net.smolok.service.device.kapua.spring
 
 import net.smolok.service.device.api.Device
-import org.assertj.core.api.Assertions
+import net.smolok.service.device.api.QueryBuilder
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,6 +29,7 @@ import smolok.eventbus.client.EventBus
 
 import static java.lang.System.setProperty
 import static net.smolok.service.device.api.Device.minimalDevice
+import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 
 @RunWith(SpringRunner)
@@ -52,7 +53,21 @@ class KapuaDeviceServiceConfigurationTest {
         def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
 
         // Then
-        Assertions.assertThat(device.deviceId).isEqualTo('myDevice')
+        assertThat(device.deviceId).isEqualTo('myDevice')
+    }
+
+    @Test
+    void doubleRegistrationShouldUpdate() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        def countBeforeSecondRegistration = eventBus.fromBus('device.count', QueryBuilder.queryBuilder([:]), long.class)
+
+        // When
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        def countAfterSecondRegistration = eventBus.fromBus('device.count', QueryBuilder.queryBuilder([:]), long.class)
+
+        // Then
+        assertThat(countBeforeSecondRegistration).isEqualTo(countAfterSecondRegistration)
     }
 
 }

@@ -27,9 +27,9 @@ public interface DeviceService {
 
     Device get(@Tenant String tenant, String deviceId);
 
-    List<Device> findByQuery(QueryBuilder queryBuilder);
+    List<Device> find(QueryBuilder queryBuilder);
 
-    long countByQuery(QueryBuilder queryBuilder);
+    long count(@Tenant String tenant, QueryBuilder queryBuilder);
 
     /**
      * Registers a given device. Registering device with the same `deviceId` twice should update the device, instead

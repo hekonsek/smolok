@@ -25,20 +25,25 @@ class KapuaDeviceService implements DeviceService {
     }
 
     @Override
-    List<Device> findByQuery(QueryBuilder queryBuilder) {
+    List<Device> find(QueryBuilder queryBuilder) {
         return null
     }
 
     @Override
-    long countByQuery(QueryBuilder queryBuilder) {
-        return 0
+    long count(@Tenant String tenant, QueryBuilder queryBuilder) {
+        kapuaService.count(null)
     }
 
     @Override
     void register(@Tenant String tenant, Device device) {
-        def deviceCreator = new SimpleDeviceCreator(tenant.hashCode().toBigInteger())
-        deviceCreator.clientId = device.deviceId
-        kapuaService.create(deviceCreator)
+        def existingDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), device.deviceId)
+        if(existingDevice != null) {
+            kapuaService.update(existingDevice)
+        } else {
+            def deviceCreator = new SimpleDeviceCreator(tenant.hashCode().toBigInteger())
+            deviceCreator.clientId = device.deviceId
+            kapuaService.create(deviceCreator)
+        }
     }
 
     @Override

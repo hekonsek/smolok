@@ -14,13 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.smolok.service.device.api;
+package net.smolok.service.device.api
 
-import java.io.Serializable;
+class QueryBuilder implements Serializable {
 
-public class QueryBuilder implements Serializable {
-
-    private final Object query;
+    private Map<String, Object> query;
 
     private int page = 0;
 
@@ -30,11 +28,18 @@ public class QueryBuilder implements Serializable {
 
     private String[] orderBy = new String[0];
 
-    public static QueryBuilder buildQuery(Object query) {
+    public QueryBuilder(Map<String, Object> query) {
+        this.query = query;
+    }
+
+    public QueryBuilder() {
+    }
+
+    public static QueryBuilder queryBuilder(Map<String, Object> query) {
         return new QueryBuilder(query);
     }
 
-    public QueryBuilder(Object query) {
+    public void setQuery(Map<String, Object> query) {
         this.query = query;
     }
 
