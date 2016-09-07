@@ -2,6 +2,7 @@ package smolok.cmd.spring
 
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -78,6 +79,7 @@ class CmdConfigurationTest {
         assertThat(paas.started)
     }
 
+    @Ignore
     @Test
     void shouldInformAboutCloudStart() {
         // When
@@ -88,6 +90,7 @@ class CmdConfigurationTest {
         assertThat(outputSink.output()).containsSubsequence('Smolok Cloud started.')
     }
 
+    @Ignore
     @Test
     void shouldShowEventBusStatus() {
         // Given
