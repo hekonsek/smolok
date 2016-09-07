@@ -23,7 +23,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
             configure(FAIL_ON_UNKNOWN_PROPERTIES, false).
             setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-    private final Mongo mongo;
+    private final MongoClient mongo;
 
     private final String db;
 
@@ -31,7 +31,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     // Constructors
 
-    public MongoDbDeviceRegistryService(Mongo mongo, String db, String collection) {
+    public MongoDbDeviceRegistryService(MongoClient mongo, String db, String collection) {
         this.mongo = mongo;
         this.db = db;
         this.collection = collection;
@@ -57,8 +57,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device update(Device device) throws KapuaException {
-        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "id", device.getId().getId().longValue())));
-        DBObject existingDevice =  devices.next();
+        DBCursor devices = devicesCollection().find(deviceId(device.getScopeId(), device.getId()));
+        DBObject existingDevice = devices.next();
         Map<String, Object> existingDeviceMap = existingDevice.toMap();
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
         normalize(existingDeviceMap);
@@ -68,8 +68,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public Device find(KapuaId scopeId, KapuaId entityId) throws KapuaException {
-        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "id", entityId.getId().longValue())));
-        if(devices.hasNext()) {
+        DBCursor devices = devicesCollection().find(deviceId(scopeId, entityId));
+        if (devices.hasNext()) {
             return dbObjectToDevice(devices.next());
         }
         return null;
@@ -92,13 +92,13 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public void delete(Device device) throws KapuaException {
-                devicesCollection().remove(new BasicDBObject(ImmutableMap.of("kapuaId", device.getId())));
+        devicesCollection().remove(deviceId(device.getScopeId(), device.getId()));
     }
 
     @Override
     public Device findByClientId(KapuaId scopeId, String clientId) throws KapuaException {
         DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "clientId", clientId)));
-        if(devices.hasNext()) {
+        if (devices.hasNext()) {
             return dbObjectToDevice(devices.next());
         }
         return null;
@@ -110,6 +110,10 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         return mongo.getDB(db).getCollection(collection);
     }
 
+    private DBObject deviceId(KapuaId scopeId, KapuaId entityId) {
+        return new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "id", entityId.getId().longValue()));
+    }
+
     private Device dbObjectToDevice(DBObject dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
         deviceMap.putAll(dbObject.toMap());
@@ -117,8 +121,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     }
 
     private void normalize(Map<String, Object> device) {
-        for(String key : device.keySet()) {
-            if(key.equals("id") || key.equals("scopeId")) {
+        for (String key : device.keySet()) {
+            if (key.equals("id") || key.equals("scopeId")) {
                 Map<String, Object> value = (Map<String, Object>) device.get(key);
                 device.put(key, ((BigInteger) value.get("id")).longValue());
             }
