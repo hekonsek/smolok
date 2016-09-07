@@ -70,4 +70,121 @@ class KapuaDeviceServiceConfigurationTest {
         assertThat(countBeforeSecondRegistration).isEqualTo(countAfterSecondRegistration)
     }
 
+    @Test
+    public void shouldGenerateId() {
+        // When
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+
+        // Then
+        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        assertThat(device.properties.kapuaId).isNotNull()
+    }
+
+//    @Test
+//    public void shouldListDisconnected() {
+//        // Given
+//        device.setLastUpdate(new DateTime(device.getLastUpdate()).minusMinutes(2).toDate());
+//        connector.toBusAndWait(registerDevice(), device);
+//
+//        // When
+//        List<String> disconnected = connector.fromBus(disconnected(), List.class);
+//
+//        // Then
+//        Truth.assertThat(disconnected).contains(device.getDeviceId());
+//    }
+//
+//    @Test
+//    public void shouldDeregisterDevice() {
+//        // Given
+//        connector.toBusAndWait(registerDevice(), device);
+//
+//        // When
+//        connector.toBusAndWait(deregisterDevice(device.getDeviceId()));
+//
+//        // Then
+//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
+//        Truth.assertThat(loadedDevice).isNull();
+//    }
+//
+//    @Test
+//    public void shouldGetDevice() {
+//        connector.toBusAndWait(registerDevice(), device);
+//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
+//        Truth.assertThat(loadedDevice.getDeviceId()).isEqualTo(device.getDeviceId());
+//    }
+//
+//    @Test
+//    public void shouldNotGetDevice() {
+//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
+//        Truth.assertThat(loadedDevice).isNull();
+//    }
+//
+//    @Test
+//    public void shouldSendHeartbeatDisconnected() {
+//        // Given
+//        device.setLastUpdate(new DateTime(device.getLastUpdate()).minusMinutes(2).toDate());
+//        connector.toBusAndWait(registerDevice(), device);
+//
+//        // When
+//        connector.toBusAndWait(deviceHeartbeat(device.getDeviceId()));
+//
+//        // Then
+//        List<String> disconnected = connector.fromBus(disconnected(), List.class);
+//        Truth.assertThat(disconnected).doesNotContain(device.getDeviceId());
+//    }
+//
+//    // Device metrics tests
+//
+//    @Test
+//    public void shouldReadEmptyMetric() {
+//        String metric = connector.fromBus(readDeviceMetric(device.getDeviceId(), randomAlphabetic(10)), String.class);
+//
+//        // Then
+//        Truth.assertThat(metric).isNull();
+//    }
+//
+//    @Test
+//    public void shouldReadStringMetric() {
+//        // Given
+//        connector.toBusAndWait(registerDevice(), device);
+//        String metric = randomAlphabetic(10);
+//        String value = randomAlphabetic(10);
+//        connector.toBusAndWait(writeDeviceMetric(device.getDeviceId(), metric), value);
+//
+//        // When
+//        String metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), String.class);
+//
+//        // Then
+//        Truth.assertThat(metricRead).isEqualTo(value);
+//    }
+//
+//    @Test
+//    public void shouldReadIntegerMetric() {
+//        // Given
+//        connector.toBusAndWait(registerDevice(), device);
+//        String metric = randomAlphabetic(10);
+//        int value = 666;
+//        connector.toBusAndWait(writeDeviceMetric(device.getDeviceId(), metric), value);
+//
+//        // When
+//        int metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), int.class);
+//
+//        // Then
+//        Truth.assertThat(metricRead).isEqualTo(value);
+//    }
+//
+//    @Test
+//    public void shouldPollStringMetric() {
+//        // Given
+//        device.setAddress("non empty");
+//        connector.toBusAndWait(registerDevice(), device);
+//        String metric = randomAlphabetic(10);
+//
+//        // When
+//        String metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), String.class);
+//
+//        // Then
+//        Truth.assertThat(metricRead).isEqualTo(metric);
+//    }
+
 }

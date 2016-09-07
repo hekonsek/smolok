@@ -21,6 +21,8 @@ class KapuaDeviceService implements DeviceService {
         def kapuaDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), deviceId)
         def device = new Device()
         device.deviceId = kapuaDevice.clientId
+        device.properties.kapuaScopeId = kapuaDevice.scopeId.id
+        device.properties.kapuaId = kapuaDevice.id.id
         device
     }
 
