@@ -5,18 +5,17 @@
 
     <parent>
         <groupId>net.smolok</groupId>
-        <artifactId>smolok-platform-service</artifactId>
+        <artifactId>smolok-platform-service-framework</artifactId>
         <version>0.0.4-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-platform-service-framework</artifactId>
+    <artifactId>smolok-platform-service-framework-documentstore</artifactId>
     <name>${artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>bootstrap</module>
-        <module>binding</module>
-        <module>documentstore</module>
+        <module>api</module>
+        <module>mongodb</module>
     </modules>
 
 </project>
