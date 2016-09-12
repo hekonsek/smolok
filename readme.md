@@ -8,7 +8,7 @@ device-oriented system. List of such services includes big data analytics, IoT-s
 device management, telemetry reading/writing and so forth.
 
 Smolok is based on the top of the leading open source projects including [Apache Spark](http://spark.apache.org) and
-[Eclipse IoT stack](http://iot.eclipse.org)(particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project).
+[Eclipse IoT stack](http://iot.eclipse.org) (particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project).
 
 ## Getting started
 
