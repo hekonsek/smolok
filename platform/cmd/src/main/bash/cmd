@@ -19,6 +19,10 @@ if [ -z "${SMOLOK_VERSION}" ]; then
   SMOLOK_VERSION='0.0.3'
 fi
 
-docker run --privileged --rm -v /dev:/host/dev -v ${HOME}/.smolok/downloads:/root/.smolok/downloads \
-  -v /var/smolok/spark/jobs:/var/smolok/spark/jobs \
-  -v /var/run/docker.sock:/run/docker.sock -it smolok/cmd:${SMOLOK_VERSION} "$@"
+mkdir -p ~/.smolok/logs
+
+if [ ! -e ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar ] || [ ! -z `echo ${SMOLOK_VERSION} | grep SNAPSHOT` ]; then
+  mvn dependency:get -Dartifact=net.smolok:smolok-cmd:${SMOLOK_VERSION}:jar:fat -DremoteRepositories=http://repo1.maven.apache.org/maven2,https://oss.sonatype.org/content/repositories/snapshots >> ~/.smolok/logs/cmd 2>&1
+fi
+
+sudo java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar "$@"
