@@ -9,32 +9,23 @@
         <version>0.0.4-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-lib-common</artifactId>
+    <artifactId>smolok-lib-download</artifactId>
     <name>${artifactId}</name>
 
     <dependencies>
+        <!-- Smolok dependencies -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-lib-process</artifactId>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Optional Spring runtime -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- Testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

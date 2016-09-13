@@ -1,18 +1,19 @@
-package smolok.lib.common.spring;
+package net.smolok.lib.download.spring;
 
-import org.apache.commons.lang3.SystemUtils;
+import net.smolok.lib.download.DownloadManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import smolok.lib.common.DownloadManager;
 
 import java.io.File;
+
+import static org.apache.commons.lang3.SystemUtils.getUserHome;
 
 @Configuration
 public class DownloadManagerConfiguration {
 
     @Bean
     DownloadManager downloadManager() {
-        return new DownloadManager(new File(new File(SystemUtils.getUserHome(), ".smolok"), "downloads"));
+        return new DownloadManager(new File(new File(getUserHome(), ".smolok"), "downloads"));
     }
 
 }

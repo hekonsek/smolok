@@ -1,4 +1,4 @@
-package smolok.lib.common
+package net.smolok.lib.download
 
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.Validate
@@ -39,7 +39,11 @@ class DownloadManager {
         if(!targetFile.exists()) {
             LOG.debug('File {} does not exist - downloading...', targetFile.absolutePath)
             def tmpFile = File.createTempFile('smolok', 'download')
-            copyLarge(image.source().openStream(), new FileOutputStream(tmpFile))
+            try {
+                copyLarge(image.source().openStream(), new FileOutputStream(tmpFile))
+            } catch (UnknownHostException e) {
+                throw new DownloadProblemException(targetFile.name, e)
+            }
             targetFile.parentFile.mkdirs()
             tmpFile.renameTo(targetFile)
             LOG.debug('Saved downloaded file to {}.', targetFile.absolutePath)

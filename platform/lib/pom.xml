@@ -16,6 +16,7 @@
     <modules>
         <module>common</module>
         <module>process</module>
+        <module>download</module>
         <module>docker</module>
         <module>vertx</module>
         <module>ssh</module>

@@ -1,13 +1,13 @@
 package smolok.cmd.commands
 
+import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.Validate
 import smolok.cmd.Command
 import smolok.cmd.OutputSink
-import smolok.lib.common.DownloadManager
+
 import smolok.lib.process.ProcessManager
 
 import static org.slf4j.LoggerFactory.getLogger
-import static smolok.lib.common.DownloadManager.*
 
 class SdcardInstallRaspbianCommand implements Command {
 
@@ -25,11 +25,11 @@ class SdcardInstallRaspbianCommand implements Command {
 
     private final String devicesDirectory
 
-    private final BinaryCoordinates image
+    private final DownloadManager.BinaryCoordinates image
 
     // Constructors
 
-    SdcardInstallRaspbianCommand(DownloadManager downloadManager, ProcessManager processManager, String devicesDirectory, BinaryCoordinates image) {
+    SdcardInstallRaspbianCommand(DownloadManager downloadManager, ProcessManager processManager, String devicesDirectory, DownloadManager.BinaryCoordinates image) {
         this.devicesDirectory = devicesDirectory
         this.downloadManager = downloadManager
         this.processManager = processManager

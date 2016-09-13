@@ -1,6 +1,6 @@
 package smolok.cmd.spring
 
-import org.apache.commons.lang3.SystemUtils
+import net.smolok.lib.download.DownloadManager
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -14,7 +14,7 @@ import smolok.cmd.commands.CloudStatusCommand
 import smolok.cmd.commands.SdcardInstallRaspbianCommand
 import smolok.cmd.commands.SparkStartCommand
 import smolok.cmd.commands.SparkSubmitCommand
-import smolok.lib.common.DownloadManager
+
 import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
 import smolok.paas.Paas
