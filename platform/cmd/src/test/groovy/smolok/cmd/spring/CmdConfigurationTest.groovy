@@ -17,8 +17,8 @@ import smolok.lib.docker.Docker
 import smolok.paas.Paas
 
 import static com.google.common.io.Files.createTempDir
-import static java.util.UUID.randomUUID
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.running
 import static smolok.lib.process.ExecutorBasedProcessManager.command
@@ -48,8 +48,8 @@ class CmdConfigurationTest {
     static void beforeClass() {
         System.setProperty('raspbian.image.uri', 'https://repo1.maven.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar')
         System.setProperty('devices.directory', devicesDirectory.absolutePath)
-        System.setProperty('raspbian.image.file.name.extracted', randomUUID().toString())
-        System.setProperty('raspbian.image.file.name.compressed', randomUUID().toString())
+        System.setProperty('raspbian.image.file.name.extracted', uuid())
+        System.setProperty('raspbian.image.file.name.compressed', "${uuid()}.zip")
     }
 
     // PaaS fixtures
