@@ -38,11 +38,6 @@ class CmdConfiguration {
         new CommandDispatcher(outputSink, commands)
     }
 
-    @Bean
-    DownloadManager downloadManager() {
-        new DownloadManager(new File(new File(SystemUtils.userHome, '.smolok'), 'downloads'))
-    }
-
     // Commands
 
     @Bean

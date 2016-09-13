@@ -35,24 +35,26 @@ class DownloadManager {
         Validate.notNull(image.source(), 'Source URL cannot be null.')
         Validate.notNull(image.fileName(), 'Please indicate the name of the target file.')
 
-        def file = downloadedFile(image.fileName)
-        if(!file.exists()) {
-            LOG.debug('File {} does not exist - downloading...', file.absolutePath)
-            file.parentFile.mkdirs()
-            copyLarge(image.source().openStream(), new FileOutputStream(file))
-            LOG.debug('Saved downloaded file to {}.', file.absolutePath)
+        def targetFile = downloadedFile(image.fileName)
+        if(!targetFile.exists()) {
+            LOG.debug('File {} does not exist - downloading...', targetFile.absolutePath)
+            def tmpFile = File.createTempFile('smolok', 'download')
+            copyLarge(image.source().openStream(), new FileOutputStream(tmpFile))
+            targetFile.parentFile.mkdirs()
+            tmpFile.renameTo(targetFile)
+            LOG.debug('Saved downloaded file to {}.', targetFile.absolutePath)
 
             if(image.extractedFileName != null) {
                 def extractedImage = downloadedFile(image.extractedFileName)
                 if (!extractedImage.exists()) {
-                    def zip = new ZipInputStream(new FileInputStream(file))
+                    def zip = new ZipInputStream(new FileInputStream(targetFile))
                     zip.nextEntry
                     IOUtils.copyLarge(zip, new FileOutputStream(extractedImage))
                     zip.close()
                 }
             }
         } else {
-            LOG.debug('File {} exists - download skipped.', file)
+            LOG.debug('File {} exists - download skipped.', targetFile)
         }
     }
 
