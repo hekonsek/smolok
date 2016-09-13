@@ -16,6 +16,7 @@
  */
 package net.smolok.lib.download
 
+import groovy.transform.ToString
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
@@ -35,9 +36,11 @@ class DownloadManager {
 
     private final static LOG = getLogger(DownloadManager.class)
 
-    // Members
+    // Collaborators
 
     private final ProcessManager processManager
+
+    // Configuration members
 
     private final File downloadDirectory
 
@@ -52,16 +55,17 @@ class DownloadManager {
 
     // Download operations
 
-    void download(BinaryCoordinates image) {
-        Validate.notNull(image.source(), 'Source URL cannot be null.')
-        Validate.notNull(image.fileName(), 'Please indicate the name of the target file.')
+    void download(BinaryCoordinates coordinates) {
+        Validate.notNull(coordinates.source(), 'Source URL cannot be null.')
+        Validate.notNull(coordinates.fileName(), 'Please indicate the name of the target file.')
+        LOG.debug('About to download file using the following coordinates: {}', coordinates)
 
-        def targetFile = downloadedFile(image.fileName)
+        def targetFile = downloadedFile(coordinates.fileName)
         if(!targetFile.exists()) {
             LOG.debug('File {} does not exist - downloading...', targetFile.absolutePath)
             def tmpFile = File.createTempFile('smolok', 'download')
             try {
-                copyLarge(image.source().openStream(), new FileOutputStream(tmpFile))
+                copyLarge(coordinates.source().openStream(), new FileOutputStream(tmpFile))
             } catch (UnknownHostException e) {
                 throw new FileDownloadException(targetFile.name, e)
             }
@@ -69,8 +73,8 @@ class DownloadManager {
             tmpFile.renameTo(targetFile)
             LOG.debug('Saved downloaded file to {}.', targetFile.absolutePath)
 
-            if(image.extractedFileName != null) {
-                def extractedImage = downloadedFile(image.extractedFileName)
+            if(coordinates.extractedFileName != null) {
+                def extractedImage = downloadedFile(coordinates.extractedFileName)
                 if (!extractedImage.exists()) {
                     if(targetFile.name.endsWith('.zip')) {
                         def zip = new ZipInputStream(new FileInputStream(targetFile))
@@ -97,9 +101,13 @@ class DownloadManager {
     }
 
     File downloadedFile(String name) {
+        Validate.notBlank(name, 'Name of the downloaded file cannot be blank.')
         new File(downloadDirectory, name)
     }
 
+    // Inner classes
+
+    @ToString
     static class BinaryCoordinates {
 
         private final URL source
