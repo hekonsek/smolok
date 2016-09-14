@@ -107,7 +107,7 @@ class OpenshiftPaas implements Paas {
     void stop() {
         processManager.execute(command('ps aux')).findAll{ it.contains('openshift start') }.each {
             def pid = it.split(/\s+/)[1]
-            processManager.execute('kill', pid)
+            processManager.execute('sudo kill', pid)
         }
     }
 
