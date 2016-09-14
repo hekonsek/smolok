@@ -85,17 +85,20 @@ class OpenshiftPaas implements Paas {
                 def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
                 println processManager.executeAsync('sudo', serverPath, 'start')
                 println 'xxxxxxx'
+                println '111111'
                 await().atMost(60, SECONDS).until({println processManager.execute('ps', 'aux').findAll{it.contains('openshift start')}; println oc('get pod');isNotLoggedIntoProject()} as Callable<Boolean>)
                 println 'yyyyyyy'
                 Thread.sleep(30000)
                 oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
                 oc('new-project smolok')
+                println '22222'
                 await().atMost(60, SECONDS).until({println oc('get pod'); isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
+            println '33333333'
             await().atMost(120, SECONDS).until({isStarted()} as Callable<Boolean>)
             LOG.debug('Event bus has been started.')
         } else {
