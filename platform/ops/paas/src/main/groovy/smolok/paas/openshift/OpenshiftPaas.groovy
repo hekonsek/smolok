@@ -83,7 +83,7 @@ class OpenshiftPaas implements Paas {
                 processManager.executeAsync(serverPath, 'start')
             } else {
                 def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
-                println processManager.executeAsync(serverPath, 'start').get()
+                println processManager.executeAsync('sudo', serverPath, 'start')
                 println 'xxxxxxx'
                 await().atMost(60, SECONDS).until({println processManager.execute('ps', 'aux').findAll{it.contains('openshift start')}; println oc('get pod');isNotLoggedIntoProject()} as Callable<Boolean>)
                 println 'yyyyyyy'
