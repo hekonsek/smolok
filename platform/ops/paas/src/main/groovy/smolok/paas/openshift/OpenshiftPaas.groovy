@@ -90,7 +90,7 @@ class OpenshiftPaas implements Paas {
                 Thread.sleep(15000)
                 oc('login -u admin -p admin')
                 oc('new-project smolok')
-                await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
+                await().atMost(60, SECONDS).until({println oc('get pod'); isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
@@ -143,7 +143,8 @@ class OpenshiftPaas implements Paas {
     // Helpers
 
     private isNotLoggedIntoProject() {
-        oc(OS_STATUS_COMMAND).first().contains('You must be logged in to the server')
+        def yyy = oc(OS_STATUS_COMMAND).first()
+                yyy.contains('You must be logged in to the server') || yyy.contains('Missing or incomplete configuration info')
     }
 
     private isNotStarted() {
