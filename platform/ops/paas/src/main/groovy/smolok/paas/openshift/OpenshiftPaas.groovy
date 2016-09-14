@@ -88,7 +88,7 @@ class OpenshiftPaas implements Paas {
                 await().atMost(60, SECONDS).until({println processManager.execute('ps', 'aux').findAll{it.contains('openshift start')}; println oc('get pod');isNotLoggedIntoProject()} as Callable<Boolean>)
                 println 'yyyyyyy'
                 Thread.sleep(15000)
-                oc('login -u admin -p admin')
+                oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
                 oc('new-project smolok')
                 await().atMost(60, SECONDS).until({println oc('get pod'); isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
