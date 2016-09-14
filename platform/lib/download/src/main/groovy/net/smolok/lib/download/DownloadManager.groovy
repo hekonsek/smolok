@@ -72,25 +72,25 @@ class DownloadManager {
             targetFile.parentFile.mkdirs()
             tmpFile.renameTo(targetFile)
             LOG.debug('Saved downloaded file to {}.', targetFile.absolutePath)
-
-            if(coordinates.extractedFileName != null) {
-                def extractedImage = downloadedFile(coordinates.extractedFileName)
-                if (!extractedImage.exists()) {
-                    if(targetFile.name.endsWith('.zip')) {
-                        def zip = new ZipInputStream(new FileInputStream(targetFile))
-                        zip.nextEntry
-                        IOUtils.copyLarge(zip, new FileOutputStream(extractedImage))
-                        zip.close()
-                    } else if(targetFile.name.endsWith('.tar.gz')) {
-                        extractedImage.mkdirs()
-                        processManager.execute(command("tar xvpf ${targetFile} -C ${extractedImage}"))
-                    } else {
-                        throw new UnsupportedCompressionFormatException(targetFile.name)
-                    }
-                }
-            }
         } else {
             LOG.debug('File {} exists - download skipped.', targetFile)
+        }
+
+        if(coordinates.extractedFileName != null) {
+            def extractedImage = downloadedFile(coordinates.extractedFileName)
+            if (!extractedImage.exists()) {
+                if(targetFile.name.endsWith('.zip')) {
+                    def zip = new ZipInputStream(new FileInputStream(targetFile))
+                    zip.nextEntry
+                    IOUtils.copyLarge(zip, new FileOutputStream(extractedImage))
+                    zip.close()
+                } else if(targetFile.name.endsWith('.tar.gz')) {
+                    extractedImage.mkdirs()
+                    processManager.execute(command("tar xvpf ${targetFile} -C ${extractedImage}"))
+                } else {
+                    throw new UnsupportedCompressionFormatException(targetFile.name)
+                }
+            }
         }
     }
 

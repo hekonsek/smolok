@@ -1,7 +1,6 @@
 package smolok.paas.openshift.spring
 
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +11,6 @@ import smolok.paas.Paas
 
 import static org.assertj.core.api.Assertions.assertThat
 
-@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = [Smolok.class, OpenshiftPaasConfiguration.class])
 class OpenshiftPaasConfigurationTest {

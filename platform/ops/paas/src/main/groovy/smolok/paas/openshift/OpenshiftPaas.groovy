@@ -1,13 +1,19 @@
 package smolok.paas.openshift
 
+import com.google.common.io.Files
+import net.smolok.lib.download.DownloadManager
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
+import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
+
 import smolok.lib.docker.ContainerStatus
-import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
 import smolok.paas.ServiceEndpoint
 
+import java.nio.file.Paths
 import java.util.concurrent.Callable
 
 import static com.jayway.awaitility.Awaitility.await
@@ -25,45 +31,41 @@ class OpenshiftPaas implements Paas {
 
     // Docker commands constants
 
-    private final static OS_PROVISION_COMMAND =
-            '''run -d --name openshift-server --privileged --pid=host --net=host
-            -v /:/rootfs:ro -v /var/run:/var/run:rw -v /sys:/sys -v /var/lib/docker:/var/lib/docker:rw
-            -v /var/lib/origin/openshift.local.volumes:/var/lib/origin/openshift.local.volumes
-            openshift/origin:v1.2.1 start'''
+    private final static OS_STATUS_COMMAND = 'status'
 
-    private final static OS_STATUS_COMMAND = 'exec openshift-server oc status'
-
-    private final static OS_REMOVE_COMMAND = 'rm openshift-server'
-
-    private final static OS_GET_SERVICES_COMMAND = 'exec openshift-server oc get service'
+    private final static OS_GET_SERVICES_COMMAND = 'get service'
 
     // Collaborators
 
-    private final Docker docker
+    private final DownloadManager downloadManager
 
     private final ProcessManager processManager
 
     private final AmqpProbe amqpProbe
 
     // Constructors
-    OpenshiftPaas(Docker docker, ProcessManager processManager, AmqpProbe amqpProbe) {
-        this.docker = docker
+
+    OpenshiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
+        this.downloadManager = downloadManager
         this.processManager = processManager
         this.amqpProbe = amqpProbe
     }
 
     // Platform operations
 
+    void init() {
+        downloadManager.download(new DownloadManager.BinaryCoordinates(new URL('https://github.com/openshift/origin/releases/download/v1.3.0-rc1/openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz'), 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz', 'openshift'))
+    }
+
     @Override
     boolean isProvisioned() {
-        def status = docker.status('openshift-server')
-        LOG.debug('Status of OpenShift server: {}', status)
-        status != ContainerStatus.none
+        new File('.').list().find{ it.startsWith('openshift.local') }
     }
 
     @Override
     boolean isStarted() {
-        def eventBusOutput = dockerRun(OS_GET_SERVICES_COMMAND).find {
+
+        def eventBusOutput = oc(OS_GET_SERVICES_COMMAND).find {
             it.startsWith('eventbus')
         }
         if(eventBusOutput == null) {
@@ -77,13 +79,19 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                docker.startService(container('openshift-server'))
+                def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
+                processManager.executeAsync(serverPath, 'start')
             } else {
-                dockerRun(OS_PROVISION_COMMAND)
+                def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
+                processManager.executeAsync(serverPath, 'start')
+                await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
+                Thread.sleep(15000)
+                def x = oc('login -u admin -p admin')
+                def y = oc('new-project smolok')
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
-                dockerRun("exec openshift-server oc new-app smolok/eventbus:${smolokVersion.get()}")
+                oc("new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
             await().atMost(120, SECONDS).until({isStarted()} as Callable<Boolean>)
@@ -95,20 +103,35 @@ class OpenshiftPaas implements Paas {
 
     @Override
     void stop() {
-        dockerRun('ps -q').collect {
-            processManager.executeAsync(command("docker stop ${it}"))
-        }.collect { it.get() }
+        processManager.execute(command('ps aux')).findAll{ it.contains('openshift start') }.each {
+            def pid = it.split(/\s+/)[1]
+            processManager.execute('kill', pid)
+        }
     }
 
     @Override
     void reset() {
         stop()
-        dockerRun(OS_REMOVE_COMMAND)
+
+        def openshiftDirectory = SystemUtils.userDir.absolutePath
+
+        processManager.execute('mount').each {
+            def volume = it.split(' ')[2]
+            if(volume.startsWith(openshiftDirectory)) {
+                processManager.execute(command("umount ${volume}"))
+            }
+        }
+
+        new File('.').listFiles().each {
+            if(it.name.startsWith('openshift.local.')) {
+                FileUtils.deleteDirectory(it)
+            }
+        }
     }
 
     @Override
     List<ServiceEndpoint> services() {
-        def output = dockerRun(OS_GET_SERVICES_COMMAND)
+        def output = oc(OS_GET_SERVICES_COMMAND)
         def servicesOutput = output.subList(1, output.size())
         servicesOutput.collect{ it.split(/\s+/) }.collect {
             new ServiceEndpoint(it[0], it[1], it[3].replaceFirst('/.+', '').toInteger())
@@ -117,12 +140,20 @@ class OpenshiftPaas implements Paas {
 
     // Helpers
 
-    private isOsStarted() {
-        dockerRun(OS_STATUS_COMMAND).first().startsWith('In project ')
+    private isNotLoggedIntoProject() {
+        oc(OS_STATUS_COMMAND).first().contains('You must be logged in to the server')
     }
 
-    private dockerRun(String cmd) {
-        processManager.execute(command("docker ${cmd}"))
+    private isNotStarted() {
+        oc(OS_STATUS_COMMAND).first().startsWith('The connection to the server')
+    }
+
+    private isOsStarted() {
+        oc(OS_STATUS_COMMAND).first().startsWith('In project ')
+    }
+
+    private oc(String cmd) {
+        processManager.execute(command(Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'oc').toFile().absolutePath + ' ' + cmd))
     }
 
 }
