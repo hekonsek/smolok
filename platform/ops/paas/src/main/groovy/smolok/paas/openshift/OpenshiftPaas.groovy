@@ -1,13 +1,9 @@
 package smolok.paas.openshift
 
-import com.google.common.io.Files
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
-
-import smolok.lib.docker.ContainerStatus
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
@@ -18,9 +14,9 @@ import java.util.concurrent.Callable
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static net.smolok.lib.download.DownloadManager.BinaryCoordinates
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
-import static smolok.lib.docker.Container.container
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class OpenshiftPaas implements Paas {
@@ -29,7 +25,11 @@ class OpenshiftPaas implements Paas {
 
     private final static LOG = getLogger(OpenshiftPaas.class)
 
-    // Docker commands constants
+    // Constants
+
+    private static final OPENSHIFT_DOWNLOAD_URL = new URL('https://github.com/openshift/origin/releases/download/v1.3.0-rc1/openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz')
+
+    // OpenShift commands constants
 
     private final static OS_STATUS_COMMAND = 'status'
 
@@ -54,7 +54,7 @@ class OpenshiftPaas implements Paas {
     // Platform operations
 
     void init() {
-        downloadManager.download(new DownloadManager.BinaryCoordinates(new URL('https://github.com/openshift/origin/releases/download/v1.3.0-rc1/openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz'), 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz', 'openshift'))
+        downloadManager.download(new BinaryCoordinates(OPENSHIFT_DOWNLOAD_URL, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit.tar.gz', 'openshift'))
     }
 
     @Override
@@ -86,8 +86,8 @@ class OpenshiftPaas implements Paas {
                 processManager.executeAsync(serverPath, 'start')
                 await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
                 Thread.sleep(15000)
-                def x = oc('login -u admin -p admin')
-                def y = oc('new-project smolok')
+                oc('login -u admin -p admin')
+                oc('new-project smolok')
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')

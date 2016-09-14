@@ -16,10 +16,6 @@
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-lib-docker</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-download</artifactId>
         </dependency>
         <dependency>
