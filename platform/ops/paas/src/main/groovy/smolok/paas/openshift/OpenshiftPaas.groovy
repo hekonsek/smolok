@@ -126,7 +126,7 @@ class OpenshiftPaas implements Paas {
 
         new File('.').listFiles().each {
             if(it.name.startsWith('openshift.local.')) {
-                FileUtils.deleteDirectory(it)
+                processManager.execute(command("sudo rm -rf ${it.name}"))
             }
         }
     }
