@@ -120,7 +120,7 @@ class OpenshiftPaas implements Paas {
         processManager.execute('mount').each {
             def volume = it.split(' ')[2]
             if(volume.startsWith(openshiftDirectory)) {
-                processManager.execute(command("umount ${volume}"))
+                processManager.execute(command("sudo umount ${volume}"))
             }
         }
 
