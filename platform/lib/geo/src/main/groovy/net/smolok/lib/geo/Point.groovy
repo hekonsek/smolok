@@ -30,6 +30,12 @@ class Point {
         this.lng = lng
     }
 
+    static Point point(double lat, double lng) {
+        new Point(lat, lng)
+    }
+
+    // Getters & setters
+
     double lat() {
         return lat
     }

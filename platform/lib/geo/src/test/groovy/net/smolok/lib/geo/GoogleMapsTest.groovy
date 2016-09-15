@@ -21,6 +21,7 @@ import org.junit.Test
 
 import java.nio.file.Files
 
+import static net.smolok.lib.geo.Point.point
 import static org.assertj.core.api.Assertions.assertThat
 
 class GoogleMapsTest {
@@ -28,8 +29,8 @@ class GoogleMapsTest {
     @Test
     void shouldDownloadMapAsPng() {
         // Given
-        def firstPoint = new Point(49.823873, 19.041077)
-        def secondPoint = new Point(49.829472, 19.077234)
+        def firstPoint = point(49.823873, 19.041077)
+        def secondPoint = point(49.829472, 19.077234)
 
         // When
         def url = GoogleMaps.renderRouteUrl(firstPoint, secondPoint)
