@@ -103,7 +103,7 @@ class OpenshiftPaas implements Paas {
                 def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
                 processManager.executeAsync('sudo', serverPath, 'start')
                 await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
-                await().atMost(60, SECONDS).until({
+                await().atMost(120, SECONDS).until({
                     !oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first().
                             startsWith('Error from server: User "admin" cannot get users at the cluster scope')
                 } as Callable<Boolean>)
@@ -170,7 +170,7 @@ class OpenshiftPaas implements Paas {
     }
 
     private oc(String cmd) {
-        processManager.execute(command(Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'oc').toFile().absolutePath + ' ' + cmd))
+        processManager.execute(command(Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'oc').toFile().absolutePath + ' ' + cmd))
     }
 
 }
