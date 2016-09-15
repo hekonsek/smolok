@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 
+import java.nio.file.Paths
 import java.util.zip.ZipInputStream
 
 import static org.apache.commons.io.IOUtils.copyLarge
@@ -103,6 +104,10 @@ class DownloadManager {
     File downloadedFile(String name) {
         Validate.notBlank(name, 'Name of the downloaded file cannot be blank.')
         new File(downloadDirectory, name)
+    }
+
+    File fileFromExtractedDirectory(String extractedDirectoryName, String filename) {
+        Paths.get(downloadedFile(extractedDirectoryName).absolutePath, filename).toFile()
     }
 
     // Inner classes
