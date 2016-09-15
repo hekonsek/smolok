@@ -13,15 +13,16 @@
     <name>${artifactId}</name>
 
     <dependencies>
-        <!-- Smolok dependencies -->
+        <!-- Internal dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
         </dependency>
+
+        <!-- External dependencies -->
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts-core</artifactId>
-            <version>1.14.0</version>
         </dependency>
 
         <!-- Testing dependencies -->

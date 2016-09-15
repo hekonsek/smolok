@@ -22,6 +22,7 @@
         <commons-logging.version>1.1</commons-logging.version>
         <drools.version>6.4.0.Final</drools.version>
         <jsch.version>0.1.53</jsch.version>
+        <jts.version>1.14.0</jts.version>
         <netty.version>4.0.33.Final</netty.version>
         <smolok.version>0.0.4-SNAPSHOT</smolok.version>
         <spark.version>2.0.0</spark.version>
@@ -143,7 +144,8 @@
                 <artifactId>smolok-status</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
-            <!-- Non-Smolok dependencies -->
+
+            <!-- External dependencies -->
             <dependency>
                 <groupId>com.datastax.cassandra</groupId>
                 <artifactId>cassandra-driver-core</artifactId>
@@ -153,6 +155,11 @@
                 <groupId>com.jcraft</groupId>
                 <artifactId>jsch</artifactId>
                 <version>${jsch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vividsolutions</groupId>
+                <artifactId>jts-core</artifactId>
+                <version>${jts.version}</version>
             </dependency>
             <!-- Camel AMQP pulls netty-all, we need to be sure that it is compatible with our version used by Vert.x -->
             <dependency>
