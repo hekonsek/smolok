@@ -17,7 +17,6 @@
 package smolok.paas.openshift
 
 import net.smolok.lib.download.DownloadManager
-import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
@@ -74,7 +73,7 @@ class OpenshiftPaas implements Paas {
     // Platform operations
 
     void init() {
-        downloadManager.download(new BinaryCoordinates(OPENSHIFT_DOWNLOAD_URL, OPENSHIFT_DISTRO_ARCHIVE, 'openshift'))
+        downloadManager.download(new BinaryCoordinates(OPENSHIFT_DOWNLOAD_URL, OPENSHIFT_DISTRO_ARCHIVE, OPENSHIFT_DISTRO))
     }
 
     @Override
@@ -84,7 +83,6 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isStarted() {
-
         def eventBusOutput = oc(OS_GET_SERVICES_COMMAND).find {
             it.startsWith('eventbus')
         }
@@ -99,17 +97,18 @@ class OpenshiftPaas implements Paas {
     void start() {
         if(!isStarted()) {
             if(isProvisioned()) {
-                def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
+                def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
                 processManager.executeAsync(serverPath, 'start')
             } else {
-                def serverPath = Paths.get(downloadManager.downloadedFile('openshift').absolutePath, 'openshift-origin-server-v1.3.0-rc1-ac0bb1bf6a629e0c262f04636b8cf2916b16098c-linux-64bit', 'openshift').toFile().absolutePath
+                def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
                 processManager.executeAsync('sudo', serverPath, 'start')
                 await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
-                Thread.sleep(30000)
-                oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
+                await().atMost(60, SECONDS).until({
+                    !oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first().
+                            startsWith('Error from server: User "admin" cannot get users at the cluster scope')
+                } as Callable<Boolean>)
                 oc('new-project smolok')
-                println '22222'
-                await().atMost(60, SECONDS).until({println oc('get pod'); isOsStarted()} as Callable<Boolean>)
+                await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
