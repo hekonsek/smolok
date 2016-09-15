@@ -16,17 +16,17 @@
  */
 package smolok.encoding.camel.spring;
 
-import smolok.encoding.camel.PayloadEncodingDataFormat;
-import org.springframework.context.annotation.Bean;
+import smolok.encoding.camel.PayloadEncodingDataFormat
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.encoding.spi.PayloadEncoding;
+import smolok.encoding.spi.PayloadEncoding
 
 @Configuration
-public class PayloadEncodingDataFormatConfiguration {
+class PayloadEncodingDataFormatConfiguration {
 
     @Bean
     PayloadEncodingDataFormat payloadEncodingDataFormat(PayloadEncoding payloadEncoding) {
-        return new PayloadEncodingDataFormat(payloadEncoding);
+        new PayloadEncodingDataFormat(payloadEncoding)
     }
 
 }
