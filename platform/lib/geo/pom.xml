@@ -24,6 +24,11 @@
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>0.1.15</version>
+        </dependency>
 
         <!-- Testing dependencies -->
         <dependency>
