@@ -107,7 +107,8 @@ class OpenshiftPaas implements Paas {
                 await().atMost(60, SECONDS).until({
                     def x = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
                     println x
-                            !x.startsWith('Error from server: User "admin" cannot get users at the cluster scope')
+                            !x.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
+                                    !x.startsWith('error: dial tcp')
                 } as Callable<Boolean>)
                 println 'yyy'
 //                Thread.sleep(30000)
