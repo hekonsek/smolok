@@ -108,8 +108,8 @@ class OpenshiftPaas implements Paas {
 //                    println x
 //                            !x.startsWith('Error from server: User "admin" cannot get users at the cluster scope')
 //                } as Callable<Boolean>)
-                oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
                 Thread.sleep(30000)
+                oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
                 oc('new-project smolok')
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
