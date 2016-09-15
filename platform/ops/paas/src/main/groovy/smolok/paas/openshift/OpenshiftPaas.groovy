@@ -170,7 +170,7 @@ class OpenshiftPaas implements Paas {
     }
 
     private oc(String cmd) {
-        processManager.execute(downloadManager.fileFromExtractedDirectory("${OPENSHIFT_DISTRO}/${OPENSHIFT_DISTRO}", 'oc').absolutePath, cmd)
+        processManager.execute(command(downloadManager.fileFromExtractedDirectory("${OPENSHIFT_DISTRO}/${OPENSHIFT_DISTRO}", 'oc').absolutePath + ' ' + cmd))
     }
 
 }
