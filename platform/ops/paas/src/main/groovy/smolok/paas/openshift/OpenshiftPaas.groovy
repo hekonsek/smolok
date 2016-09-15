@@ -114,7 +114,6 @@ class OpenshiftPaas implements Paas {
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
-            println '33333333'
             await().atMost(120, SECONDS).until({isStarted()} as Callable<Boolean>)
             LOG.debug('Event bus has been started.')
         } else {
@@ -162,12 +161,8 @@ class OpenshiftPaas implements Paas {
     // Helpers
 
     private isNotLoggedIntoProject() {
-        def yyy = oc(OS_STATUS_COMMAND).first()
-                yyy.contains('You must be logged in to the server') || yyy.contains('Missing or incomplete configuration info')
-    }
-
-    private isNotStarted() {
-        oc(OS_STATUS_COMMAND).first().startsWith('The connection to the server')
+        def statusOutput = oc(OS_STATUS_COMMAND).first()
+        statusOutput.contains('You must be logged in to the server') || statusOutput.contains('Missing or incomplete configuration info')
     }
 
     private isOsStarted() {
