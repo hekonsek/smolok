@@ -103,16 +103,11 @@ class OpenshiftPaas implements Paas {
                 def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
                 processManager.executeAsync('sudo', serverPath, 'start')
                 await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
-                println 'xxx'
                 await().atMost(60, SECONDS).until({
-                    def x = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
-                    println x
-                            !x.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
-                                    !x.startsWith('error: dial tcp')
+                    def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
+                    !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
+                            !loginOutput.startsWith('error: dial tcp')
                 } as Callable<Boolean>)
-                println 'yyy'
-//                Thread.sleep(30000)
-//                oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true')
                 oc('new-project smolok')
                 await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
