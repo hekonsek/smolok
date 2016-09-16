@@ -24,8 +24,8 @@ import com.google.common.collect.ImmutableList;
 class EchoMockProcessManager extends ExecutorBasedProcessManager {
 
     @Override
-    List<String> execute(String... command) {
-        ImmutableList.copyOf(command)
+    List<String> execute(Command command) {
+        ImmutableList.copyOf(command.command)
     }
 
 }

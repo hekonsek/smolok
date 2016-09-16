@@ -21,16 +21,27 @@ import static org.apache.commons.io.IOUtils.readLines
 class DefaultProcessManager extends ExecutorBasedProcessManager {
 
     @Override
-    List<String> execute(String... command) {
+    List<String> execute(Command command) {
         if(log.isDebugEnabled()) {
-            log.debug('About to execute command:', command.toList())
+            log.debug('About to execute command:', command.command())
         }
 
         try {
-            def process = new ProcessBuilder().redirectErrorStream(true).command(command).start()
+            def commandSegments = command.command()
+
+            def sudoPassword = command.sudoPassword()
+            if(command.sudo()) {
+                if(System.getProperty("user.name") == 'root' || sudoPassword == null || sudoPassword.isEmpty()) {
+                    commandSegments.add(0, 'sudo')
+                } else {
+                    commandSegments = ['/bin/bash', '-c', "echo ${sudoPassword}| sudo -S ${commandSegments.join(' ')}"]
+                }
+            }
+
+            def process = new ProcessBuilder().redirectErrorStream(true).command(commandSegments).start()
             def output = readLines(process.getInputStream())
             if(log.isDebugEnabled()) {
-                log.debug('Output of the command {}: {}', command.toList(), output)
+                log.debug('Output of the command {}: {}', commandSegments, output)
             }
             output
         } catch (IOException e) {

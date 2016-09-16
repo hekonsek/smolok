@@ -17,12 +17,14 @@
 package smolok.paas.openshift.spring
 
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
+import smolok.lib.common.Properties
 import smolok.paas.Paas
 
 import static org.assertj.core.api.Assertions.assertThat
@@ -32,6 +34,17 @@ import static org.assertj.core.api.Assertions.assertThat
 class OpenShiftPaasConfigurationTest {
 
     // Collaborators fixtures
+
+//    @BeforeClass
+//    static void beforeClass() {
+//        Properties.setSystemStringProperty('SUDO_PASSWORD', ' ')
+//
+//
+//        def sudoPassword = Properties.stringProperty('SUDO_PASSWORD')
+//        if(sudoPassword == null && System.getProperty("user.name") == 'root') {
+//            Properties.setSystemStringProperty('SUDO_PASSWORD', '')
+//        }
+//    }
 
     @Autowired
     Paas paas

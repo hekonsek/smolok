@@ -18,7 +18,7 @@ abstract class ExecutorBasedProcessManager implements ProcessManager {
 
     private final executor = newCachedThreadPool()
 
-    boolean canExecute(String... command) {
+    boolean canExecute(Command command) {
         try {
             execute(command)
             true
@@ -29,7 +29,7 @@ abstract class ExecutorBasedProcessManager implements ProcessManager {
     }
 
     @Override
-    Future<List<String>> executeAsync(String... command) {
+    Future<List<String>> executeAsync(Command command) {
         executor.submit({execute(command)} as Callable<List<String>>)
     }
 

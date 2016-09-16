@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.fail
+import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class DefaultProcessManagerTest {
@@ -18,26 +19,26 @@ class DefaultProcessManagerTest {
 
     @Test
     void shouldBeAbleToExecuteEcho() {
-        def canExecuteEcho = processManager.canExecute('echo')
+        def canExecuteEcho = processManager.canExecute(cmd('echo'))
         assertThat(canExecuteEcho).isTrue()
     }
 
     @Test
     void shouldNotBeAbleToExecuteRandomCommand() {
-        def canExecuteEcho = processManager.canExecute('invalidCommand')
+        def canExecuteEcho = processManager.canExecute(cmd('invalidCommand'))
         assertThat(canExecuteEcho).isFalse()
     }
 
     @Test
     void shouldRunEcho() {
-        def output = processManager.execute('echo', 'foo')
+        def output = processManager.execute(cmd('echo', 'foo'))
         assertThat(output).isEqualTo(['foo'])
     }
 
     @Test
     void shouldHandleInvalidCommand() {
         try {
-            processManager.execute('invalidCommand')
+            processManager.execute(cmd('invalidCommand'))
         } catch (ProcessExecutionException e) {
             assertThat(e).hasCauseInstanceOf(IOException.class)
             return
@@ -47,14 +48,14 @@ class DefaultProcessManagerTest {
 
     @Test
     void shouldRunEchoAsynchronously() {
-        def output = processManager.executeAsync('echo', 'foo')
+        def output = processManager.executeAsync(cmd('echo', 'foo'))
         assertThat(output.get()).isEqualTo(['foo'])
     }
 
     @Test
     void shouldHandleInvalidAsynchronousCommand() {
         try {
-            processManager.executeAsync('invalidCommand').get()
+            processManager.executeAsync(cmd('invalidCommand')).get()
         } catch (ExecutionException e) {
             assertThat(e).hasCauseInstanceOf(ProcessExecutionException.class)
             return
@@ -64,19 +65,19 @@ class DefaultProcessManagerTest {
 
     @Test
     void shouldParseCommandWithSpaces() {
-        def output = processManager.execute(command('echo foo'))
+        def output = processManager.execute(cmd('echo foo'))
         assertThat(output).isEqualTo(['foo'])
     }
 
     @Test
     void shouldParseCommandWithDoubleSpaces() {
-        def output = processManager.execute(command('echo  foo'))
+        def output = processManager.execute(cmd('echo  foo'))
         assertThat(output).isEqualTo(['foo'])
     }
 
     @Test
     void shouldParseCommandWithNewLines() {
-        def output = processManager.execute(command('echo\nfoo'))
+        def output = processManager.execute(cmd('echo\nfoo'))
         assertThat(output).isEqualTo(['foo'])
     }
 

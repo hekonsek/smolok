@@ -11,7 +11,7 @@ class FixedMockProcessManager extends ExecutorBasedProcessManager {
     }
 
     @Override
-    List<String> execute(String... command) {
+    List<String> execute(Command command) {
         result
     }
 

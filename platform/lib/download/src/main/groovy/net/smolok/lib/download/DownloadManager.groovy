@@ -26,6 +26,7 @@ import java.util.zip.ZipInputStream
 
 import static org.apache.commons.io.IOUtils.copyLarge
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 /**
@@ -87,7 +88,7 @@ class DownloadManager {
                     zip.close()
                 } else if(targetFile.name.endsWith('.tar.gz')) {
                     extractedImage.mkdirs()
-                    processManager.execute(command("tar xvpf ${targetFile} -C ${extractedImage}"))
+                    processManager.execute(cmd("tar xvpf ${targetFile} -C ${extractedImage}"))
                 } else {
                     throw new UnsupportedCompressionFormatException(targetFile.name)
                 }

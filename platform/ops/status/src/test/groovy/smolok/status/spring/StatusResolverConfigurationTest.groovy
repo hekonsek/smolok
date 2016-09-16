@@ -13,6 +13,7 @@ import smolok.paas.Paas
 import smolok.status.StatusResolver
 
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
@@ -58,8 +59,8 @@ class StatusResolverConfigurationTest {
     @Test
     void cannotSendToEventBus() {
         // Given
-        def eventsBusPid = processManager.execute(command('docker ps')).find{ it.contains('k8s_eventbus') }.replaceFirst(/\s.+/, '')
-        processManager.execute(command("docker stop ${eventsBusPid}"))
+        def eventsBusPid = processManager.execute(cmd('docker ps')).find{ it.contains('k8s_eventbus') }.replaceFirst(/\s.+/, '')
+        processManager.execute(cmd("docker stop ${eventsBusPid}"))
 
         // When
         def canSendToEventBus = statusResolver.status().find{ it.key() == EVENTBUS_CAN_SEND_METRIC_KEY }

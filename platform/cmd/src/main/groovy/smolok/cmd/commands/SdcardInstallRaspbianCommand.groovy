@@ -8,6 +8,7 @@ import smolok.cmd.OutputSink
 import smolok.lib.process.ProcessManager
 
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.process.Command.cmd
 
 class SdcardInstallRaspbianCommand implements Command {
 
@@ -54,10 +55,10 @@ class SdcardInstallRaspbianCommand implements Command {
 
         outputSink.out('Writing image to SD card...')
         def extractedImage = downloadManager.downloadedFile(image.extractedFileName())
-        processManager.execute("dd", "bs=4M", "if=${extractedImage}", "of=${device}").forEach {
+        processManager.execute(cmd("dd", "bs=4M", "if=${extractedImage}", "of=${device}")).forEach {
             outputSink.out(it)
         }
-        processManager.execute('sync').forEach {
+        processManager.execute(cmd('sync')).forEach {
             outputSink.out(it)
         }
     }

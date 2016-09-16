@@ -7,7 +7,7 @@ import java.util.concurrent.Future
  */
 interface ProcessManager {
 
-    boolean canExecute(String... command)
+    boolean canExecute(Command command)
 
     /**
      * Executes command and returns output.
@@ -16,8 +16,8 @@ interface ProcessManager {
      * @return standard output and standard error combined into a single list. Each line of collected output is
      * represented as a line of returned list.
      */
-    List<String> execute(String... command)
+    List<String> execute(Command command)
 
-    Future<List<String>> executeAsync(String... command)
+    Future<List<String>> executeAsync(Command command)
 
 }

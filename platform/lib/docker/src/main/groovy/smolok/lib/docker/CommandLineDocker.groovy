@@ -2,6 +2,7 @@ package smolok.lib.docker
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang3.Validate
+import smolok.lib.process.Command
 import smolok.lib.process.ProcessManager
 
 import static org.slf4j.LoggerFactory.getLogger
@@ -10,6 +11,7 @@ import static ServiceStartupResults.started
 import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.none
 import static smolok.lib.docker.ContainerStatus.running
+import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class CommandLineDocker implements Docker {
@@ -30,7 +32,7 @@ class CommandLineDocker implements Docker {
 
     @Override
     List<String> execute(Container container) {
-        processManager.execute(command(buildRunCommand(container, false)))
+        processManager.execute(cmd(buildRunCommand(container, false)))
     }
 
     ServiceStartupResults startService(Container container) {
@@ -42,17 +44,17 @@ class CommandLineDocker implements Docker {
         switch(status(container.name())) {
             case running: return alreadyRunning
             case created:
-                processManager.execute(command("docker start ${container.name()}"))
+                processManager.execute(cmd("docker start ${container.name()}"))
                 return started
             case none:
-                processManager.execute(command(buildRunCommand(container, true)))
+                processManager.execute(cmd(buildRunCommand(container, true)))
                 return ServiceStartupResults.created
         }
     }
 
     ContainerStatus status(String name) {
-        if (processManager.execute(command("docker ps -a -f name=${name}")).size() > 1) {
-            if (processManager.execute(command("docker ps -f name=${name}")).size() > 1) {
+        if (processManager.execute(cmd("docker ps -a -f name=${name}")).size() > 1) {
+            if (processManager.execute(cmd("docker ps -f name=${name}")).size() > 1) {
                 running
             } else {
                 created
@@ -67,12 +69,12 @@ class CommandLineDocker implements Docker {
         Validate.notBlank(name, 'Container name cannot be blank.')
         LOG.debug('About to stop container: {}', name)
 
-        processManager.execute(command("docker stop ${name}"))
+        processManager.execute(cmd("docker stop ${name}"))
     }
 
     @Override
     InspectResults inspect(String containerId) {
-        def commandOutput = processManager.execute(command("docker inspect ${containerId}")).join(' ')
+        def commandOutput = processManager.execute(cmd("docker inspect ${containerId}")).join(' ')
         def trimmedCommandOutput = commandOutput.substring(1, commandOutput.length() - 1)
         new InspectResults(MAPPER.readValue(trimmedCommandOutput, Map.class))
     }
