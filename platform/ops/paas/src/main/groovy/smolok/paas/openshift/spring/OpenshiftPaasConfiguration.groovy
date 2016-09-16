@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
-import smolok.paas.openshift.OpenshiftPaas
+import smolok.paas.openshift.OpenShiftPaas
 
 /**
  * Spring configuration for OpenShift PaaS provider
@@ -37,7 +37,7 @@ class OpenshiftPaasConfiguration {
     @Bean(initMethod = 'init')
     @ConditionalOnMissingBean
     Paas paas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
-        new OpenshiftPaas(downloadManager, processManager, amqpProbe)
+        new OpenShiftPaas(downloadManager, processManager, amqpProbe)
     }
 
 }

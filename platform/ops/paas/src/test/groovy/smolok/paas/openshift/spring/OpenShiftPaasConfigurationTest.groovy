@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Smolok.class)
-class OpenshiftPaasConfigurationTest {
+class OpenShiftPaasConfigurationTest {
 
     // Collaborators fixtures
 

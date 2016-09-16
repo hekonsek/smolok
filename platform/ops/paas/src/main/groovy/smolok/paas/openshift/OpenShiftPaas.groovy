@@ -34,11 +34,11 @@ import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
-class OpenshiftPaas implements Paas {
+class OpenShiftPaas implements Paas {
 
     // Logging
 
-    private final static LOG = getLogger(OpenshiftPaas.class)
+    private final static LOG = getLogger(OpenShiftPaas.class)
 
     // Constants
 
@@ -50,9 +50,9 @@ class OpenshiftPaas implements Paas {
 
     // OpenShift commands constants
 
-    private final static OS_STATUS_COMMAND = 'status'
+    private final static OC_STATUS = 'status'
 
-    private final static OS_GET_SERVICES_COMMAND = 'get service'
+    private final static OC_GET_SERVICE = 'get service'
 
     // Collaborators
 
@@ -64,7 +64,7 @@ class OpenshiftPaas implements Paas {
 
     // Constructors
 
-    OpenshiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
+    OpenShiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
         this.downloadManager = downloadManager
         this.processManager = processManager
         this.amqpProbe = amqpProbe
@@ -83,7 +83,7 @@ class OpenshiftPaas implements Paas {
 
     @Override
     boolean isStarted() {
-        def eventBusOutput = oc(OS_GET_SERVICES_COMMAND).find {
+        def eventBusOutput = oc(OC_GET_SERVICE).find {
             it.startsWith('eventbus')
         }
         if(eventBusOutput == null) {
@@ -152,7 +152,7 @@ class OpenshiftPaas implements Paas {
 
     @Override
     List<ServiceEndpoint> services() {
-        def output = oc(OS_GET_SERVICES_COMMAND)
+        def output = oc(OC_GET_SERVICE)
         def servicesOutput = output.subList(1, output.size())
         servicesOutput.collect{ it.split(/\s+/) }.collect {
             new ServiceEndpoint(it[0], it[1], it[3].replaceFirst('/.+', '').toInteger())
@@ -162,12 +162,12 @@ class OpenshiftPaas implements Paas {
     // Helpers
 
     private isNotLoggedIntoProject() {
-        def statusOutput = oc(OS_STATUS_COMMAND).first()
+        def statusOutput = oc(OC_STATUS).first()
         statusOutput.contains('You must be logged in to the server') || statusOutput.contains('Missing or incomplete configuration info')
     }
 
     private isOsStarted() {
-        oc(OS_STATUS_COMMAND).first().startsWith('In project ')
+        oc(OC_STATUS).first().startsWith('In project ')
     }
 
     private oc(String cmd) {
