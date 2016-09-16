@@ -12,8 +12,15 @@
     <artifactId>smolok-paas</artifactId>
     <name>${artifactId}</name>
 
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <dependencies>
-        <!-- Smolok dependencies -->
+        <!-- Internal dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-download</artifactId>
@@ -23,18 +30,16 @@
             <artifactId>smolok-lib-vertx</artifactId>
         </dependency>
 
-        <!-- Non-Smolok dependencies -->
+        <!-- External dependencies -->
         <dependency>
             <groupId>com.jayway.awaitility</groupId>
             <artifactId>awaitility</artifactId>
         </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging-api</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Testing -->
