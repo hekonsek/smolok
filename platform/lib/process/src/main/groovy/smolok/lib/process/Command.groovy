@@ -19,21 +19,23 @@ class Command {
         this.sudoPassword = sudoPassword
     }
 
-    static Command cmd(String... command) {
+    static Command cmd(boolean sudo, String... command) {
         if(command.length == 1 && command[0] =~ /\s+/) {
             cmd(command[0].split(/\s+/))
         } else {
-            new Command(command.toList(), null, false, null)
+            new Command(command.toList(), null, sudo, null)
         }
     }
 
-    static Command sudo(String... command) {
-        if(command.length == 1 && command[0] =~ /\s+/) {
-            sudo(command[0].split(/\s+/))
-        } else {
-            new Command(command.toList(), null, true, null)
-        }
+    static Command cmd(String... command) {
+        cmd(false, command)
     }
+
+    static Command sudo(String... command) {
+        cmd(true, command)
+    }
+
+    // Members access
 
     List<String> command() {
         return command
@@ -44,8 +46,10 @@ class Command {
     }
 
     boolean sudo() {
-        return sudo
+        sudo
     }
+
+    // Member resolvers
 
     String sudoPassword() {
         if(sudoPassword != null) {
