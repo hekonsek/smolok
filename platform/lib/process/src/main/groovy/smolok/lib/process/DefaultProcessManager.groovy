@@ -31,10 +31,12 @@ class DefaultProcessManager extends ExecutorBasedProcessManager {
 
             def sudoPassword = command.sudoPassword()
             if(command.sudo()) {
-                if(System.getProperty("user.name") == 'root' || sudoPassword == null || sudoPassword.isEmpty()) {
+                if(sudoPassword == null) {
+                    throw new IllegalStateException('Sudo access is required to execute the command. Please set up SUDO_PASSWORD environment variable or JVM system property.')
+                } else if(System.getProperty("user.name") == 'root' || sudoPassword.isEmpty()) {
                     commandSegments.add(0, 'sudo')
                 } else {
-                    commandSegments = ['/bin/bash', '-c', "echo ${sudoPassword}| sudo -S ${commandSegments.join(' ')}"]
+                    commandSegments = ['/bin/bash', '-c', "echo '${sudoPassword}'| sudo -S ${commandSegments.join(' ')}".toString()]
                 }
             }
 
