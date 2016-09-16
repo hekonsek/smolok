@@ -29,7 +29,7 @@ class Command {
 
     static Command sudo(String... command) {
         if(command.length == 1 && command[0] =~ /\s+/) {
-            cmd(command[0].split(/\s+/))
+            sudo(command[0].split(/\s+/))
         } else {
             new Command(command.toList(), null, true, null)
         }
