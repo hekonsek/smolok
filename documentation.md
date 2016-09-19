@@ -19,7 +19,8 @@ Smolok platform provides the following features enabling Big Data for connected 
 
 ### Paas infrastructure
 
-Smolok provisions PaaS backend that takes care of:
+Smolok provisions Kubernetes-based PaaS backend that handles container-based deployment of the cloud services. In particular
+PaaS provides:
 - basic application nodes health-checks
 - restarting crashed and stalled nodes
 - services discovery
