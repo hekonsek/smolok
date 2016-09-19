@@ -4,10 +4,10 @@ import org.junit.Test
 
 import java.util.concurrent.ExecutionException
 
+import static java.io.File.createTempFile
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.fail
 import static smolok.lib.process.Command.cmd
-import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class DefaultProcessManagerTest {
 
@@ -79,6 +79,19 @@ class DefaultProcessManagerTest {
     void shouldParseCommandWithNewLines() {
         def output = processManager.execute(cmd('echo\nfoo'))
         assertThat(output).isEqualTo(['foo'])
+    }
+
+    @Test
+    void shouldChangeWorkingDirectory() {
+        // Given
+        def tempFile = createTempFile('smolok', 'test')
+        def command = new CommandBuilder('ls').workingDirectory(tempFile.parentFile).build()
+
+        // When
+        def output = processManager.execute(command)
+
+        // Then
+        assertThat(output).contains(tempFile.name)
     }
 
 }
