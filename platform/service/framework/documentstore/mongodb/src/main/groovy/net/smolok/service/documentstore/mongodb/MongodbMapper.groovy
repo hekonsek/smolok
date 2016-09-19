@@ -24,6 +24,8 @@ import org.bson.types.ObjectId
 
 class MongodbMapper {
 
+    static final def MONGO_ID = '_id'
+
     private static final SIMPLE_SUFFIX_OPERATORS = [
             "GreaterThan": '$gt',
             "GreaterThanEqual": '$gte',

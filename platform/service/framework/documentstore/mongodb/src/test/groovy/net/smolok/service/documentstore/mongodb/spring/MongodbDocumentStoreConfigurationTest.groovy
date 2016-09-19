@@ -19,6 +19,7 @@ package net.smolok.service.documentstore.mongodb.spring
 import com.fasterxml.jackson.databind.ObjectMapper
 import net.smolok.service.documentstore.api.DocumentStore
 import net.smolok.service.documentstore.api.QueryBuilder
+import org.bson.types.ObjectId
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -167,6 +168,351 @@ class MongodbDocumentStoreConfigurationTest {
         // Then
         assertThat(invoices).isEmpty()
     }
+
+    @Test
+    public void shouldFindMany() {
+        // Given
+        def firstInvoice = documentStore.save(collection, serialize(invoice))
+        def secondInvoice = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def invoices = documentStore.findMany(collection, [firstInvoice, secondInvoice])
+
+        // Then
+        assertThat(invoices).hasSize(2)
+        assertThat(invoices.first().id).isEqualTo(firstInvoice)
+        assertThat(invoices.last().id).isEqualTo(secondInvoice)
+    }
+
+    @Test
+    public void shouldNotFindMany() {
+        // When
+        def invoices = documentStore.findMany(collection, [ObjectId.get().toString(), ObjectId.get().toString()])
+
+        // Then
+        assertThat(invoices).isEmpty()
+    }
+
+//    @Test
+//    public void shouldNotFindOne() {
+//        // When
+//        Invoice invoice = documentService.findOne(Invoice.class, ObjectId.get().toString());
+//
+//        // Then
+//        assertNull(invoice);
+//    }
+//
+//    @Test
+//    public void shouldCount() throws UnknownHostException, InterruptedException {
+//        // Given
+//        documentService.save(new Invoice().invoiceId("invoice001"));
+//
+//        // When
+//        long invoices = documentService.count(Invoice.class);
+//
+//        // Then
+//        assertEquals(1, invoices);
+//    }
+//
+//    @Test
+//    public void shouldFindByQuery() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
+//    }
+//
+//    @Test
+//    public void shouldFindAllByQuery() {
+//        // Given
+//        documentService.save(new Invoice());
+//        documentService.save(new Invoice());
+//
+//        // When
+//        InvoiceQuery query = new InvoiceQuery();
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(2, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldNotFindByQuery() {
+//        // Given
+//        documentService.save(new Invoice().invoiceId("invoice001"));
+//        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldFindByNestedQuery() {
+//        // Given
+//        String street = "someStreet";
+//        invoice.address = new Address().street(street);
+//        invoice = documentService.save(invoice);
+//
+//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street(street);
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(street, invoices.get(0).address.street);
+//    }
+//
+//    @Test
+//    public void shouldNotFindByNestedQuery() {
+//        // Given
+//        String street = "someStreet";
+//        invoice.address = new Address().street(street);
+//        invoice = documentService.save(invoice);
+//
+//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street("someRandomStreet");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldReturnPageByQuery() {
+//        // Given
+//        Invoice firstInvoice = documentService.save(new Invoice());
+//        Invoice secondInvoice = documentService.save(new Invoice());
+//        Invoice thirdInvoice = documentService.save(new Invoice());
+//
+//        // When
+//        List<Invoice> firstPage = documentService.findByQuery(Invoice.class, buildQuery(new InvoiceQuery()).page(0).size(2));
+//        List<Invoice> secondPage = documentService.findByQuery(Invoice.class, buildQuery(new InvoiceQuery()).page(1).size(2));
+//
+//        // Then
+//        assertEquals(2, firstPage.size());
+//        assertEquals(1, secondPage.size());
+//        assertEquals(firstInvoice.id, firstPage.get(0).id);
+//        assertEquals(secondInvoice.id, firstPage.get(1).id);
+//        assertEquals(thirdInvoice.id, secondPage.get(0).id);
+//    }
+//
+//    @Test
+//    public void shouldSortDescending() {
+//        // Given
+//        Invoice firstInvoice = documentService.save(new Invoice().invoiceId("1"));
+//        Invoice secondInvoice = documentService.save(new Invoice().invoiceId("2"));
+//        Invoice thirdInvoice = documentService.save(new Invoice().invoiceId("3"));
+//
+//        // When
+//        List<Invoice> firstPage = documentService.findByQuery(Invoice.class, buildQuery(
+//                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(0));
+//        List<Invoice> secondPage = documentService.findByQuery(Invoice.class, buildQuery(
+//                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(1));
+//
+//        // Then
+//        assertEquals(2, firstPage.size());
+//        assertEquals(1, secondPage.size());
+//        assertEquals(thirdInvoice.id, firstPage.get(0).id);
+//        assertEquals(secondInvoice.id, firstPage.get(1).id);
+//        assertEquals(firstInvoice.id, secondPage.get(0).id);
+//    }
+//
+//    @Test
+//    public void shouldFindByQueryWithContains() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery();
+//        query.setInvoiceIdContains("voice");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
+//    }
+//
+//    @Test
+//    public void shouldNotFindByQueryWithContains() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery();
+//        query.setInvoiceIdContains("randomString");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldFindByQueryWithIn() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceIdIn(invoice.invoiceId, "foo", "bar");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
+//    }
+//
+//    @Test
+//    public void shouldNotFindByQueryWithIn() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceIdIn("foo", "bar");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldFindByQueryWithNotIn() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn("foo", "bar");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
+//    }
+//
+//    @Test
+//    public void shouldNotFindByQueryWithNotIn() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn(invoice.invoiceId, "foo", "bar");
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices.size());
+//    }
+//
+//    @Test
+//    public void shouldFindByQueryBetweenDateRange() {
+//        // Given
+//        Invoice todayInvoice = documentService.save(invoice);
+//        invoice = new Invoice();
+//        invoice.timestamp = now().minusDays(2).toDate();
+//        documentService.save(invoice);
+//        invoice = new Invoice();
+//        invoice.timestamp = now().plusDays(2).toDate();
+//        documentService.save(invoice);
+//
+//        InvoiceQuery query = new InvoiceQuery();
+//        query.setTimestampGreaterThanEqual(now().minusDays(1).toDate());
+//        query.setTimestampLessThan(now().plusDays(1).toDate());
+//
+//        // When
+//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices.size());
+//        assertEquals(todayInvoice.id, invoices.get(0).id);
+//    }
+//
+//    @Test
+//    public void shouldCountPositiveByQuery() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
+//
+//        // When
+//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices);
+//    }
+//
+//    @Test
+//    public void shouldCountNegativeByQuery() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
+//
+//        // When
+//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices);
+//    }
+//
+//    @Test
+//    public void shouldCountPositiveByQueryWithContains() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery();
+//        query.setInvoiceIdContains("voice");
+//
+//        // When
+//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(1, invoices);
+//    }
+//
+//    @Test
+//    public void shouldCountNegativeByQueryWithContains() {
+//        // Given
+//        documentService.save(invoice);
+//        InvoiceQuery query = new InvoiceQuery();
+//        query.setInvoiceIdContains("randomString");
+//
+//        // When
+//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//
+//        // Then
+//        assertEquals(0, invoices);
+//    }
+//
+//    @Test
+//    public void shouldRemoveDocument() {
+//        // Given
+//        invoice = documentService.save(invoice);
+//
+//        // When
+//        documentService.remove(Invoice.class, invoice.id);
+//
+//        // Then
+//        long count = documentService.count(Invoice.class);
+//        assertEquals(0, count);
+//    }
+//
+//    @Test
+//    public void shouldSetCustomApiEndpointOptions() {
+//        for (Endpoint endpoint : camelContext.getEndpoints()) {
+//            if (endpoint.getEndpointUri().startsWith("http")) {
+//                NettyHttpEndpoint nettyEndpoint = (NettyHttpEndpoint) endpoint;
+//                assertEquals(1000, nettyEndpoint.getConfiguration().getRequestTimeout());
+//                assertEquals(20000, nettyEndpoint.getConfiguration().getConnectTimeout());
+//                return;
+//            }
+//        }
+//        fail("Can't find Netty endpoint with custom options.");
+//    }
 
     // Helpers
 

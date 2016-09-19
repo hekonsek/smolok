@@ -22,16 +22,26 @@ import org.bson.types.ObjectId
 
 import static MongodbMapper.sortConditions
 import static MongodbMapper.mongoQuery
+import static net.smolok.service.documentstore.mongodb.MongodbMapper.MONGO_ID
 import static net.smolok.service.documentstore.mongodb.MongodbMapper.canonicalToMongo
 import static net.smolok.service.documentstore.mongodb.MongodbMapper.mongoToCanonical
+import static org.slf4j.LoggerFactory.getLogger
 
-public class MongodbDocumentStore implements DocumentStore {
+class MongodbDocumentStore implements DocumentStore {
 
-    private static final def MONGO_ID = '_id'
+    // Logger
+
+    private static final LOG = getLogger(MongodbDocumentStore.class)
+
+    // Collaborators
+
+    private final Mongo mongo
+
+    // Configuration members
 
     private final String documentsDbName
 
-    private final Mongo mongo
+    // Constructors
 
     MongodbDocumentStore(Mongo mongo, String documentsDbName) {
         this.mongo = mongo
