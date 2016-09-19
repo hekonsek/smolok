@@ -61,12 +61,12 @@ public class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
-    List<Map<String, Object>> findByQuery(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        def universalQuery = (Map<String, Object>) queryBuilder.getOrDefault("query", emptyMap());
+    List<Map<String, Object>> findByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
+        Map<String, Object> universalQuery = (Map<String, Object>) queryBuilder.query
         DBObject mongoQuery = new MongoQueryBuilder().jsonToMongoQuery(new BasicDBObject(universalQuery));
-        int skip = ((int) queryBuilder.getOrDefault("page", 0)) * ((int) queryBuilder.getOrDefault("size", 100));
-        DBCursor results = collection(documentCollection).find(mongoQuery).
-                limit((Integer) queryBuilder.getOrDefault("size", 100)).skip(skip).sort(new MongoQueryBuilder().queryBuilderToSortConditions(queryBuilder));
+        int skip = queryBuilder.page * queryBuilder.size
+        DBCursor results = collection(collectionx).find(mongoQuery).
+                limit(queryBuilder.size).skip(skip).sort(new MongoQueryBuilder().queryBuilderToSortConditions(queryBuilder));
         results.toArray().collect{ mongoToCanonical(it).toMap() }
     }
 

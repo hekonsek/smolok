@@ -19,7 +19,6 @@ package net.smolok.service.documentstore.mongodb.spring
 import com.fasterxml.jackson.databind.ObjectMapper
 import net.smolok.service.documentstore.api.DocumentStore
 import net.smolok.service.documentstore.api.QueryBuilder
-import net.smolok.service.documentstore.mongodb.spring.MongodbDocumentStoreConfiguration
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -94,57 +93,15 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(updatedInvoice.invoiceId).isEqualTo(invoice.invoiceId)
     }
 
-//    @Test
-//    void rest_shouldCountInvoice() {
-//        // Given
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-//
-//        // When
-////        def count = payloadEncoding.decode(new RestTemplate().getForObject("http://localhost:${httpPort}/document/count/${collection}", byte[].class))
-//
-//        // Then
-//        assertThat(count).isEqualTo(1)
-//    }
-//
-//    @Test
-//    public void rest_shouldFindOne() {
-//        // Given
-////        def id = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice), byte[].class))
-//
-//        // When
-////        def loadedInvoice = payloadEncoding.decode(new RestTemplate().getForObject("http://localhost:${httpPort}/document/findOne/${collection}/${id}", byte[].class))
-//
-//        // Then
-//        assertThat(loadedInvoice).isNotNull()
-//    }
-//
-//    @Test
-//    public void rest_shouldUpdateDocument() {
-//        // Given
-////        def id = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice), byte[].class))
-//        invoice.id = id
-//        invoice.invoiceId = 'newValue'
-//
-//        // When
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-//
-//        // Then
-////        def updatedInvoice = payloadEncoding.decode(new RestTemplate().getForObject("http://localhost:${httpPort}/document/findOne/${collection}/${id}", byte[].class))
-//        assertThat(updatedInvoice.invoiceId).isEqualTo(invoice.invoiceId)
-//    }
-//
-//    @Test
-//    public void shouldReturnEmptyList() {
-//        Map<String, Object> query = ImmutableMap.of("invoiceId", "someRandomName");
-//        Map<String, Object> queryBuilder = ImmutableMap.of("query", query);
-//
-//        // When
-////        def invoices = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/findByQuery/${collection}", payloadEncoding.encode(queryBuilder), byte[].class))
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
+    @Test
+    void shouldReturnEmptyList() {
+        // When
+        def invoices = documentStore.findByQuery(collection, new QueryBuilder())
+
+        // Then
+        assertThat(invoices.size()).isEqualTo(0);
+    }
+
 //    @Test
 //    public void shouldFindByQuery() {
 //        // Given
