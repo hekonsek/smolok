@@ -10,6 +10,21 @@ device management, telemetry reading/writing and so forth.
 Smolok is based on the top of the leading open source projects including [Apache Spark](http://spark.apache.org) and
 [Eclipse IoT stack](http://iot.eclipse.org) (particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project).
 
+## Features summary
+
+Smolok platform provides the following features enabling Big Data for connected devices:
+
+- messaging infrastructure
+
+### Messaging infrastructure
+
+Smolok can provision and manage scalable messaging infrastructure that can be used for the following purposes:
+- messaging backend for connected devices
+- centralized event bus connecting devices and subsystems together
+- queue system
+- publish/subscribe notification infrastructure
+- protocol bridge (for example MQTT to AMQP bridge)
+
 ## Command line tool
 
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
