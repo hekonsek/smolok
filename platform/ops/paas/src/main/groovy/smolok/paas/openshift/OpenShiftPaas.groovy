@@ -67,7 +67,7 @@ class OpenShiftPaas implements Paas {
 
     // Cached variables
 
-    private final String serverPath
+    private final def startOpenShiftCommand
 
     // Constructors
 
@@ -76,7 +76,8 @@ class OpenShiftPaas implements Paas {
         this.processManager = processManager
         this.amqpProbe = amqpProbe
 
-        this.serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
+        def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
+        startOpenShiftCommand = sudo(serverPath, 'start').workingDirectory(openshiftHome).build()
     }
 
     // Platform operations
@@ -88,7 +89,7 @@ class OpenShiftPaas implements Paas {
 
     @Override
     boolean isProvisioned() {
-        openshiftHome.list().find{ it.startsWith('openshift.local') }
+        openshiftHome.list().find { it.startsWith('openshift.local') }
     }
 
     @Override
@@ -96,7 +97,7 @@ class OpenShiftPaas implements Paas {
         def eventBusOutput = oc(OC_GET_SERVICE).find {
             it.startsWith('eventbus')
         }
-        if(eventBusOutput == null) {
+        if (eventBusOutput == null) {
             return false
         }
         def eventBusOutputParts = eventBusOutput.split(/\s+/)
@@ -105,26 +106,25 @@ class OpenShiftPaas implements Paas {
 
     @Override
     void start() {
-        if(!isStarted()) {
-            def startOpenShift = sudo(serverPath, 'start').workingDirectory(openshiftHome).build()
-            if(isProvisioned()) {
-                processManager.executeAsync(startOpenShift)
-            } else {
-                processManager.executeAsync(startOpenShift)
-                await().atMost(60, SECONDS).until({isNotLoggedIntoProject()} as Callable<Boolean>)
+        if (!isStarted()) {
+            def isProvisioned = isProvisioned()
+            processManager.executeAsync(startOpenShiftCommand)
+            if (!isProvisioned) {
+                LOG.debug('OpenShift is not provisioned. Started provisioning...')
+                await().atMost(60, SECONDS).until({ isNotLoggedIntoProject() } as Callable<Boolean>)
                 await().atMost(60, SECONDS).until({
                     def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
                     !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
                             !loginOutput.startsWith('error: dial tcp')
                 } as Callable<Boolean>)
                 oc('new-project smolok')
-                await().atMost(60, SECONDS).until({isOsStarted()} as Callable<Boolean>)
+                await().atMost(60, SECONDS).until({ isOsStarted() } as Callable<Boolean>)
                 def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                 Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
-            await().atMost(120, SECONDS).until({isStarted()} as Callable<Boolean>)
+            await().atMost(120, SECONDS).until({ isStarted() } as Callable<Boolean>)
             LOG.debug('Event bus has been started.')
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
@@ -133,7 +133,7 @@ class OpenShiftPaas implements Paas {
 
     @Override
     void stop() {
-        processManager.execute(sudo('ps aux').build()).findAll{ it.contains('openshift start') }.each {
+        processManager.execute(sudo('ps aux').build()).findAll { it.contains('openshift start') }.each {
             def pid = it.split(/\s+/)[1]
             processManager.execute(sudo('kill', pid).build())
         }
@@ -145,14 +145,14 @@ class OpenShiftPaas implements Paas {
 
         processManager.execute(sudo('mount').build()).each {
             def volume = it.split(' ')[2]
-            if(volume.startsWith(openshiftHome.absolutePath)) {
+            if (volume.startsWith(openshiftHome.absolutePath)) {
                 def umountOutput = processManager.execute(sudo("umount ${volume}").build())
                 Validate.isTrue(umountOutput.isEmpty(), "Problem with unmounting volume: ${umountOutput}")
             }
         }
 
         openshiftHome.listFiles().each {
-            if(it.name.startsWith('openshift.local.')) {
+            if (it.name.startsWith('openshift.local.')) {
                 def rmOutput = processManager.execute(sudo("rm -rf ${it.absolutePath}").build())
                 Validate.isTrue(rmOutput.isEmpty(), "Problem with removing OpenShift installation: ${rmOutput}")
             }
@@ -163,7 +163,7 @@ class OpenShiftPaas implements Paas {
     List<ServiceEndpoint> services() {
         def output = oc(OC_GET_SERVICE)
         def servicesOutput = output.subList(1, output.size())
-        servicesOutput.collect{ it.split(/\s+/) }.collect {
+        servicesOutput.collect { it.split(/\s+/) }.collect {
             new ServiceEndpoint(it[0], it[1], it[3].replaceFirst('/.+', '').toInteger())
         }
     }
