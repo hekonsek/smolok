@@ -18,6 +18,11 @@
             <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-documentstore-api</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
+        </dependency>
 
         <!-- Non-Smolok dependencies -->
         <dependency>
@@ -32,11 +37,20 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-groovy</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+        </dependency>
 
         <!-- Optional Spring runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -71,6 +85,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

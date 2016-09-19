@@ -17,11 +17,12 @@
 package net.smolok.service.documentstore.api;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
-class QueryBuilder implements Serializable {
+public class QueryBuilder implements Serializable {
 
-    private Map<String, Object> query;
+    private Map<String, Object> query = new HashMap<>();
 
     private int page = 0;
 
@@ -40,6 +41,10 @@ class QueryBuilder implements Serializable {
 
     public static QueryBuilder queryBuilder(Map<String, Object> query) {
         return new QueryBuilder(query);
+    }
+
+    public static QueryBuilder queryBuilder() {
+        return new QueryBuilder();
     }
 
     // Getters & setters
