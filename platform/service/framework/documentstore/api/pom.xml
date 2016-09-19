@@ -12,4 +12,11 @@
     <artifactId>smolok-service-documentstore-api</artifactId>
     <name>${artifactId}</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
