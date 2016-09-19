@@ -35,17 +35,6 @@ class OpenShiftPaasConfigurationTest {
 
     // Collaborators fixtures
 
-//    @BeforeClass
-//    static void beforeClass() {
-//        Properties.setSystemStringProperty('SUDO_PASSWORD', ' ')
-//
-//
-//        def sudoPassword = Properties.stringProperty('SUDO_PASSWORD')
-//        if(sudoPassword == null && System.getProperty("user.name") == 'root') {
-//            Properties.setSystemStringProperty('SUDO_PASSWORD', '')
-//        }
-//    }
-
     @Autowired
     Paas paas
 

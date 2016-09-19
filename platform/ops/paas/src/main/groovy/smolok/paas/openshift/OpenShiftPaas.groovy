@@ -19,7 +19,6 @@ package smolok.paas.openshift
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
-import smolok.lib.process.CommandBuilder
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.Paas
@@ -34,7 +33,7 @@ import static net.smolok.lib.download.DownloadManager.BinaryCoordinates
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 import static smolok.lib.process.Command.cmd
-import static smolok.lib.process.Command.sudo
+import static smolok.lib.process.CommandBuilder.sudo
 
 class OpenShiftPaas implements Paas {
 
@@ -66,12 +65,18 @@ class OpenShiftPaas implements Paas {
 
     private final def openshiftHome = Paths.get(SystemUtils.getUserHome().absolutePath, '.smolok', 'openshift').toFile()
 
+    // Cached variables
+
+    private final String serverPath
+
     // Constructors
 
     OpenShiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
         this.downloadManager = downloadManager
         this.processManager = processManager
         this.amqpProbe = amqpProbe
+
+        this.serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
     }
 
     // Platform operations
@@ -101,8 +106,7 @@ class OpenShiftPaas implements Paas {
     @Override
     void start() {
         if(!isStarted()) {
-            def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
-            def startOpenShift = new CommandBuilder(serverPath, 'start').sudo(true).workingDirectory(openshiftHome).build()
+            def startOpenShift = sudo(serverPath, 'start').workingDirectory(openshiftHome).build()
             if(isProvisioned()) {
                 processManager.executeAsync(startOpenShift)
             } else {
@@ -129,9 +133,9 @@ class OpenShiftPaas implements Paas {
 
     @Override
     void stop() {
-        processManager.execute(sudo('ps aux')).findAll{ it.contains('openshift start') }.each {
+        processManager.execute(sudo('ps aux').build()).findAll{ it.contains('openshift start') }.each {
             def pid = it.split(/\s+/)[1]
-            processManager.execute(sudo('kill', pid))
+            processManager.execute(sudo('kill', pid).build())
         }
     }
 
@@ -139,17 +143,17 @@ class OpenShiftPaas implements Paas {
     void reset() {
         stop()
 
-        processManager.execute(sudo('mount')).each {
+        processManager.execute(sudo('mount').build()).each {
             def volume = it.split(' ')[2]
             if(volume.startsWith(openshiftHome.absolutePath)) {
-                def umountOutput = processManager.execute(sudo("umount ${volume}"))
+                def umountOutput = processManager.execute(sudo("umount ${volume}").build())
                 Validate.isTrue(umountOutput.isEmpty(), "Problem with unmounting volume: ${umountOutput}")
             }
         }
 
         openshiftHome.listFiles().each {
             if(it.name.startsWith('openshift.local.')) {
-                def rmOutput = processManager.execute(sudo("rm -rf ${it.absolutePath}"))
+                def rmOutput = processManager.execute(sudo("rm -rf ${it.absolutePath}").build())
                 Validate.isTrue(rmOutput.isEmpty(), "Problem with removing OpenShift installation: ${rmOutput}")
             }
         }
