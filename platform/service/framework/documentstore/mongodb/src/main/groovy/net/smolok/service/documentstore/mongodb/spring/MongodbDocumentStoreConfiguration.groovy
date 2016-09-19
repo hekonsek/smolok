@@ -29,7 +29,7 @@ class MongodbDocumentStoreConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    DocumentStore documentStore(Mongo mongo, @Value('documentStore.mongodb.db:documents') String documentsDbName) {
+    DocumentStore documentStore(Mongo mongo, @Value('${documentStore.mongodb.db:documents}') String documentsDbName) {
         new MongodbDocumentStore(mongo, documentsDbName)
     }
 
