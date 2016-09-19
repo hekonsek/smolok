@@ -39,16 +39,16 @@ public class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
-    String save(String documentCollection, Map<String, Object> pojo) {
-        def document = canonicalToMongo(new BasicDBObject(pojo))
-        collection(documentCollection).save(document)
+    String save(String collection, Map<String, Object> pojo) {
+        def document = canonicalToMongo(pojo)
+        docCollection(collection).save(document)
         document.get(MONGO_ID).toString()
     }
 
     @Override
     public Map<String, Object> findOne(String documentCollection, String documentId) {
         ObjectId id = new ObjectId(documentId);
-        DBObject document = collection(documentCollection).findOne(id);
+        DBObject document = docCollection(documentCollection).findOne(id);
         if(document == null) {
             return null;
         }
@@ -59,14 +59,14 @@ public class MongodbDocumentStore implements DocumentStore {
     List<Map<String, Object>> findMany(String documentCollection, List<String> ids) {
         def mongoIds = new BasicDBObject('$in', ids.collect{new ObjectId(it)})
         def query = new BasicDBObject('_id', mongoIds)
-        collection(documentCollection).find(query).toArray().collect { mongoToCanonical(it).toMap() }
+        docCollection(documentCollection).find(query).toArray().collect { mongoToCanonical(it).toMap() }
     }
 
     @Override
     List<Map<String, Object>> findByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         DBObject mongoQuery = mongoQuery(queryBuilder.query);
         int skip = queryBuilder.page * queryBuilder.size
-        DBCursor results = collection(collectionx).find(mongoQuery).
+        DBCursor results = docCollection(collectionx).find(mongoQuery).
                 limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
         results.toArray().collect{ mongoToCanonical(it).toMap() }
     }
@@ -75,18 +75,18 @@ public class MongodbDocumentStore implements DocumentStore {
     long countByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         DBObject mongoQuery = mongoQuery(queryBuilder.query)
         int skip = queryBuilder.page * queryBuilder.size
-        DBCursor results = collection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
+        DBCursor results = docCollection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
         return results.count();
     }
 
     @Override
     void remove(String documentCollection, String identifier) {
-        collection(documentCollection).remove(new BasicDBObject(MONGO_ID, new ObjectId(identifier)))
+        docCollection(documentCollection).remove(new BasicDBObject(MONGO_ID, new ObjectId(identifier)))
     }
 
     // Helpers
 
-    private DBCollection collection(String collection) {
+    private DBCollection docCollection(String collection) {
         mongo.getDB(documentsDbName).getCollection(collection)
     }
 

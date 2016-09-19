@@ -66,9 +66,10 @@ class MongodbMapper {
         }
     }
 
-    public static DBObject canonicalToMongo(DBObject json) {
-        Preconditions.checkNotNull(json, "JSON passed to the conversion can't be null.");
-        DBObject bson = new BasicDBObject(json.toMap());
+    static DBObject canonicalToMongo(Map<String, Object> document) {
+        Preconditions.checkNotNull(document, "JSON passed to the conversion can't be null.");
+
+        def bson = new BasicDBObject(document)
         Object id = bson.get("id");
         if (id != null) {
             bson.removeField("id");
@@ -77,9 +78,8 @@ class MongodbMapper {
         return bson;
     }
 
-    public static DBObject mongoToCanonical(DBObject bson) {
+    static DBObject mongoToCanonical(DBObject bson) {
         Preconditions.checkNotNull(bson, "BSON passed to the conversion can't be null.");
-//        LOG.debug("Converting BSON object to JSON: {}", bson);
         DBObject json = new BasicDBObject(bson.toMap());
         Object id = json.get("_id");
         if (id != null) {

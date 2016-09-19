@@ -1,5 +1,5 @@
 /**
- * Licensed to the Rhiot under one or more
+ * Licensed to the Smolok under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The licenses this file to You under the Apache License, Version 2.0
@@ -67,7 +67,7 @@ class MongodbDocumentStoreConfigurationTest {
     }
 
     @Test
-    public void shouldFindOne() {
+    void shouldFindOne() {
         // Given
         def id = documentStore.save(collection, serialize(invoice))
 
@@ -76,6 +76,30 @@ class MongodbDocumentStoreConfigurationTest {
 
         // Then
         assertThat(loadedInvoice).isNotNull()
+    }
+
+    @Test
+    void loadedDocumentShouldHasId() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def loadedInvoice = documentStore.findOne(collection, id)
+
+        // Then
+        assertThat(loadedInvoice.id).isInstanceOf(String.class)
+    }
+
+    @Test
+    void loadedDocumentShouldHasNotMongoId() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def loadedInvoice = documentStore.findOne(collection, id)
+
+        // Then
+        assertThat(loadedInvoice._id).isNull()
     }
 
     @Test
