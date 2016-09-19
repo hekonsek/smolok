@@ -18,9 +18,19 @@ class CommandBuilder {
         this.command = command.toList()
     }
 
+    static CommandBuilder cmd(String... command) {
+        if(command.length == 1 && command[0] =~ /\s+/) {
+            cmd(command[0].split(/\s+/))
+        } else {
+            new CommandBuilder(command.toList())
+        }
+    }
+
     Command build() {
         new Command(command, workingDirectory, sudo, sudoPassword)
     }
+
+    // Setters
 
     CommandBuilder workingDirectory(File workingDirectory) {
         this.workingDirectory = workingDirectory
@@ -29,6 +39,11 @@ class CommandBuilder {
 
     CommandBuilder sudo(boolean sudo) {
         this.sudo = sudo
+        this
+    }
+
+    CommandBuilder sudo() {
+        this.sudo(true)
         this
     }
 

@@ -21,7 +21,7 @@ class Command {
 
     static Command cmd(boolean sudo, String... command) {
         if(command.length == 1 && command[0] =~ /\s+/) {
-            cmd(command[0].split(/\s+/))
+            cmd(sudo, command[0].split(/\s+/))
         } else {
             new Command(command.toList(), null, sudo, null)
         }
