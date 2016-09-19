@@ -14,16 +14,24 @@ Smolok is based on the top of the leading open source projects including [Apache
 
 Smolok platform provides the following features enabling Big Data for connected devices:
 
+- PaaS infrastructure
 - messaging infrastructure
+
+### Paas infrastructure
+
+Smolok provisions PaaS backend that takes care of:
+- basic application nodes health-checks
+- restarting crashed and stalled nodes
+- services discovery
+- services load balancing
 
 ### Messaging infrastructure
 
-Smolok can provision and manage scalable messaging infrastructure that can be used for the following purposes:
+Smolok provisions and manages messaging infrastructure that can be used for the following purposes:
 - messaging backend for connected devices
 - centralized event bus connecting devices and subsystems together
 - queue system
 - publish/subscribe notification infrastructure
-- protocol bridge (for example MQTT to AMQP bridge)
 
 ## Command line tool
 
