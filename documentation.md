@@ -24,6 +24,7 @@ Smolok provisions PaaS backend that takes care of:
 - restarting crashed and stalled nodes
 - services discovery
 - services load balancing
+- no-downtime deployments
 
 ### Messaging infrastructure
 
