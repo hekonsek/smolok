@@ -10,6 +10,8 @@ class CommandBuilder {
 
     String sudoPassword
 
+    // Constructors
+
     CommandBuilder(List<String> command) {
         this.command = command
     }
@@ -18,6 +20,8 @@ class CommandBuilder {
         this.command = command.toList()
     }
 
+    // Factory methods
+
     static CommandBuilder cmd(String... command) {
         if(command.length == 1 && command[0] =~ /\s+/) {
             cmd(command[0].split(/\s+/))
@@ -25,6 +29,12 @@ class CommandBuilder {
             new CommandBuilder(command.toList())
         }
     }
+
+    static CommandBuilder sudo(String... command) {
+        cmd(command).sudo()
+    }
+
+    // Build methods
 
     Command build() {
         new Command(command, workingDirectory, sudo, sudoPassword)
