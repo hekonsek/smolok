@@ -53,8 +53,8 @@ public class QueryBuilder implements Serializable {
         this.query = query;
     }
 
-    public Object getQuery() {
-        return query;
+    public Map<String, Object> getQuery() {
+        query
     }
 
     public int getPage() {

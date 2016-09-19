@@ -116,32 +116,33 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices.first().invoiceId).isEqualTo(invoice.invoiceId)
     }
 
-//    @Test
-//    public void shouldFindAllByQuery() {
-//        // Given
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-//
-//        // When
-////        def invoices = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/findByQuery/${collection}", payloadEncoding.encode([query:[:]]), byte[].class))
-//
-//        // Then
-//        assertEquals(2, invoices.size());
-//    }
-//
-//    @Test
-//    public void shouldNotFindByQuery() {
-//        // Given
-//        invoice.invoiceId = 'invoice001'
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-//        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
-//
-//        // When
-////        def invoices = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/findByQuery/${collection}", payloadEncoding.encode([query: query]), byte[].class))
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
+    @Test
+    public void shouldFindAllByQuery() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        documentStore.save(collection, serialize(invoice))
+
+        // When
+        def invoices = documentStore.findByQuery(collection, new QueryBuilder())
+
+        // Then
+        assertThat(invoices).hasSize(2)
+    }
+
+    @Test
+    public void shouldNotFindByQuery() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+
+        invoice.invoiceId = 'invoice001'
+        def query = new QueryBuilder([invoiceId: "randomValue"])
+
+        // When
+        def invoices = documentStore.findByQuery(collection, query)
+
+        // Then
+        assertThat(invoices).isEmpty()
+    }
 
     // Helpers
 

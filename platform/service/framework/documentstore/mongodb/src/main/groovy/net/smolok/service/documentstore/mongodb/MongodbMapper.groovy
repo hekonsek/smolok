@@ -16,11 +16,13 @@
  */
 package net.smolok.service.documentstore.mongodb
 
+import com.google.common.base.Preconditions
 import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
 import net.smolok.service.documentstore.api.QueryBuilder
+import org.bson.types.ObjectId
 
-class MongodbQueryBuilders {
+class MongodbMapper {
 
     private static final SIMPLE_SUFFIX_OPERATORS = [
             "GreaterThan": '$gt',
@@ -30,8 +32,8 @@ class MongodbQueryBuilders {
             "NotIn": '$nin',
             "In": '$in'];
 
-    public DBObject jsonToMongoQuery(DBObject jsonQuery) {
-        BasicDBObject mongoQuery = new BasicDBObject();
+    static DBObject mongoQuery(Map<String, Object> jsonQuery) {
+        def mongoQuery = new BasicDBObject()
         for (String originalKey : jsonQuery.keySet()) {
             String compoundKey = originalKey.replaceAll('(.)_', '$1.');
 
@@ -47,10 +49,10 @@ class MongodbQueryBuilders {
                 mongoQuery.put(compoundKey, new BasicDBObject('$eq', jsonQuery.get(originalKey)));
             }
         }
-        return mongoQuery;
+        mongoQuery
     }
 
-    public static DBObject sortConditions(QueryBuilder queryBuilder) {
+    static DBObject sortConditions(QueryBuilder queryBuilder) {
         int order = queryBuilder.sortAscending ? 1 : -1
         def orderBy = queryBuilder.orderBy
         if (orderBy.size() == 0) {
@@ -64,14 +66,37 @@ class MongodbQueryBuilders {
         }
     }
 
+    public static DBObject canonicalToMongo(DBObject json) {
+        Preconditions.checkNotNull(json, "JSON passed to the conversion can't be null.");
+        DBObject bson = new BasicDBObject(json.toMap());
+        Object id = bson.get("id");
+        if (id != null) {
+            bson.removeField("id");
+            bson.put("_id", new ObjectId(id.toString()));
+        }
+        return bson;
+    }
+
+    public static DBObject mongoToCanonical(DBObject bson) {
+        Preconditions.checkNotNull(bson, "BSON passed to the conversion can't be null.");
+//        LOG.debug("Converting BSON object to JSON: {}", bson);
+        DBObject json = new BasicDBObject(bson.toMap());
+        Object id = json.get("_id");
+        if (id != null) {
+            json.removeField("_id");
+            json.put("id", id.toString());
+        }
+        return json;
+    }
+
     // Helpers
 
-    private String findFirstMatchOperator(String originalKey) {
+    private static String findFirstMatchOperator(String originalKey) {
         List<String> matchingSuffixOperators = SIMPLE_SUFFIX_OPERATORS.keySet().findAll{originalKey.endsWith(it)}.toList()
         return matchingSuffixOperators.isEmpty() ? null : matchingSuffixOperators.get(0);
     }
 
-    private void addRestriction(BasicDBObject query, String propertyWithOperator, String propertyOperator, String operator, Object value) {
+    private static void addRestriction(BasicDBObject query, String propertyWithOperator, String propertyOperator, String operator, Object value) {
         String property = propertyWithOperator.replaceAll(propertyOperator + '$', "");
         if (query.containsField(property)) {
             BasicDBObject existingRestriction = (BasicDBObject) query.get(property);

@@ -20,8 +20,10 @@ import com.mongodb.*
 import net.smolok.service.documentstore.api.DocumentStore
 import org.bson.types.ObjectId
 
-import static com.google.common.base.Preconditions.checkNotNull
-import static MongodbQueryBuilders.sortConditions
+import static MongodbMapper.sortConditions
+import static MongodbMapper.mongoQuery
+import static net.smolok.service.documentstore.mongodb.MongodbMapper.canonicalToMongo
+import static net.smolok.service.documentstore.mongodb.MongodbMapper.mongoToCanonical
 
 public class MongodbDocumentStore implements DocumentStore {
 
@@ -62,8 +64,7 @@ public class MongodbDocumentStore implements DocumentStore {
 
     @Override
     List<Map<String, Object>> findByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        Map<String, Object> universalQuery = (Map<String, Object>) queryBuilder.query
-        DBObject mongoQuery = new MongodbQueryBuilders().jsonToMongoQuery(new BasicDBObject(universalQuery));
+        DBObject mongoQuery = mongoQuery(queryBuilder.query);
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = collection(collectionx).find(mongoQuery).
                 limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
@@ -72,8 +73,7 @@ public class MongodbDocumentStore implements DocumentStore {
 
     @Override
     long countByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        Map<String, Object> universalQuery = (Map<String, Object>) queryBuilder.query
-        DBObject mongoQuery = new MongodbQueryBuilders().jsonToMongoQuery(new BasicDBObject(universalQuery));
+        DBObject mongoQuery = mongoQuery(queryBuilder.query)
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = collection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
         return results.count();
@@ -88,29 +88,6 @@ public class MongodbDocumentStore implements DocumentStore {
 
     private DBCollection collection(String collection) {
         mongo.getDB(documentsDbName).getCollection(collection)
-    }
-
-    public static DBObject canonicalToMongo(DBObject json) {
-        checkNotNull(json, "JSON passed to the conversion can't be null.");
-        DBObject bson = new BasicDBObject(json.toMap());
-        Object id = bson.get("id");
-        if (id != null) {
-            bson.removeField("id");
-            bson.put("_id", new ObjectId(id.toString()));
-        }
-        return bson;
-    }
-
-    public static DBObject mongoToCanonical(DBObject bson) {
-        checkNotNull(bson, "BSON passed to the conversion can't be null.");
-//        LOG.debug("Converting BSON object to JSON: {}", bson);
-        DBObject json = new BasicDBObject(bson.toMap());
-        Object id = json.get("_id");
-        if (id != null) {
-            json.removeField("_id");
-            json.put("id", id.toString());
-        }
-        return json;
     }
 
 }
