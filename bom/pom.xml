@@ -141,6 +141,16 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-documentstore-api</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-documentstore-mongodb</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-status</artifactId>
                 <version>${smolok.version}</version>
             </dependency>

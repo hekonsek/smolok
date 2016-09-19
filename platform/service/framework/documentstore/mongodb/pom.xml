@@ -13,7 +13,7 @@
     <name>${artifactId}</name>
 
     <dependencies>
-        <!-- Smolok dependencies -->
+        <!-- Internal dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-common</artifactId>
@@ -21,21 +21,12 @@
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-documentstore-api</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
         </dependency>
 
-        <!-- Non-Smolok dependencies -->
+        <!-- External dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-amqp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-groovy</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -52,23 +43,6 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <!-- Smolok testing dependencies -->
-        <dependency>
-            <groupId>net.smolok</groupId>
-            <artifactId>smolok-bootstrap</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.smolok</groupId>
-            <artifactId>smolok-eventbus</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.smolok</groupId>
-            <artifactId>smolok-eventbus-client</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- External testing dependencies -->
