@@ -21,7 +21,7 @@ import net.smolok.service.documentstore.api.DocumentStore
 import org.bson.types.ObjectId
 
 import static com.google.common.base.Preconditions.checkNotNull
-import static java.util.Collections.emptyMap
+import static MongodbQueryBuilders.sortConditions
 
 public class MongodbDocumentStore implements DocumentStore {
 
@@ -63,19 +63,19 @@ public class MongodbDocumentStore implements DocumentStore {
     @Override
     List<Map<String, Object>> findByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         Map<String, Object> universalQuery = (Map<String, Object>) queryBuilder.query
-        DBObject mongoQuery = new MongoQueryBuilder().jsonToMongoQuery(new BasicDBObject(universalQuery));
+        DBObject mongoQuery = new MongodbQueryBuilders().jsonToMongoQuery(new BasicDBObject(universalQuery));
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = collection(collectionx).find(mongoQuery).
-                limit(queryBuilder.size).skip(skip).sort(new MongoQueryBuilder().queryBuilderToSortConditions(queryBuilder));
+                limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
         results.toArray().collect{ mongoToCanonical(it).toMap() }
     }
 
     @Override
     long countByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         Map<String, Object> universalQuery = (Map<String, Object>) queryBuilder.query
-        DBObject mongoQuery = new MongoQueryBuilder().jsonToMongoQuery(new BasicDBObject(universalQuery));
+        DBObject mongoQuery = new MongodbQueryBuilders().jsonToMongoQuery(new BasicDBObject(universalQuery));
         int skip = queryBuilder.page * queryBuilder.size
-        DBCursor results = collection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(new MongoQueryBuilder().queryBuilderToSortConditions(queryBuilder));
+        DBCursor results = collection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
         return results.count();
     }
 

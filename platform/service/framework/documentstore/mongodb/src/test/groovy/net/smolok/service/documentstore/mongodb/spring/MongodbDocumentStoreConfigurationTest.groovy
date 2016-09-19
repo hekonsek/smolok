@@ -102,20 +102,20 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices.size()).isEqualTo(0);
     }
 
-//    @Test
-//    public void shouldFindByQuery() {
-//        // Given
-////        new RestTemplate().postForLocation("http://localhost:${httpPort}/document/save/${collection}", payloadEncoding.encode(invoice))
-//        def query = [query: new InvoiceQuery().invoiceId(invoice.invoiceId)]
-//
-//        // When
-////        def invoices = payloadEncoding.decode(new RestTemplate().postForObject("http://localhost:${httpPort}/document/findByQuery/${collection}", payloadEncoding.encode(query), byte[].class))
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
-//    }
-//
+    @Test
+    public void shouldFindByQuery() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = [invoiceId: invoice.invoiceId]
+
+        // When
+        def invoices = documentStore.findByQuery(collection, new QueryBuilder(query))
+
+        // Then
+        assertThat(invoices.size()).isEqualTo(1)
+        assertThat(invoices.first().invoiceId).isEqualTo(invoice.invoiceId)
+    }
+
 //    @Test
 //    public void shouldFindAllByQuery() {
 //        // Given
@@ -166,100 +166,6 @@ class MongodbDocumentStoreConfigurationTest {
 
             String street
 
-        }
-
-    }
-
-    static class InvoiceQuery {
-
-        private String invoiceId;
-
-        private String invoiceIdContains;
-
-        private String[] invoiceIdIn;
-
-        private String[] invoiceIdNotIn;
-
-        private Date timestampLessThan;
-
-        private Date timestampGreaterThanEqual;
-
-        private String address_street;
-
-        public String getInvoiceId() {
-            return invoiceId;
-        }
-
-        public void setInvoiceId(String invoiceId) {
-            this.invoiceId = invoiceId;
-        }
-
-        public InvoiceQuery invoiceId(String invoiceId) {
-            this.invoiceId = invoiceId;
-            return this;
-        }
-
-        public String getInvoiceIdContains() {
-            return invoiceIdContains;
-        }
-
-        public void setInvoiceIdContains(String invoiceIdLike) {
-            this.invoiceIdContains = invoiceIdLike;
-        }
-
-        public String[] getInvoiceIdIn() {
-            return invoiceIdIn;
-        }
-
-        public void setInvoiceIdIn(String[] invoiceIdIn) {
-            this.invoiceIdIn = invoiceIdIn;
-        }
-
-        public InvoiceQuery invoiceIdIn(String... invoiceIdIn) {
-            this.invoiceIdIn = invoiceIdIn;
-            return this;
-        }
-
-        public String[] getInvoiceIdNotIn() {
-            return invoiceIdNotIn;
-        }
-
-        public void setInvoiceIdNotIn(String[] invoiceIdNotIn) {
-            this.invoiceIdNotIn = invoiceIdNotIn;
-        }
-
-        public InvoiceQuery invoiceIdNotIn(String... invoiceIdNotIn) {
-            this.invoiceIdNotIn = invoiceIdNotIn;
-            return this;
-        }
-
-        public Date getTimestampLessThan() {
-            return timestampLessThan;
-        }
-
-        public void setTimestampLessThan(Date timestampLessThan) {
-            this.timestampLessThan = timestampLessThan;
-        }
-
-        public Date getTimestampGreaterThanEqual() {
-            return timestampGreaterThanEqual;
-        }
-
-        public void setTimestampGreaterThanEqual(Date timestampGreaterThanEqual) {
-            this.timestampGreaterThanEqual = timestampGreaterThanEqual;
-        }
-
-        public String getAddress_street() {
-            return address_street;
-        }
-
-        public void setAddress_street(String address_street) {
-            this.address_street = address_street;
-        }
-
-        public InvoiceQuery address_street(String address_street) {
-            this.setAddress_street(address_street);
-            return this;
         }
 
     }

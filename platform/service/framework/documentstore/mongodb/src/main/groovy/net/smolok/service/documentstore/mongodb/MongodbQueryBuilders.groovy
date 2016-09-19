@@ -14,17 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.smolok.service.documentstore.mongodb;
+package net.smolok.service.documentstore.mongodb
 
-import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
 import net.smolok.service.documentstore.api.QueryBuilder
 
-import static java.lang.Boolean.parseBoolean
+class MongodbQueryBuilders {
 
-public class MongoQueryBuilder {
-
-    private static final Map<String, String> SIMPLE_SUFFIX_OPERATORS = [
+    private static final SIMPLE_SUFFIX_OPERATORS = [
             "GreaterThan": '$gt',
             "GreaterThanEqual": '$gte',
             "LessThan": '$lt',
@@ -52,18 +50,17 @@ public class MongoQueryBuilder {
         return mongoQuery;
     }
 
-    // TODO Don't return stack traces
-    public DBObject queryBuilderToSortConditions(QueryBuilder queryBuilder) {
-        int order = queryBuilder.sortAscending ? 1 : -1;
-        List<String> orderBy = queryBuilder.orderBy.toList()
+    public static DBObject sortConditions(QueryBuilder queryBuilder) {
+        int order = queryBuilder.sortAscending ? 1 : -1
+        def orderBy = queryBuilder.orderBy
         if (orderBy.size() == 0) {
-            return new BasicDBObject('$natural', order);
+            new BasicDBObject('$natural', order);
         } else {
             BasicDBObject sort = new BasicDBObject();
             for (String by : orderBy) {
                 sort.put(by, order);
             }
-            return sort;
+            sort
         }
     }
 
