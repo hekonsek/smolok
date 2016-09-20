@@ -19,9 +19,16 @@ package net.smolok.lib.geo
 import org.junit.Test
 
 import static net.smolok.lib.geo.Geofencing.isPointWithinPolygon
+import static net.smolok.lib.geo.Geofencing.metersBetweenPoints
+import static net.smolok.lib.geo.Geofencing.metersOutsideFence
+import static net.smolok.lib.geo.Point.point
 import static org.assertj.core.api.Assertions.assertThat
 
 class GeofencingTest {
+
+    def bielskoCity = point(49.8287954,19.0299223)
+
+    def gdyniaCity = point(54.4843721, 18.4982603)
 
     @Test
     void shouldDetectPointWIthinPolygon() {
@@ -46,5 +53,39 @@ class GeofencingTest {
         // Then
         assertThat(isWithin).isFalse()
     }
+
+    @Test
+    void shouldCalculateMetersBetweenPoints() {
+        // When
+        def distanceInKilometers = metersBetweenPoints(bielskoCity, gdyniaCity) / 1000
+
+        // Then
+        assertThat(distanceInKilometers).isGreaterThan(500d)
+        assertThat(distanceInKilometers).isLessThan(550d)
+    }
+
+    @Test
+    void distanceBetweenPointsShouldBeReflective() {
+        // When
+        def bielskoGdyniaDistance = metersBetweenPoints(bielskoCity, gdyniaCity)
+        def gdyniaBielskoDistance = metersBetweenPoints(gdyniaCity, bielskoCity)
+
+        // Then
+        assertThat(bielskoGdyniaDistance).isEqualTo(gdyniaBielskoDistance)
+    }
+
+    @Test
+    void isShouldNotBeInAreaOfGdynia() {
+        // Given
+        def fenceRadius = 500 * 1000
+        def fiftyKilometers = 50 * 1000
+
+        // When
+        def outsizeOfFence = metersOutsideFence(gdyniaCity, bielskoCity, fenceRadius)
+
+        // Then
+        assertThat(outsizeOfFence).isBetween(0d, fiftyKilometers.doubleValue())
+    }
+
 
 }
