@@ -80,12 +80,12 @@ class MongodbMapper {
         return bson;
     }
 
-    static DBObject mongoToCanonical(DBObject bson) {
+    static Map<String, Object> mongoToCanonical(DBObject bson) {
         Preconditions.checkNotNull(bson, "BSON passed to the conversion can't be null.");
-        DBObject json = new BasicDBObject(bson.toMap());
+        def json = bson.toMap()
         Object id = json.get("_id");
         if (id != null) {
-            json.removeField("_id");
+            json.remove("_id");
             json.put("id", id.toString());
         }
         return json;

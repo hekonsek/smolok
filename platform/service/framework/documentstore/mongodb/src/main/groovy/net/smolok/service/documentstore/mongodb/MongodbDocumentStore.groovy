@@ -48,28 +48,30 @@ class MongodbDocumentStore implements DocumentStore {
         this.documentsDbName = documentsDbName
     }
 
+    // Operations implementations
+
     @Override
     String save(String collection, Map<String, Object> pojo) {
+        LOG.debug('About to save {} into {}.', pojo, collection)
         def document = canonicalToMongo(pojo)
         documentCollection(collection).save(document)
         document.get(MONGO_ID).toString()
     }
 
     @Override
-    public Map<String, Object> findOne(String collection, String documentId) {
-        ObjectId id = new ObjectId(documentId);
-        DBObject document = documentCollection(collection).findOne(id);
+    Map<String, Object> findOne(String collection, String documentId) {
+        def document = documentCollection(collection).findOne(new ObjectId(documentId))
         if(document == null) {
-            return null;
+            return null
         }
-        return mongoToCanonical(document).toMap();
+        mongoToCanonical(document)
     }
 
     @Override
     List<Map<String, Object>> findMany(String collection, List<String> ids) {
         def mongoIds = new BasicDBObject('$in', ids.collect{new ObjectId(it)})
         def query = new BasicDBObject('_id', mongoIds)
-        documentCollection(collection).find(query).toArray().collect { mongoToCanonical(it).toMap() }
+        documentCollection(collection).find(query).toArray().collect { mongoToCanonical(it) }
     }
 
     @Override
@@ -78,7 +80,7 @@ class MongodbDocumentStore implements DocumentStore {
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = documentCollection(collectionx).find(mongoQuery).
                 limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
-        results.toArray().collect{ mongoToCanonical(it).toMap() }
+        results.toArray().collect{ mongoToCanonical(it) }
     }
 
     @Override

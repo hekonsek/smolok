@@ -214,80 +214,40 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices).isEqualTo(1)
     }
 
-//    @Test
-//    public void shouldFindByQuery() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
-//    }
-//
-//    @Test
-//    public void shouldFindAllByQuery() {
-//        // Given
-//        documentService.save(new Invoice());
-//        documentService.save(new Invoice());
-//
-//        // When
-//        InvoiceQuery query = new InvoiceQuery();
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(2, invoices.size());
-//    }
-//
-//    @Test
-//    public void shouldNotFindByQuery() {
-//        // Given
-//        documentService.save(new Invoice().invoiceId("invoice001"));
-//        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
-//    @Test
-//    public void shouldFindByNestedQuery() {
-//        // Given
-//        String street = "someStreet";
-//        invoice.address = new Address().street(street);
-//        invoice = documentService.save(invoice);
-//
-//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street(street);
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(street, invoices.get(0).address.street);
-//    }
-//
-//    @Test
-//    public void shouldNotFindByNestedQuery() {
-//        // Given
-//        String street = "someStreet";
-//        invoice.address = new Address().street(street);
-//        invoice = documentService.save(invoice);
-//
-//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street("someRandomStreet");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
+
+    @Test
+    public void shouldFindByNestedQuery() {
+        // Given
+        String street = "someStreet";
+        invoice.address = new Invoice.Address(street: street)
+        documentStore.save(collection, serialize(invoice))
+
+        def query = new QueryBuilder([address_street: street])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).hasSize(1)
+        assertThat(invoices.get(0).address.street).isEqualTo(street)
+    }
+
+    @Test
+    public void shouldNotFindByNestedQuery() {
+        // Given
+        String street = "someStreet";
+        invoice.address = new Invoice.Address(street: street)
+        documentStore.save(collection, serialize(invoice))
+
+        def query = new QueryBuilder([address_street: 'someRandomStreet'])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).isEmpty()
+    }
+
 //    @Test
 //    public void shouldReturnPageByQuery() {
 //        // Given
