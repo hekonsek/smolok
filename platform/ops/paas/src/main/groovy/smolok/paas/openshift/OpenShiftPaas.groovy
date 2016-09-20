@@ -31,6 +31,7 @@ import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
 import static net.smolok.lib.download.DownloadManager.BinaryCoordinates
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Awaitilities.condition
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.CommandBuilder.sudo
@@ -111,7 +112,7 @@ class OpenShiftPaas implements Paas {
             processManager.executeAsync(startOpenShiftCommand)
             if (!isProvisioned) {
                 LOG.debug('OpenShift is not provisioned. Started provisioning...')
-                await().atMost(60, SECONDS).until({ isNotLoggedIntoProject() } as Callable<Boolean>)
+                await('login prompt is displayed').atMost(60, SECONDS).until(condition{ !loginPromptIsDisplayed() })
                 await().atMost(60, SECONDS).until({
                     def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
                     !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
@@ -170,7 +171,7 @@ class OpenShiftPaas implements Paas {
 
     // Helpers
 
-    private isNotLoggedIntoProject() {
+    private loginPromptIsDisplayed() {
         def statusOutput = oc(OC_STATUS).first()
         statusOutput.contains('You must be logged in to the server') || statusOutput.contains('Missing or incomplete configuration info')
     }
