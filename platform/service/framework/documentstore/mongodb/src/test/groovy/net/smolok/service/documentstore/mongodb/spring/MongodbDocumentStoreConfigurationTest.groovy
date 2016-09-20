@@ -248,25 +248,25 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices).isEmpty()
     }
 
-//    @Test
-//    public void shouldReturnPageByQuery() {
-//        // Given
-//        Invoice firstInvoice = documentService.save(new Invoice());
-//        Invoice secondInvoice = documentService.save(new Invoice());
-//        Invoice thirdInvoice = documentService.save(new Invoice());
-//
-//        // When
-//        List<Invoice> firstPage = documentService.find(Invoice.class, buildQuery(new InvoiceQuery()).page(0).size(2));
-//        List<Invoice> secondPage = documentService.find(Invoice.class, buildQuery(new InvoiceQuery()).page(1).size(2));
-//
-//        // Then
-//        assertEquals(2, firstPage.size());
-//        assertEquals(1, secondPage.size());
-//        assertEquals(firstInvoice.id, firstPage.get(0).id);
-//        assertEquals(secondInvoice.id, firstPage.get(1).id);
-//        assertEquals(thirdInvoice.id, secondPage.get(0).id);
-//    }
-//
+    @Test
+    public void shouldReturnPageByQuery() {
+        // Given
+        def firstInvoice = documentStore.save(collection, serialize(invoice))
+        def secondInvoice = documentStore.save(collection, serialize(invoice))
+        def thirdInvoice = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def firstPage = documentStore.find(collection, new QueryBuilder().page(0).size(2))
+        def secondPage = documentStore.find(collection, new QueryBuilder().page(1).size(2))
+
+        // Then
+        assertThat(firstPage).hasSize(2)
+        assertThat(secondPage).hasSize(1)
+        assertThat(firstPage.get(0).id).isEqualTo(firstInvoice)
+        assertThat(firstPage.get(1).id).isEqualTo(secondInvoice)
+        assertThat(secondPage.get(0).id).isEqualTo(thirdInvoice)
+    }
+
 //    @Test
 //    public void shouldSortDescending() {
 //        // Given

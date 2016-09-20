@@ -20,12 +20,12 @@ import com.mongodb.*
 import net.smolok.service.documentstore.api.DocumentStore
 import org.bson.types.ObjectId
 
-import static MongodbMapper.sortConditions
 import static MongodbMapper.mongoQuery
-import static net.smolok.service.documentstore.mongodb.MongodbMapper.MONGO_ID
-import static net.smolok.service.documentstore.mongodb.MongodbMapper.canonicalToMongo
-import static net.smolok.service.documentstore.mongodb.MongodbMapper.mongoToCanonical
+import static MongodbMapper.sortConditions
+import static net.smolok.service.documentstore.mongodb.MongodbMapper.*
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Lang.doWith
+import static smolok.lib.common.Lang.nullOr
 
 class MongodbDocumentStore implements DocumentStore {
 
@@ -53,18 +53,12 @@ class MongodbDocumentStore implements DocumentStore {
     @Override
     String save(String collection, Map<String, Object> pojo) {
         LOG.debug('About to save {} into {}.', pojo, collection)
-        def document = canonicalToMongo(pojo)
-        documentCollection(collection).save(document)
-        document.get(MONGO_ID).toString()
+        doWith(canonicalToMongo(pojo)) { documentCollection(collection).save(it) }[MONGO_ID].toString()
     }
 
     @Override
     Map<String, Object> findOne(String collection, String documentId) {
-        def document = documentCollection(collection).findOne(new ObjectId(documentId))
-        if(document == null) {
-            return null
-        }
-        mongoToCanonical(document)
+        nullOr(documentCollection(collection).findOne(new ObjectId(documentId))) { mongoToCanonical(it) }
     }
 
     @Override
