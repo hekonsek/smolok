@@ -10,14 +10,27 @@ device management, telemetry reading/writing and so forth.
 Smolok is based on the top of the leading open source projects including [Apache Spark](http://spark.apache.org) and
 [Eclipse IoT stack](http://iot.eclipse.org) (particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project).
 
-## Features summary
+## High level overview
+
+### Features summary
 
 Smolok platform provides the following features enabling Big Data for connected devices:
 
+- command line administration tool
 - PaaS infrastructure
 - messaging infrastructure
 
-### Paas infrastructure
+#### Command line administration tool
+
+The primary administrative interface of Smolok is a command line tool which can be installed in less than a minute using
+a single shell command. The command line administration tool provides the following features:
+
+- simple Smolok installer
+- single (and simple) administration interface
+- easy access to platform status and monitoring information
+- ability to add custom commands
+
+#### Paas infrastructure
 
 Smolok provisions Kubernetes-based PaaS backend that handles container-based deployment of the cloud services. In particular
 PaaS provides:
@@ -27,7 +40,7 @@ PaaS provides:
 - services load balancing
 - no-downtime deployments
 
-### Messaging infrastructure
+#### Messaging infrastructure
 
 Smolok provisions and manages messaging infrastructure that can be used for the following purposes:
 - messaging backend for connected devices
@@ -35,14 +48,21 @@ Smolok provisions and manages messaging infrastructure that can be used for the 
 - queue system
 - publish/subscribe notification infrastructure
 
-## Command line tool
+### Common use cases
+
+#### Install command line tool
 
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
 Smolok command line tool, execute the following command:
 
     bash <(curl -sL https://goo.gl/cLVVCF)
 
-The requirement for using Smolok command line tool is to have Docker client available in the path.
+## Command line tool
+
+Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
+Smolok command line tool, execute the following command:
+
+    bash <(curl -sL https://goo.gl/cLVVCF)
 
 ### Enforcing Smolok version
 
