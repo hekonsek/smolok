@@ -14,16 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.smolok.service.documentstore.api;
-
-import java.util.List;
-import java.util.Map;
-
+package net.smolok.service.documentstore.api
 /**
  * Document stores can be used to perform CRUD operations on messages formatted as documents i.e. JSON-like
  * structures.
  */
-public interface DocumentStore {
+interface DocumentStore {
 
     String save(String collection, Map<String, Object> pojo);
 
@@ -31,7 +27,7 @@ public interface DocumentStore {
 
     List<Map<String, Object>> findMany(String collection, List<String> ids);
 
-    List<Map<String,Object>> findByQuery(String collection, QueryBuilder queryBuilder);
+    List<Map<String,Object>> find(String collection, QueryBuilder queryBuilder);
 
     /**
      * Returns the number of the documents in the given collection.
@@ -39,8 +35,8 @@ public interface DocumentStore {
      * @param collection to query against.
      * @return number of documents. Returns 0 for non-existing collections as well.
      */
-    long countByQuery(String collection, QueryBuilder queryBuilder);
+    long count(String collection, QueryBuilder queryBuilder)
 
-    void remove(String collection, String id);
+    void remove(String collection, String id)
 
 }

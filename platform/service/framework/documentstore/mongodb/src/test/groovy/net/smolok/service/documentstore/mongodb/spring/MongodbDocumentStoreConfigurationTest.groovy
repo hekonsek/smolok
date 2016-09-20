@@ -61,7 +61,7 @@ class MongodbDocumentStoreConfigurationTest {
         documentStore.save(collection, serialize(invoice))
 
         // When
-        def count = documentStore.countByQuery(collection, QueryBuilder.queryBuilder())
+        def count = documentStore.count(collection, QueryBuilder.queryBuilder())
 
         // Then
         assertThat(count).isEqualTo(1)
@@ -121,7 +121,7 @@ class MongodbDocumentStoreConfigurationTest {
     @Test
     void shouldReturnEmptyList() {
         // When
-        def invoices = documentStore.findByQuery(collection, new QueryBuilder())
+        def invoices = documentStore.find(collection, new QueryBuilder())
 
         // Then
         assertThat(invoices.size()).isEqualTo(0);
@@ -134,7 +134,7 @@ class MongodbDocumentStoreConfigurationTest {
         def query = [invoiceId: invoice.invoiceId]
 
         // When
-        def invoices = documentStore.findByQuery(collection, new QueryBuilder(query))
+        def invoices = documentStore.find(collection, new QueryBuilder(query))
 
         // Then
         assertThat(invoices.size()).isEqualTo(1)
@@ -148,7 +148,7 @@ class MongodbDocumentStoreConfigurationTest {
         documentStore.save(collection, serialize(invoice))
 
         // When
-        def invoices = documentStore.findByQuery(collection, new QueryBuilder())
+        def invoices = documentStore.find(collection, new QueryBuilder())
 
         // Then
         assertThat(invoices).hasSize(2)
@@ -163,7 +163,7 @@ class MongodbDocumentStoreConfigurationTest {
         def query = new QueryBuilder([invoiceId: "randomValue"])
 
         // When
-        def invoices = documentStore.findByQuery(collection, query)
+        def invoices = documentStore.find(collection, query)
 
         // Then
         assertThat(invoices).isEmpty()
@@ -193,27 +193,27 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices).isEmpty()
     }
 
-//    @Test
-//    public void shouldNotFindOne() {
-//        // When
-//        Invoice invoice = documentService.findOne(Invoice.class, ObjectId.get().toString());
-//
-//        // Then
-//        assertNull(invoice);
-//    }
-//
-//    @Test
-//    public void shouldCount() throws UnknownHostException, InterruptedException {
-//        // Given
-//        documentService.save(new Invoice().invoiceId("invoice001"));
-//
-//        // When
-//        long invoices = documentService.count(Invoice.class);
-//
-//        // Then
-//        assertEquals(1, invoices);
-//    }
-//
+    @Test
+    public void shouldNotFindOne() {
+        // When
+        def invoice = documentStore.findOne(collection, ObjectId.get().toString())
+
+        // Then
+        assertThat(invoice).isNull()
+    }
+
+    @Test
+    public void shouldCount() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+
+        // When
+        long invoices = documentStore.count(collection, new QueryBuilder())
+
+        // Then
+        assertThat(invoices).isEqualTo(1)
+    }
+
 //    @Test
 //    public void shouldFindByQuery() {
 //        // Given
@@ -221,7 +221,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -236,7 +236,7 @@ class MongodbDocumentStoreConfigurationTest {
 //
 //        // When
 //        InvoiceQuery query = new InvoiceQuery();
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(2, invoices.size());
@@ -249,7 +249,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices.size());
@@ -265,7 +265,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street(street);
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -282,7 +282,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId).address_street("someRandomStreet");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices.size());
@@ -296,8 +296,8 @@ class MongodbDocumentStoreConfigurationTest {
 //        Invoice thirdInvoice = documentService.save(new Invoice());
 //
 //        // When
-//        List<Invoice> firstPage = documentService.findByQuery(Invoice.class, buildQuery(new InvoiceQuery()).page(0).size(2));
-//        List<Invoice> secondPage = documentService.findByQuery(Invoice.class, buildQuery(new InvoiceQuery()).page(1).size(2));
+//        List<Invoice> firstPage = documentService.find(Invoice.class, buildQuery(new InvoiceQuery()).page(0).size(2));
+//        List<Invoice> secondPage = documentService.find(Invoice.class, buildQuery(new InvoiceQuery()).page(1).size(2));
 //
 //        // Then
 //        assertEquals(2, firstPage.size());
@@ -315,9 +315,9 @@ class MongodbDocumentStoreConfigurationTest {
 //        Invoice thirdInvoice = documentService.save(new Invoice().invoiceId("3"));
 //
 //        // When
-//        List<Invoice> firstPage = documentService.findByQuery(Invoice.class, buildQuery(
+//        List<Invoice> firstPage = documentService.find(Invoice.class, buildQuery(
 //                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(0));
-//        List<Invoice> secondPage = documentService.findByQuery(Invoice.class, buildQuery(
+//        List<Invoice> secondPage = documentService.find(Invoice.class, buildQuery(
 //                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(1));
 //
 //        // Then
@@ -336,7 +336,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        query.setInvoiceIdContains("voice");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -351,7 +351,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        query.setInvoiceIdContains("randomString");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices.size());
@@ -364,7 +364,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceIdIn(invoice.invoiceId, "foo", "bar");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -378,7 +378,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceIdIn("foo", "bar");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices.size());
@@ -391,7 +391,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn("foo", "bar");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -405,7 +405,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn(invoice.invoiceId, "foo", "bar");
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices.size());
@@ -427,7 +427,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        query.setTimestampLessThan(now().plusDays(1).toDate());
 //
 //        // When
-//        List<Invoice> invoices = documentService.findByQuery(Invoice.class, new QueryBuilder(query));
+//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices.size());
@@ -441,7 +441,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
 //
 //        // When
-//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices);
@@ -454,7 +454,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
 //
 //        // When
-//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices);
@@ -468,7 +468,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        query.setInvoiceIdContains("voice");
 //
 //        // When
-//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(1, invoices);
@@ -482,7 +482,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        query.setInvoiceIdContains("randomString");
 //
 //        // When
-//        long invoices = documentService.countByQuery(Invoice.class, new QueryBuilder(query));
+//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
 //
 //        // Then
 //        assertEquals(0, invoices);

@@ -73,7 +73,7 @@ class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
-    List<Map<String, Object>> findByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
+    List<Map<String, Object>> find(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         DBObject mongoQuery = mongoQuery(queryBuilder.query);
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = documentCollection(collectionx).find(mongoQuery).
@@ -82,7 +82,7 @@ class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
-    long countByQuery(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
+    long count(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         DBObject mongoQuery = mongoQuery(queryBuilder.query)
         int skip = queryBuilder.page * queryBuilder.size
         DBCursor results = documentCollection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));

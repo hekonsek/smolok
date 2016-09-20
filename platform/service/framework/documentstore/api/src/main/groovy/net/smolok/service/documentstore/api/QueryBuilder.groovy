@@ -14,19 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.smolok.service.documentstore.api;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+package net.smolok.service.documentstore.api
 
 public class QueryBuilder implements Serializable {
 
-    private Map<String, Object> query = new HashMap<>();
+    private Map<String, Object> query = new HashMap<>()
 
-    private int page = 0;
+    private int page = 0
 
-    private int size = 25;
+    private int size = 25
 
     private boolean sortAscending = true;
 
