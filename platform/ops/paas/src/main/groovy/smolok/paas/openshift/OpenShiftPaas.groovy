@@ -112,7 +112,7 @@ class OpenShiftPaas implements Paas {
             processManager.executeAsync(startOpenShiftCommand)
             if (!isProvisioned) {
                 LOG.debug('OpenShift is not provisioned. Started provisioning...')
-                await('login prompt is displayed').atMost(60, SECONDS).until(condition{ !loginPromptIsDisplayed() })
+                await('login prompt is displayed').atMost(60, SECONDS).until(condition{ loginPromptIsDisplayed() })
                 await().atMost(60, SECONDS).until({
                     def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
                     !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
