@@ -20,24 +20,7 @@ import com.google.common.collect.Lists
 import com.google.maps.internal.PolylineEncoding
 import com.google.maps.model.LatLng
 
-import static java.lang.Math.PI
-import static java.lang.Math.PI
-import static java.lang.Math.PI
-import static java.lang.Math.PI
-import static java.lang.Math.PI
-import static java.lang.Math.asin
-import static java.lang.Math.atan2
-import static java.lang.Math.cos
-import static java.lang.Math.cos
-import static java.lang.Math.cos
-import static java.lang.Math.cos
-import static java.lang.Math.cos
-import static java.lang.Math.sin
-import static java.lang.Math.sin
-import static java.lang.Math.sin
-import static java.lang.Math.sin
-import static java.lang.Math.sin
-import static java.lang.Math.sin
+import static java.lang.Math.*
 
 class GoogleMaps {
 
@@ -68,12 +51,12 @@ class GoogleMaps {
         }
     }
 
-    public static String encodeMarker(LatLng coordinates, char marketText, String color) {
+    public static String encodeMarker(Point coordinates, char marketText, String color) {
         return "color:" + color + "%7Clabel:" + marketText + "%7C" + coordinates.lat + "," + coordinates.lng;
     }
 
-    public static URL generateFenceMap(LatLng center, LatLng marker, double fenceRadiusInMeters) {
-        String circle = Geofencing.encodeCircle(center, fenceRadiusInMeters);
+    public static URL renderCircleFenceMapUrl(Point center, Point marker, double fenceRadiusInMeters) {
+        String circle = encodeCircle(center, fenceRadiusInMeters);
         String encodedMarker = encodeMarker(marker, 'D' as char, "blue");
 
         try {
@@ -84,24 +67,24 @@ class GoogleMaps {
     }
 
     public static String encodeCircle(Point center, double radiusInMeters) {
-        double radiusInKilometers = radiusInMeters / 1000;
+        double radiusInKilometers = radiusInMeters / 1000
 
-        double lat = (center.lat * PI) / 180;
-        double lng = (center.lng * PI) / 180;
+        double lat = (center.lat() * PI) / 180;
+        double lng = (center.lng() * PI) / 180;
 
         int precision = 8
 
         double $d = radiusInKilometers / Geofencing.EARTH_RADIUS_IN_KILOMETERS;
 
         def points = new LinkedList<>();
-        for (int $i = 0; $i <= 360; $i += precision) {
-            double $brng = $i * PI / 180;
+        for (int i = 0; i <= 360; i += precision) {
+            double brng = i * PI / 180;
 
-            double $pLat = asin(sin(lat) * cos($d) + cos(lat) * sin($d) * cos($brng));
-            double $pLng = ((lng + atan2(sin($brng) * sin($d) * cos(lat), cos($d) - sin(lat) * sin($pLat))) * 180) / PI;
-            $pLat = ($pLat * 180) / PI;
+            double pLat = asin(sin(lat) * cos($d) + cos(lat) * sin($d) * cos(brng))
+            double pLng = ((lng + atan2(sin(brng) * sin($d) * cos(lat), cos($d) - sin(lat) * sin(pLat))) * 180) / PI
+            pLat = (pLat * 180) / PI;
 
-            points.add(new Point($pLat, $pLng));
+            points.add(new LatLng(pLat, pLng));
         }
 
         return PolylineEncoding.encode(points);

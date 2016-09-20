@@ -26,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class GoogleMapsTest {
 
+    def mapFile = File.createTempFile('xxx', 'xxx')
+
     @Test
     void shouldDownloadMapAsPng() {
         // Given
@@ -34,7 +36,21 @@ class GoogleMapsTest {
 
         // When
         def url = GoogleMaps.renderRouteUrl(firstPoint, secondPoint)
-        def mapFile = File.createTempFile('xxx', 'xxx')
+        IOUtils.copy(url.openStream(), new FileOutputStream(mapFile))
+
+        // Then
+        def mapContentType = Files.probeContentType(mapFile.toPath())
+        assertThat(mapContentType).isEqualTo('image/png')
+    }
+
+    @Test
+    void shouldDownloadMapWithCircleAsPng() {
+        // Given
+        def firstPoint = point(49.823873, 19.041077)
+        def secondPoint = point(49.829472, 19.077234)
+
+        // When
+        def url = GoogleMaps.renderCircleFenceMapUrl(firstPoint, secondPoint, 500d)
         IOUtils.copy(url.openStream(), new FileOutputStream(mapFile))
 
         // Then
