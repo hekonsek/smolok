@@ -34,11 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat
 import static org.joda.time.DateTime.now
 import static smolok.lib.common.Networks.findAvailableTcpPort
 import static smolok.lib.common.Properties.setIntProperty
+import static smolok.lib.common.Properties.setSystemStringProperty
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = [MongoAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class,
-        MongodbDocumentStoreConfiguration.class, MongodbDocumentStoreConfigurationTest.class])
+        MongodbDocumentStoreConfiguration.class])
 class MongodbDocumentStoreConfigurationTest {
 
     def collection = uuid()
@@ -52,6 +53,7 @@ class MongodbDocumentStoreConfigurationTest {
 
     @BeforeClass
     static void beforeClass() {
+        setSystemStringProperty('documentStore.mongodb.idField', 'myid')
         setIntProperty("spring.data.mongodb.port", findAvailableTcpPort())
     }
 
@@ -90,7 +92,7 @@ class MongodbDocumentStoreConfigurationTest {
         def loadedInvoice = documentStore.findOne(collection, id)
 
         // Then
-        assertThat(loadedInvoice.id).isInstanceOf(String.class)
+        assertThat(loadedInvoice.myid).isInstanceOf(String.class)
     }
 
     @Test
@@ -109,7 +111,7 @@ class MongodbDocumentStoreConfigurationTest {
     public void shouldUpdateDocument() {
         // Given
         def id = documentStore.save(collection, serialize(invoice))
-        invoice.id = id
+        invoice.myid = id
         invoice.invoiceId = 'newValue'
 
         // When
@@ -141,6 +143,18 @@ class MongodbDocumentStoreConfigurationTest {
         // Then
         assertThat(invoices.size()).isEqualTo(1)
         assertThat(invoices.first().invoiceId).isEqualTo(invoice.invoiceId)
+    }
+
+    @Test
+    void shouldFindOneByQuery() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def invoices = documentStore.find(collection, new QueryBuilder([myid: id]))
+
+        // Then
+        assertThat(invoices).isNotEmpty()
     }
 
     @Test
@@ -182,8 +196,8 @@ class MongodbDocumentStoreConfigurationTest {
 
         // Then
         assertThat(invoices).hasSize(2)
-        assertThat(invoices.first().id).isEqualTo(firstInvoice)
-        assertThat(invoices.last().id).isEqualTo(secondInvoice)
+        assertThat(invoices.first().myid).isEqualTo(firstInvoice)
+        assertThat(invoices.last().myid).isEqualTo(secondInvoice)
     }
 
     @Test
@@ -264,9 +278,9 @@ class MongodbDocumentStoreConfigurationTest {
         // Then
         assertThat(firstPage).hasSize(2)
         assertThat(secondPage).hasSize(1)
-        assertThat(firstPage.get(0).id).isEqualTo(firstInvoice)
-        assertThat(firstPage.get(1).id).isEqualTo(secondInvoice)
-        assertThat(secondPage.get(0).id).isEqualTo(thirdInvoice)
+        assertThat(firstPage.get(0).myid).isEqualTo(firstInvoice)
+        assertThat(firstPage.get(1).myid).isEqualTo(secondInvoice)
+        assertThat(secondPage.get(0).myid).isEqualTo(thirdInvoice)
     }
 
     @Test
@@ -277,15 +291,15 @@ class MongodbDocumentStoreConfigurationTest {
         def thirdInvoice = documentStore.save(collection, serialize(invoice))
 
         // When
-        def firstPage = documentStore.find(collection, new QueryBuilder().page(0).size(2).sortAscending(false).orderBy('id'))
-        def secondPage = documentStore.find(collection, new QueryBuilder().page(1).size(2).sortAscending(false).orderBy('id'))
+        def firstPage = documentStore.find(collection, new QueryBuilder().page(0).size(2).sortAscending(false).orderBy('myid'))
+        def secondPage = documentStore.find(collection, new QueryBuilder().page(1).size(2).sortAscending(false).orderBy('myid'))
 
         // Then
         assertThat(firstPage).hasSize(2)
         assertThat(secondPage).hasSize(1)
-        assertThat(firstPage.get(0).id).isEqualTo(thirdInvoice)
-        assertThat(firstPage.get(1).id).isEqualTo(secondInvoice)
-        assertThat(secondPage.get(0).id).isEqualTo(firstInvoice)
+        assertThat(firstPage.get(0).myid).isEqualTo(thirdInvoice)
+        assertThat(firstPage.get(1).myid).isEqualTo(secondInvoice)
+        assertThat(secondPage.get(0).myid).isEqualTo(firstInvoice)
     }
 
     @Test
@@ -388,7 +402,7 @@ class MongodbDocumentStoreConfigurationTest {
 
         // Then
         assertThat(invoices).hasSize(1);
-        assertThat(invoices.first().id).isEqualTo(todayInvoice)
+        assertThat(invoices.first().myid).isEqualTo(todayInvoice)
     }
 
 //    @Test
@@ -482,7 +496,7 @@ class MongodbDocumentStoreConfigurationTest {
 
     static class Invoice {
 
-        String id
+        String myid
 
         Date timestamp = new Date()
 
