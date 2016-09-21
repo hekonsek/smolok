@@ -12,32 +12,12 @@
  *******************************************************************************/
 package org.eclipse.kapua.service.device.registry;
 
-/**
- * Defines the strategy to validate credentials during device login.
- */
 public enum DeviceCredentialsMode
 {
-    /**
-     * Strategy to use will be picked up from the default value set for the current account.
-     * 
-     * This value cannot be used as a default for the account.
-     */
     INHERITED(false),
 
-    /**
-     * Device can change login credentials between credentials and
-     * can use credentials that are used by another device.<br/>
-     * <br/>
-     * This is the most insecure strategy.
-     */
     LOOSE,
 
-    /**
-     * Device cannot change login credentials between logins and
-     * cannot use credentials that are used by another device.<br/>
-     * <br/>
-     * This is the most secure strategy.
-     */
     STRICT;
 
     private boolean usableAsAccountDefault;
@@ -52,11 +32,6 @@ public enum DeviceCredentialsMode
         this.usableAsAccountDefault = usableAsAccountDefault;
     }
 
-    /**
-     * Returns whether or not this value can be used as a default for the default tight value in an account.
-     * 
-     * @return true if it is usable, false if not
-     */
     public boolean isUsableAsAccountDefault()
     {
         return usableAsAccountDefault;
