@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import net.smolok.service.documentstore.api.DocumentStore
 import net.smolok.service.documentstore.api.QueryBuilder
 import org.bson.types.ObjectId
+import org.joda.time.DateTime
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 
 import static org.assertj.core.api.Assertions.assertThat
+import static org.joda.time.DateTime.now
 import static smolok.lib.common.Networks.findAvailableTcpPort
 import static smolok.lib.common.Properties.setIntProperty
 import static smolok.lib.common.Uuids.uuid
@@ -340,56 +342,55 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices).hasSize(0);
     }
 
-//    @Test
-//    public void shouldFindByQueryWithNotIn() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn("foo", "bar");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
-//    }
-//
-//    @Test
-//    public void shouldNotFindByQueryWithNotIn() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceIdNotIn(invoice.invoiceId, "foo", "bar");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
-//    @Test
-//    public void shouldFindByQueryBetweenDateRange() {
-//        // Given
-//        Invoice todayInvoice = documentService.save(invoice);
-//        invoice = new Invoice();
-//        invoice.timestamp = now().minusDays(2).toDate();
-//        documentService.save(invoice);
-//        invoice = new Invoice();
-//        invoice.timestamp = now().plusDays(2).toDate();
-//        documentService.save(invoice);
-//
-//        InvoiceQuery query = new InvoiceQuery();
-//        query.setTimestampGreaterThanEqual(now().minusDays(1).toDate());
-//        query.setTimestampLessThan(now().plusDays(1).toDate());
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(todayInvoice.id, invoices.get(0).id);
-//    }
-//
+    @Test
+    void shouldFindByQueryWithNotIn() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdNotIn: ['baz', 'bar']])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).hasSize(1);
+        assertThat(invoices.get(0).invoiceId).isEqualTo(invoice.invoiceId)
+    }
+
+    @Test
+    void shouldNotFindByQueryWithNotIn() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdNotIn: ['foo', 'bar']])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).isEmpty()
+    }
+
+    @Test
+    public void shouldFindByQueryBetweenDateRange() {
+        // Given
+        invoice.timestamp = now().toDate()
+        def todayInvoice = documentStore.save(collection, serialize(invoice))
+        invoice = new Invoice()
+        invoice.timestamp = now().minusDays(2).toDate();
+        documentStore.save(collection, serialize(invoice))
+        invoice = new Invoice();
+        invoice.timestamp = now().plusDays(2).toDate()
+        documentStore.save(collection, serialize(invoice));
+
+        def query = new QueryBuilder([timestampGreaterThanEqual: now().minusDays(1).toDate().time, timestampLessThan: now().plusDays(1).toDate().time])
+
+        // When
+        def invoices = documentStore.find(collection, query)
+
+        // Then
+        assertThat(invoices).hasSize(1);
+        assertThat(invoices.first().id).isEqualTo(todayInvoice)
+    }
+
 //    @Test
 //    public void shouldCountPositiveByQuery() {
 //        // Given
@@ -402,7 +403,7 @@ class MongodbDocumentStoreConfigurationTest {
 //        // Then
 //        assertEquals(1, invoices);
 //    }
-//
+
 //    @Test
 //    public void shouldCountNegativeByQuery() {
 //        // Given

@@ -18,6 +18,7 @@ package net.smolok.service.documentstore.mongodb
 
 import com.mongodb.*
 import net.smolok.service.documentstore.api.DocumentStore
+import org.apache.commons.lang3.Validate
 import org.bson.types.ObjectId
 
 import static MongodbMapper.sortConditions
@@ -44,8 +45,8 @@ class MongodbDocumentStore implements DocumentStore {
     // Constructors
 
     MongodbDocumentStore(Mongo mongo, String documentsDbName) {
-        this.mongo = mongo
-        this.documentsDbName = documentsDbName
+        this.mongo = Validate.notNull(mongo, 'Mongo client expected not to be null.')
+        this.documentsDbName = Validate.notBlank(documentsDbName, 'Documents database name expected not to be blank.')
     }
 
     // Operations implementations
@@ -58,13 +59,14 @@ class MongodbDocumentStore implements DocumentStore {
 
     @Override
     Map<String, Object> findOne(String collection, String documentId) {
+        LOG.debug('Looking up for document with ID {} from collection {}.', documentId, collection)
         nullOr(documentCollection(collection).findOne(new ObjectId(documentId))) { mongoToCanonical(it) }
     }
 
     @Override
     List<Map<String, Object>> findMany(String collection, List<String> ids) {
         def mongoIds = new BasicDBObject('$in', ids.collect{new ObjectId(it)})
-        def query = new BasicDBObject('_id', mongoIds)
+        def query = new BasicDBObject(MONGO_ID, mongoIds)
         documentCollection(collection).find(query).toArray().collect { mongoToCanonical(it) }
     }
 
