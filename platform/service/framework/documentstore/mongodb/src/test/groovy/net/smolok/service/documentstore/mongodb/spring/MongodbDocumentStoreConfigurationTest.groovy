@@ -249,7 +249,7 @@ class MongodbDocumentStoreConfigurationTest {
     }
 
     @Test
-    public void shouldReturnPageByQuery() {
+    void shouldReturnPageByQuery() {
         // Given
         def firstInvoice = documentStore.save(collection, serialize(invoice))
         def secondInvoice = documentStore.save(collection, serialize(invoice))
@@ -267,27 +267,25 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(secondPage.get(0).id).isEqualTo(thirdInvoice)
     }
 
-//    @Test
-//    public void shouldSortDescending() {
-//        // Given
-//        Invoice firstInvoice = documentService.save(new Invoice().invoiceId("1"));
-//        Invoice secondInvoice = documentService.save(new Invoice().invoiceId("2"));
-//        Invoice thirdInvoice = documentService.save(new Invoice().invoiceId("3"));
-//
-//        // When
-//        List<Invoice> firstPage = documentService.find(Invoice.class, buildQuery(
-//                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(0));
-//        List<Invoice> secondPage = documentService.find(Invoice.class, buildQuery(
-//                new InvoiceQuery()).size(2).orderBy("invoiceId").sortAscending(false).page(1));
-//
-//        // Then
-//        assertEquals(2, firstPage.size());
-//        assertEquals(1, secondPage.size());
-//        assertEquals(thirdInvoice.id, firstPage.get(0).id);
-//        assertEquals(secondInvoice.id, firstPage.get(1).id);
-//        assertEquals(firstInvoice.id, secondPage.get(0).id);
-//    }
-//
+    @Test
+    void shouldSortDescending() {
+        // Given
+        def firstInvoice = documentStore.save(collection, serialize(invoice))
+        def secondInvoice = documentStore.save(collection, serialize(invoice))
+        def thirdInvoice = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def firstPage = documentStore.find(collection, new QueryBuilder().page(0).size(2).sortAscending(false).orderBy('id'))
+        def secondPage = documentStore.find(collection, new QueryBuilder().page(1).size(2).sortAscending(false).orderBy('id'))
+
+        // Then
+        assertThat(firstPage).hasSize(2)
+        assertThat(secondPage).hasSize(1)
+        assertThat(firstPage.get(0).id).isEqualTo(thirdInvoice)
+        assertThat(firstPage.get(1).id).isEqualTo(secondInvoice)
+        assertThat(secondPage.get(0).id).isEqualTo(firstInvoice)
+    }
+
 //    @Test
 //    public void shouldFindByQueryWithContains() {
 //        // Given

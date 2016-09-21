@@ -20,9 +20,13 @@ import com.google.common.base.Preconditions
 import com.mongodb.BasicDBObject
 import com.mongodb.DBObject
 import net.smolok.service.documentstore.api.QueryBuilder
+import org.apache.commons.lang3.Validate
 import org.bson.types.ObjectId
 
-class MongodbMapper {
+/**
+ * Converts DocumentStore canonical data (like documents and queries) into MongoDB structures (and reversely).
+ */
+final class MongodbMapper {
 
     static final def MONGO_ID = '_id'
 
@@ -33,6 +37,9 @@ class MongodbMapper {
             "LessThanEqual": '$lte',
             "NotIn": '$nin',
             "In": '$in'];
+
+    private MongodbMapper() {
+    }
 
     static DBObject mongoQuery(Map<String, Object> jsonQuery) {
         def mongoQuery = new BasicDBObject()
@@ -55,14 +62,22 @@ class MongodbMapper {
     }
 
     static DBObject sortConditions(QueryBuilder queryBuilder) {
+        Validate.notNull(queryBuilder, 'Query builder cannot be null.')
+
         int order = queryBuilder.sortAscending ? 1 : -1
+
         def orderBy = queryBuilder.orderBy
+        def indexOfId = orderBy.findIndexOf {it == 'id'}
+        if(indexOfId > -1) {
+            orderBy[indexOfId] = '_id'
+        }
+
         if (orderBy.size() == 0) {
-            new BasicDBObject('$natural', order);
+            new BasicDBObject('$natural', order)
         } else {
-            BasicDBObject sort = new BasicDBObject();
-            for (String by : orderBy) {
-                sort.put(by, order);
+            def sort = new BasicDBObject()
+            orderBy.each {
+                sort.put(it, order)
             }
             sort
         }
