@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.smolok</groupId>
         <artifactId>smolok</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.5-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-bom</artifactId>
@@ -24,7 +24,7 @@
         <jsch.version>0.1.53</jsch.version>
         <jts.version>1.14.0</jts.version>
         <netty.version>4.0.33.Final</netty.version>
-        <smolok.version>0.0.4</smolok.version>
+        <smolok.version>0.0.5-SNAPSHOT</smolok.version>
         <spark.version>2.0.0</spark.version>
         <sshd.version>1.2.0</sshd.version>
         <vertx.version>3.2.0</vertx.version>
