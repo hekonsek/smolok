@@ -18,11 +18,9 @@
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
         </dependency>
-
-        <!-- External dependencies -->
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-documentstore-mongodb</artifactId>
         </dependency>
 
         <!-- Optional Spring runtime -->

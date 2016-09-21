@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.*;
+import net.smolok.service.documentstore.api.DocumentStore;
 import org.eclipse.kapua.service.device.registry.*;
 
 import java.math.BigInteger;
@@ -19,6 +20,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
             configure(FAIL_ON_UNKNOWN_PROPERTIES, false).
             setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+    private final DocumentStore documentStore;
+
     private final MongoClient mongo;
 
     private final String db;
@@ -27,7 +30,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     // Constructors
 
-    public MongoDbDeviceRegistryService(MongoClient mongo, String db, String collection) {
+    public MongoDbDeviceRegistryService(DocumentStore documentStore, MongoClient mongo, String db, String collection) {
+        this.documentStore = documentStore;
         this.mongo = mongo;
         this.db = db;
         this.collection = collection;
@@ -41,9 +45,9 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
         DBObject device = new BasicDBObject();
         device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
-        device.put("id", id);
+        device.put("kapuaid", id);
         device.put("clientId", deviceCreator.getClientId());
-        devicesCollection().save(device);
+        documentStore.save(collection, objectMapper.convertValue(device, Map.class));
 
         SimpleDevice result = new SimpleDevice();
         result.setScopeId(deviceCreator.getScopeId().getId());
@@ -107,7 +111,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     }
 
     private DBObject deviceId(KapuaId scopeId, KapuaId entityId) {
-        return new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "id", entityId.getId().longValue()));
+        return new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue()));
     }
 
     private Device dbObjectToDevice(DBObject dbObject) {

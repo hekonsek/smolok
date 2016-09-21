@@ -22,6 +22,7 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.process.runtime.Network;
+import net.smolok.service.documentstore.mongodb.MongodbDocumentStore;
 import org.eclipse.kapua.service.device.registry.Device;
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
 import org.eclipse.kapua.service.device.registry.KapuaException;
@@ -42,8 +43,10 @@ public class MongoDbDeviceRegistryServiceTest {
 
     static int mongoPort = findAvailableTcpPort();
 
+    MongoClient mongoClient = new MongoClient("localhost", mongoPort);
+
     DeviceRegistryService registryService = new MongoDbDeviceRegistryService(
-            new MongoClient("localhost", mongoPort), "smolok", "devices"
+            new MongodbDocumentStore(mongoClient, "devices"), mongoClient, "devices", "devices"
     );
 
     @BeforeClass
