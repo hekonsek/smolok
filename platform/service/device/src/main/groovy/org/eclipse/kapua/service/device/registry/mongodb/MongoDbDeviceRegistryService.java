@@ -62,7 +62,9 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         Map<String, Object> existingDeviceMap = existingDevice.toMap();
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
         normalize(existingDeviceMap);
-        devicesCollection().save(new BasicDBObject(existingDeviceMap));
+        existingDeviceMap.put("id", existingDeviceMap.get("_id").toString());
+        existingDeviceMap.remove("_id");
+        documentStore.save(collection, existingDeviceMap);
         return new SimpleDevice();
     }
 
