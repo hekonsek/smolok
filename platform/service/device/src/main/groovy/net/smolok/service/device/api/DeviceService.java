@@ -41,7 +41,7 @@ public interface DeviceService {
 
     void update(Device device);
 
-    void deregister(String deviceId);
+    void deregister(@Tenant String tenant, String deviceId);
 
     void heartbeat(String deviceId);
 

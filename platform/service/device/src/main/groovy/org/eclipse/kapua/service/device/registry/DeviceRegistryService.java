@@ -27,7 +27,7 @@ public interface DeviceRegistryService {
     public long count(KapuaQuery<Device> query)
             throws KapuaException;
 
-    public void delete(Device device)
+    public void delete(KapuaId scopeId, KapuaId deviceId)
             throws KapuaException;
 
     public Device findByClientId(KapuaId scopeId, String clientId)

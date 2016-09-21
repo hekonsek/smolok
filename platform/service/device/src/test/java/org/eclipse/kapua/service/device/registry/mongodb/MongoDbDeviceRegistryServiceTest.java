@@ -123,7 +123,7 @@ public class MongoDbDeviceRegistryServiceTest {
         Device device = registryService.create(deviceCreator);
 
         // When
-        registryService.delete(device);
+        registryService.delete(device.getScopeId(), device.getId());
 
         // Then
         assertThat(registryService.find(device.getScopeId(), device.getId())).isNull();

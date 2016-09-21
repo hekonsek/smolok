@@ -93,8 +93,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     }
 
     @Override
-    public void delete(Device device) throws KapuaException {
-        devicesCollection().remove(deviceId(device.getScopeId(), device.getId()));
+    public void delete(KapuaId scopeId, KapuaId deviceId) throws KapuaException {
+        devicesCollection().remove(deviceId(scopeId, deviceId));
     }
 
     @Override

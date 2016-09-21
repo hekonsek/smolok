@@ -80,32 +80,19 @@ class KapuaDeviceServiceConfigurationTest {
         assertThat(device.properties.kapuaId).isNotNull()
     }
 
-//    @Test
-//    public void shouldListDisconnected() {
-//        // Given
-//        device.setLastUpdate(new DateTime(device.getLastUpdate()).minusMinutes(2).toDate());
-//        connector.toBusAndWait(registerDevice(), device);
-//
-//        // When
-//        List<String> disconnected = connector.fromBus(disconnected(), List.class);
-//
-//        // Then
-//        Truth.assertThat(disconnected).contains(device.getDeviceId());
-//    }
-//
-//    @Test
-//    public void shouldDeregisterDevice() {
-//        // Given
-//        connector.toBusAndWait(registerDevice(), device);
-//
-//        // When
-//        connector.toBusAndWait(deregisterDevice(device.getDeviceId()));
-//
-//        // Then
-//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
-//        Truth.assertThat(loadedDevice).isNull();
-//    }
-//
+    @Test
+    public void shouldDeregisterDevice() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+
+        // When
+        eventBus.toBusAndWait('device.deregister', 'myDevice')
+
+        // Then
+        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        assertThat(device).isNull()
+    }
+
 //    @Test
 //    public void shouldGetDevice() {
 //        connector.toBusAndWait(registerDevice(), device);
