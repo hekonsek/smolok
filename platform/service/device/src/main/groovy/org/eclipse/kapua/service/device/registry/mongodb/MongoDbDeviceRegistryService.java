@@ -22,7 +22,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     private final DocumentStore documentStore;
 
-    private final MongoClient mongo;
+    private final Mongo mongo;
 
     private final String db;
 
@@ -30,7 +30,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     // Constructors
 
-    public MongoDbDeviceRegistryService(DocumentStore documentStore, MongoClient mongo, String db, String collection) {
+    public MongoDbDeviceRegistryService(DocumentStore documentStore, Mongo mongo, String db, String collection) {
         this.documentStore = documentStore;
         this.mongo = mongo;
         this.db = db;

@@ -16,47 +16,42 @@
  */
 package org.eclipse.kapua.service.device.registry.mongodb;
 
-import com.mongodb.MongoClient;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.process.runtime.Network;
-import net.smolok.service.documentstore.mongodb.MongodbDocumentStore;
+import net.smolok.service.device.kapua.spring.KapuaDeviceServiceConfiguration;
+import net.smolok.service.documentstore.mongodb.spring.MongodbDocumentStoreConfiguration;
 import org.eclipse.kapua.service.device.registry.Device;
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
 import org.eclipse.kapua.service.device.registry.KapuaException;
+import org.eclipse.kapua.service.device.registry.mongodb.spring.MongodbDeviceRegistryServiceConfiguration;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
-import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static smolok.lib.common.Networks.findAvailableTcpPort;
+import static smolok.lib.common.Properties.setIntProperty;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {MongoAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class,
+        MongodbDocumentStoreConfiguration.class, MongodbDeviceRegistryServiceConfiguration.class})
 public class MongoDbDeviceRegistryServiceTest {
+
+    @Autowired
+    DeviceRegistryService registryService;
 
     // MongoDB fixtures
 
-    static int mongoPort = findAvailableTcpPort();
-
-    MongoClient mongoClient = new MongoClient("localhost", mongoPort);
-
-    DeviceRegistryService registryService = new MongoDbDeviceRegistryService(
-            new MongodbDocumentStore(mongoClient, "devices"), mongoClient, "devices", "devices"
-    );
-
     @BeforeClass
-    public static void beforeClass() throws IOException {
-        IMongodConfig mongodConfig = new MongodConfigBuilder()
-                .version(PRODUCTION)
-                .net(new Net(mongoPort, Network.localhostIsIPv6()))
-                .build();
-
-        MongodStarter.getDefaultInstance().prepare(mongodConfig).start();
+    public static void beforeClass() {
+        setIntProperty("spring.data.mongodb.port", findAvailableTcpPort());
     }
 
     // Device fixtures
