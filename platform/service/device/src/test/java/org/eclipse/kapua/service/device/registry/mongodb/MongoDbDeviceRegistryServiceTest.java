@@ -16,7 +16,6 @@
  */
 package org.eclipse.kapua.service.device.registry.mongodb;
 
-import net.smolok.service.device.kapua.spring.KapuaDeviceServiceConfiguration;
 import net.smolok.service.documentstore.mongodb.spring.MongodbDocumentStoreConfiguration;
 import org.eclipse.kapua.service.device.registry.Device;
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
@@ -26,7 +25,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
