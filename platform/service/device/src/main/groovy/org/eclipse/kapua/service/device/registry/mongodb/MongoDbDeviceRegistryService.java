@@ -119,6 +119,8 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     private Device dbObjectToDevice(DBObject dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
         deviceMap.putAll(dbObject.toMap());
+        deviceMap.put("id", deviceMap.get("kapuaid"));
+        deviceMap.remove("kapuaid");
         return objectMapper.convertValue(deviceMap, SimpleDevice.class);
     }
 

@@ -2,6 +2,7 @@ package net.smolok.service.device.kapua.spring
 
 import com.mongodb.MongoClient
 import net.smolok.service.device.kapua.KapuaDeviceService
+import net.smolok.service.documentstore.api.DocumentStore
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.mongodb.MongoDbDeviceRegistryService
 import org.springframework.beans.factory.annotation.Value
@@ -19,10 +20,10 @@ class KapuaDeviceServiceConfiguration {
     }
 
     @Bean
-    DeviceRegistryService deviceRegistryService(MongoClient mongo,
-                                                @Value('${device.database:smolok}') String db,
+    DeviceRegistryService deviceRegistryService(DocumentStore documentStore, MongoClient mongo,
+                                                @Value('${device.database:documents}') String db,
                                                 @Value('${device.collection:devices}') String collection) {
-        new MongoDbDeviceRegistryService(mongo, db, collection)
+        new MongoDbDeviceRegistryService(documentStore, mongo, db, collection)
     }
 
     @Bean
