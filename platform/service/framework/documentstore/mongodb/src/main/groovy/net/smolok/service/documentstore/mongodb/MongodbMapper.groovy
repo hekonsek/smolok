@@ -36,12 +36,15 @@ final class MongodbMapper {
             "LessThan": '$lt',
             "LessThanEqual": '$lte',
             "NotIn": '$nin',
-            "In": '$in'];
+            "In": '$in']
 
-    private MongodbMapper() {
+    private final String idField
+
+    MongodbMapper(String idField) {
+        this.idField = idField
     }
 
-    static DBObject mongoQuery(Map<String, Object> jsonQuery) {
+    DBObject mongoQuery(Map<String, Object> jsonQuery) {
         def mongoQuery = new BasicDBObject()
         for (String originalKey : jsonQuery.keySet()) {
             String compoundKey = originalKey.replaceAll('(.)_', '$1.');
@@ -55,19 +58,19 @@ final class MongodbMapper {
             if (originalKey.endsWith("Contains")) {
                 addRestriction(mongoQuery, compoundKey, "Contains", '$regex', ".*" + jsonQuery.get(originalKey) + ".*");
             } else {
-                mongoQuery.put(compoundKey, new BasicDBObject('$eq', jsonQuery.get(originalKey)));
+                addRestriction(mongoQuery, compoundKey, '', '$eq', jsonQuery.get(originalKey))
             }
         }
         mongoQuery
     }
 
-    static DBObject sortConditions(QueryBuilder queryBuilder) {
+    DBObject sortConditions(QueryBuilder queryBuilder) {
         Validate.notNull(queryBuilder, 'Query builder cannot be null.')
 
         int order = queryBuilder.sortAscending ? 1 : -1
 
         def orderBy = queryBuilder.orderBy
-        def indexOfId = orderBy.findIndexOf {it == 'id'}
+        def indexOfId = orderBy.findIndexOf {it == idField}
         if(indexOfId > -1) {
             orderBy[indexOfId] = '_id'
         }
@@ -83,38 +86,42 @@ final class MongodbMapper {
         }
     }
 
-    static DBObject canonicalToMongo(Map<String, Object> document) {
+    DBObject canonicalToMongo(Map<String, Object> document) {
         Preconditions.checkNotNull(document, "JSON passed to the conversion can't be null.");
 
         def bson = new BasicDBObject(document)
-        Object id = bson.get("id");
+        Object id = bson.get(idField);
         if (id != null) {
-            bson.removeField("id");
+            bson.removeField(idField);
             bson.put("_id", new ObjectId(id.toString()));
         }
         return bson;
     }
 
-    static Map<String, Object> mongoToCanonical(DBObject bson) {
+    Map<String, Object> mongoToCanonical(DBObject bson) {
         Preconditions.checkNotNull(bson, "BSON passed to the conversion can't be null.");
         def json = bson.toMap()
         Object id = json.get("_id");
         if (id != null) {
             json.remove("_id");
-            json.put("id", id.toString());
+            json.put(idField, id.toString());
         }
         return json;
     }
 
     // Helpers
 
-    private static String findFirstMatchOperator(String originalKey) {
+    private String findFirstMatchOperator(String originalKey) {
         List<String> matchingSuffixOperators = SIMPLE_SUFFIX_OPERATORS.keySet().findAll{originalKey.endsWith(it)}.toList()
         return matchingSuffixOperators.isEmpty() ? null : matchingSuffixOperators.get(0);
     }
 
-    private static void addRestriction(BasicDBObject query, String propertyWithOperator, String propertyOperator, String operator, Object value) {
-        String property = propertyWithOperator.replaceAll(propertyOperator + '$', "");
+    private void addRestriction(BasicDBObject query, String propertyWithOperator, String propertyOperator, String operator, Object value) {
+        def property = propertyWithOperator.replaceAll(propertyOperator + '$', "")
+        if(property == idField) {
+            property = '_id'
+            value = new ObjectId((String) value)
+        }
         if (query.containsField(property)) {
             BasicDBObject existingRestriction = (BasicDBObject) query.get(property);
             existingRestriction.put(operator, value);

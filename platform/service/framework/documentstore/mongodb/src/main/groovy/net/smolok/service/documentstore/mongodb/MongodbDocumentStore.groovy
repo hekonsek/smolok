@@ -38,14 +38,17 @@ class MongodbDocumentStore implements DocumentStore {
 
     private final Mongo mongo
 
+    private final MongodbMapper mongodbMapper
+
     // Configuration members
 
     private final String documentsDbName
 
     // Constructors
 
-    MongodbDocumentStore(Mongo mongo, String documentsDbName) {
+    MongodbDocumentStore(Mongo mongo, MongodbMapper mongodbMapper, String documentsDbName) {
         this.mongo = Validate.notNull(mongo, 'Mongo client expected not to be null.')
+        this.mongodbMapper = Validate.notNull(mongodbMapper, 'MongoDB mapper expected not to be null.')
         this.documentsDbName = Validate.notBlank(documentsDbName, 'Documents database name expected not to be blank.')
     }
 
@@ -54,33 +57,33 @@ class MongodbDocumentStore implements DocumentStore {
     @Override
     String save(String collection, Map<String, Object> pojo) {
         LOG.debug('About to save {} into {}.', pojo, collection)
-        doWith(canonicalToMongo(pojo)) { documentCollection(collection).save(it) }[MONGO_ID].toString()
+        doWith(mongodbMapper.canonicalToMongo(pojo)) { documentCollection(collection).save(it) }[MONGO_ID].toString()
     }
 
     @Override
     Map<String, Object> findOne(String collection, String documentId) {
         LOG.debug('Looking up for document with ID {} from collection {}.', documentId, collection)
-        nullOr(documentCollection(collection).findOne(new ObjectId(documentId))) { mongoToCanonical(it) }
+        nullOr(documentCollection(collection).findOne(new ObjectId(documentId))) { mongodbMapper.mongoToCanonical(it) }
     }
 
     @Override
     List<Map<String, Object>> findMany(String collection, List<String> ids) {
         def mongoIds = new BasicDBObject('$in', ids.collect{new ObjectId(it)})
         def query = new BasicDBObject(MONGO_ID, mongoIds)
-        documentCollection(collection).find(query).toArray().collect { mongoToCanonical(it) }
+        documentCollection(collection).find(query).toArray().collect { mongodbMapper.mongoToCanonical(it) }
     }
 
     @Override
     List<Map<String, Object>> find(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        documentCollection(collection).find(mongoQuery(queryBuilder.query)).
-                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(sortConditions(queryBuilder)).
-                toArray().collect{ mongoToCanonical(it) }
+        documentCollection(collection).find(mongodbMapper.mongoQuery(queryBuilder.query)).
+                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(mongodbMapper.sortConditions(queryBuilder)).
+                toArray().collect{ mongodbMapper.mongoToCanonical(it) }
     }
 
     @Override
     long count(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        documentCollection(collection).find(mongoQuery(queryBuilder.query)).
-                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(sortConditions(queryBuilder)).
+        documentCollection(collection).find(mongodbMapper.mongoQuery(queryBuilder.query)).
+                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(mongodbMapper.sortConditions(queryBuilder)).
                 count()
     }
 

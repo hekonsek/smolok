@@ -19,6 +19,7 @@ package net.smolok.service.documentstore.mongodb.spring
 import com.mongodb.Mongo
 import net.smolok.service.documentstore.api.DocumentStore
 import net.smolok.service.documentstore.mongodb.MongodbDocumentStore
+import net.smolok.service.documentstore.mongodb.MongodbMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -29,8 +30,14 @@ class MongodbDocumentStoreConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    DocumentStore documentStore(Mongo mongo, @Value('${documentStore.mongodb.db:documents}') String documentsDbName) {
-        new MongodbDocumentStore(mongo, documentsDbName)
+    DocumentStore documentStore(Mongo mongo, MongodbMapper mongodbMapper,
+                                @Value('${documentStore.mongodb.db:documents}') String documentsDbName) {
+        new MongodbDocumentStore(mongo, mongodbMapper, documentsDbName)
+    }
+
+    @Bean
+    MongodbMapper mongodbMapper(@Value('${documentStore.mongodb.idField:id}') String idField) {
+        new MongodbMapper(idField)
     }
 
 }

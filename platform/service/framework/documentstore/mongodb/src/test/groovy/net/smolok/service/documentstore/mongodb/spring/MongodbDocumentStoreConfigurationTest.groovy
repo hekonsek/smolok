@@ -38,7 +38,7 @@ import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = [MongoAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class,
-        MongodbDocumentStoreConfiguration.class])
+        MongodbDocumentStoreConfiguration.class, MongodbDocumentStoreConfigurationTest.class])
 class MongodbDocumentStoreConfigurationTest {
 
     def collection = uuid()
