@@ -79,6 +79,10 @@ public class QueryBuilder implements Serializable {
         this.size = size;
     }
 
+    int skip() {
+        page * size
+    }
+
     public boolean isSortAscending() {
         return sortAscending;
     }

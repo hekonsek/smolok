@@ -286,62 +286,60 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(secondPage.get(0).id).isEqualTo(firstInvoice)
     }
 
-//    @Test
-//    public void shouldFindByQueryWithContains() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery();
-//        query.setInvoiceIdContains("voice");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
-//    }
-//
-//    @Test
-//    public void shouldNotFindByQueryWithContains() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery();
-//        query.setInvoiceIdContains("randomString");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
-//    @Test
-//    public void shouldFindByQueryWithIn() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceIdIn(invoice.invoiceId, "foo", "bar");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices.size());
-//        assertEquals(invoice.invoiceId, invoices.get(0).invoiceId);
-//    }
-//
-//    @Test
-//    public void shouldNotFindByQueryWithIn() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceIdIn("foo", "bar");
-//
-//        // When
-//        List<Invoice> invoices = documentService.find(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices.size());
-//    }
-//
+    @Test
+    public void shouldFindByQueryWithContains() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdContains: 'oo'])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).hasSize(1);
+        assertThat(invoices.get(0).invoiceId).isEqualTo(invoice.invoiceId)
+    }
+
+    @Test
+    public void shouldNotFindByQueryWithContains() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdContains: 'randomString'])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).isEmpty()
+    }
+
+    @Test
+    public void shouldFindByQueryWithIn() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdIn: ['foo', 'bar']])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).hasSize(1);
+        assertThat(invoices.get(0).invoiceId).isEqualTo(invoice.invoiceId)
+    }
+
+    @Test
+    public void shouldNotFindByQueryWithIn() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdIn: ['baz', 'bar']])
+
+        // When
+        def invoices = documentStore.find(collection, query);
+
+        // Then
+        assertThat(invoices).hasSize(0);
+    }
+
 //    @Test
 //    public void shouldFindByQueryWithNotIn() {
 //        // Given

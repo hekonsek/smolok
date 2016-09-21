@@ -20,9 +20,9 @@ import com.mongodb.*
 import net.smolok.service.documentstore.api.DocumentStore
 import org.bson.types.ObjectId
 
-import static MongodbMapper.mongoQuery
 import static MongodbMapper.sortConditions
 import static net.smolok.service.documentstore.mongodb.MongodbMapper.*
+import static net.smolok.service.documentstore.mongodb.MongodbMapper.mongoQuery
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.common.Lang.doWith
 import static smolok.lib.common.Lang.nullOr
@@ -69,20 +69,17 @@ class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
-    List<Map<String, Object>> find(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        DBObject mongoQuery = mongoQuery(queryBuilder.query);
-        int skip = queryBuilder.page * queryBuilder.size
-        DBCursor results = documentCollection(collectionx).find(mongoQuery).
-                limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
-        results.toArray().collect{ mongoToCanonical(it) }
+    List<Map<String, Object>> find(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
+        documentCollection(collection).find(mongoQuery(queryBuilder.query)).
+                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(sortConditions(queryBuilder)).
+                toArray().collect{ mongoToCanonical(it) }
     }
 
     @Override
-    long count(String collectionx, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
-        DBObject mongoQuery = mongoQuery(queryBuilder.query)
-        int skip = queryBuilder.page * queryBuilder.size
-        DBCursor results = documentCollection(collectionx).find(mongoQuery).limit(queryBuilder.size).skip(skip).sort(sortConditions(queryBuilder));
-        return results.count();
+    long count(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
+        documentCollection(collection).find(mongoQuery(queryBuilder.query)).
+                limit(queryBuilder.size).skip(queryBuilder.skip()).sort(sortConditions(queryBuilder)).
+                count()
     }
 
     @Override
