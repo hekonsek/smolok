@@ -11,7 +11,7 @@ import static smolok.lib.process.SudoResolver.resolveSudo
 class SudoResolverTest {
 
     @Test
-    void rootShouldUseSudo() {
+    void nonRootShouldUseSudo() {
         // Given
         setSystemStringProperty('user.name', 'notRoot')
         def command = CommandBuilder.sudo('echo foo').build()
