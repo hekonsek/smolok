@@ -22,6 +22,19 @@ class SudoResolverTest {
     }
 
     @Test
+    void nonRootWithBlankPasswordShouldUseSudoInPipe() {
+        // Given
+        setSystemStringProperty('user.name', 'notRoot')
+        def command = CommandBuilder.sudo('echo foo').sudoPassword(' ').build()
+
+        // When
+        def enhancedCommand = resolveSudo(command)
+
+        // Then
+        Assertions.assertThat(enhancedCommand.last()).contains('sudo')
+    }
+
+    @Test
     void nonRootWithEmptyPasswordShouldUseSudoPrefix() {
         // Given
         setSystemStringProperty('user.name', 'notRoot')
