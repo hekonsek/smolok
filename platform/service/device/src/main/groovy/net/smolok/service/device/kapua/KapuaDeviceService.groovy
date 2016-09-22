@@ -37,6 +37,10 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     long count(@Tenant String tenant, QueryBuilder queryBuilder) {
+        if(queryBuilder.query.containsKey('deviceId')) {
+            queryBuilder.query.put('clientId', queryBuilder.query.get('deviceId'))
+            queryBuilder.query.remove('deviceId')
+        }
         kapuaService.count(new DocumentStoreDeviceQuery(new KapuaEid(tenant.hashCode().toBigInteger()), queryBuilder))
     }
 

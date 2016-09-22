@@ -17,7 +17,6 @@
 package net.smolok.service.device.kapua.spring
 
 import net.smolok.service.device.api.Device
-import net.smolok.service.documentstore.api.QueryBuilder
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -29,6 +28,7 @@ import smolok.eventbus.client.EventBus
 
 import static java.lang.System.setProperty
 import static net.smolok.service.device.api.Device.minimalDevice
+import static net.smolok.service.documentstore.api.QueryBuilder.queryBuilder
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 
@@ -60,11 +60,11 @@ class KapuaDeviceServiceConfigurationTest {
     void doubleRegistrationShouldUpdate() {
         // Given
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-        def countBeforeSecondRegistration = eventBus.fromBus('device.count', QueryBuilder.queryBuilder([:]), long.class)
+        def countBeforeSecondRegistration = eventBus.fromBus('device.count', queryBuilder([:]), long.class)
 
         // When
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-        def countAfterSecondRegistration = eventBus.fromBus('device.count', QueryBuilder.queryBuilder([:]), long.class)
+        def countAfterSecondRegistration = eventBus.fromBus('device.count', queryBuilder([:]), long.class)
 
         // Then
         assertThat(countBeforeSecondRegistration).isEqualTo(countAfterSecondRegistration)
@@ -93,19 +93,24 @@ class KapuaDeviceServiceConfigurationTest {
         assertThat(device).isNull()
     }
 
-//    @Test
-//    public void shouldGetDevice() {
-//        connector.toBusAndWait(registerDevice(), device);
-//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
-//        Truth.assertThat(loadedDevice.getDeviceId()).isEqualTo(device.getDeviceId());
-//    }
-//
-//    @Test
-//    public void shouldNotGetDevice() {
-//        Device loadedDevice = connector.fromBus(getDevice(device.getDeviceId()), Device.class);
-//        Truth.assertThat(loadedDevice).isNull();
-//    }
-//
+    @Test
+    public void shouldNotGetDevice() {
+        def device = eventBus.fromBus('device.get', 'someRandomDevice', Device.class)
+        assertThat(device).isNull();
+    }
+
+    @Test
+    void shouldCountDevices() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('countDevice'))
+
+        // When
+        def devices = eventBus.fromBus('device.count', queryBuilder([deviceId: 'countDevice']), long.class)
+
+        // Then
+        assertThat(devices).isEqualTo(1L)
+    }
+
 //    @Test
 //    public void shouldSendHeartbeatDisconnected() {
 //        // Given
