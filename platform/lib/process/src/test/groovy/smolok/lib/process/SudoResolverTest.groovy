@@ -11,6 +11,7 @@ class SudoResolverTest {
     @Test
     void rootUseSudo() {
         // Given
+        setThreadStringProperty('user.name', 'notRoot')
         def command = CommandBuilder.sudo('echo foo').build()
 
         // When
