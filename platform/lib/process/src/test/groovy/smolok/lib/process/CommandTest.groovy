@@ -19,6 +19,8 @@ class CommandTest {
         assertThat(command.command()).isEqualTo(['foo', 'bar'])
     }
 
+    // Sudo tests
+
     @Test
     void shouldCreateCommandWithSudoEnabled() {
         def command = sudo(command).build()
@@ -36,6 +38,20 @@ class CommandTest {
     void shouldCreateCommandWithSudoDisabled() {
         def command = cmd(command).build()
         assertThat(command.sudo()).isFalse()
+    }
+
+    // toString() tests
+
+    @Test
+    void toStringShouldIncludeWorkingDirectory() {
+        def commandToString = cmd(command).workingDirectory(new File('/foo')).build().toString()
+        assertThat(commandToString).contains('workingDirectory:/foo')
+    }
+
+    @Test
+    void toStringShouldIncludeNullWorkingDirectory() {
+        def commandToString = cmd(command).build().toString()
+        assertThat(commandToString).contains('workingDirectory:null')
     }
 
 }
