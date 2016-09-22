@@ -3,6 +3,7 @@ package smolok.lib.process
 import org.assertj.core.api.Assertions
 import org.junit.Test
 
+import static smolok.lib.common.Properties.setSystemStringProperty
 import static smolok.lib.common.Properties.setThreadStringProperty
 import static smolok.lib.process.SudoResolver.resolveSudo
 
@@ -11,7 +12,7 @@ class SudoResolverTest {
     @Test
     void rootUseSudo() {
         // Given
-        setThreadStringProperty('user.name', 'notRoot')
+        setSystemStringProperty('user.name', 'notRoot')
         def command = CommandBuilder.sudo('echo foo').build()
 
         // When
@@ -24,7 +25,7 @@ class SudoResolverTest {
     @Test
     void rootShouldNotUseSudo() {
         // Given
-        setThreadStringProperty('user.name', 'root')
+        setSystemStringProperty('user.name', 'root')
         def command = CommandBuilder.sudo('echo foo').build()
 
         // When
