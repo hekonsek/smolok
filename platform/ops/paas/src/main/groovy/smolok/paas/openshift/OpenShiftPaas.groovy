@@ -28,6 +28,7 @@ import java.nio.file.Paths
 import java.util.concurrent.Callable
 
 import static com.jayway.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.MINUTES
 import static java.util.concurrent.TimeUnit.SECONDS
 import static net.smolok.lib.download.DownloadManager.BinaryCoordinates
 import static org.slf4j.LoggerFactory.getLogger
@@ -125,7 +126,7 @@ class OpenShiftPaas implements Paas {
                 oc("new-app smolok/eventbus:${smolokVersion.get()}")
             }
             LOG.debug('Waiting for the event bus to start...')
-            await().atMost(120, SECONDS).until({ isStarted() } as Callable<Boolean>)
+            await().atMost(3, MINUTES).until({ isStarted() } as Callable<Boolean>)
             LOG.debug('Event bus has been started.')
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
