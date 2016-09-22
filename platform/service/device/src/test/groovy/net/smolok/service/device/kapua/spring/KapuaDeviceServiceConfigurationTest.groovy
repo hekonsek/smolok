@@ -17,7 +17,7 @@
 package net.smolok.service.device.kapua.spring
 
 import net.smolok.service.device.api.Device
-import net.smolok.service.device.api.QueryBuilder
+import net.smolok.service.documentstore.api.QueryBuilder
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -17,9 +17,7 @@
 package org.eclipse.kapua.service.device.registry.mongodb;
 
 import net.smolok.service.documentstore.mongodb.spring.MongodbDocumentStoreConfiguration;
-import org.eclipse.kapua.service.device.registry.Device;
-import org.eclipse.kapua.service.device.registry.DeviceRegistryService;
-import org.eclipse.kapua.service.device.registry.KapuaException;
+import org.eclipse.kapua.service.device.registry.*;
 import org.eclipse.kapua.service.device.registry.mongodb.spring.MongodbDeviceRegistryServiceConfiguration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -125,6 +123,22 @@ public class MongoDbDeviceRegistryServiceTest {
 
         // Then
         assertThat(registryService.find(device.getScopeId(), device.getId())).isNull();
+    }
+
+    @Test
+    public void shouldCountDevice() throws KapuaException {
+        // Given
+        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(BigInteger.TEN);
+        deviceCreator.setClientId("foo");
+        registryService.create(deviceCreator);
+        DeviceQuery query = new DeviceQueryImpl(new KapuaEid(BigInteger.TEN));
+        query.setPredicate(new AttributePredicate<>("clientId", "foo"));
+
+        // When
+        long devices = registryService.count(query);
+
+        // Then
+        assertThat(devices).isEqualTo(1);
     }
 
 }

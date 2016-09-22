@@ -2,9 +2,10 @@ package net.smolok.service.device.kapua
 
 import net.smolok.service.device.api.Device
 import net.smolok.service.device.api.DeviceService
-import net.smolok.service.device.api.QueryBuilder
+import net.smolok.service.documentstore.api.QueryBuilder
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.KapuaEid
+import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
 import smolok.service.binding.Tenant
 
@@ -31,12 +32,12 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     List<Device> find(QueryBuilder queryBuilder) {
-        return null
+        kapuaService.query(queryBuilder)
     }
 
     @Override
     long count(@Tenant String tenant, QueryBuilder queryBuilder) {
-        kapuaService.count(null)
+        kapuaService.count(new DocumentStoreDeviceQuery(new KapuaEid(tenant.hashCode().toBigInteger()), queryBuilder))
     }
 
     @Override

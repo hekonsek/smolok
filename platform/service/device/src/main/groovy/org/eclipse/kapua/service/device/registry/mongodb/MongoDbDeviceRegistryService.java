@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.*;
-import net.smolok.service.documentstore.api.DocumentStore;
+import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery;
+import net.smolok.service.documentstore.api.*;
+import net.smolok.service.documentstore.api.QueryBuilder;
 import org.eclipse.kapua.service.device.registry.*;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -79,12 +82,20 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     @Override
     public DeviceListResult query(KapuaQuery<Device> query) throws KapuaException {
-        DBCursor devicesRecords = devicesCollection().find();
-        DeviceListResult devices = new DeviceListResultImpl();
-        while (devicesRecords.hasNext()) {
-            devices.add(dbObjectToDevice(devicesRecords.next()));
+        if(query.getPredicate() instanceof AttributePredicate) {
+            AttributePredicate attributePredicate = (AttributePredicate) query.getPredicate();
+            List<Map<String, Object>> devices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of(attributePredicate.getAttributeName(), attributePredicate.getAttributeValue())));
+            DeviceListResult result = new DeviceListResultImpl();
+            devices.forEach(device -> result.add(mapToDevice(device)));
+            return result;
+        } else if(query instanceof DocumentStoreDeviceQuery) {
+            List<Map<String, Object>> devices = documentStore.find(collection, ((DocumentStoreDeviceQuery) query).queryBuilder());
+            DeviceListResult result = new DeviceListResultImpl();
+            devices.forEach(device -> result.add(mapToDevice(device)));
+            return result;
+        } else {
+            throw new IllegalArgumentException();
         }
-        return devices;
     }
 
     @Override
@@ -117,8 +128,12 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
     }
 
     private Device dbObjectToDevice(DBObject dbObject) {
+        return mapToDevice(dbObject.toMap());
+    }
+
+    private Device mapToDevice(Map<String, Object> dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
-        deviceMap.putAll(dbObject.toMap());
+        deviceMap.putAll(dbObject);
         deviceMap.put("id", deviceMap.get("kapuaid"));
         deviceMap.remove("kapuaid");
         return objectMapper.convertValue(deviceMap, SimpleDevice.class);
