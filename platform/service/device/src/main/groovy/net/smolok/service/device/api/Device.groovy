@@ -14,24 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.smolok.service.device.api;
+package net.smolok.service.device.api
 
-import java.util.*;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Represents information about device registered in a cloud service.
  */
-public class Device {
+class Device {
 
-    private String deviceId;
+    private String deviceId
 
-    private Date registrationDate;
+    private Date registrationDate
 
-    private Date lastUpdate;
+    private Date lastUpdate
 
-    private boolean disconnected;
+    private boolean disconnected
 
-    private Map<String, Object> properties = new HashMap<>();
+    private def properties = new HashMap<String, Object>()
 
     // Constructors
 
@@ -43,7 +43,7 @@ public class Device {
         this.registrationDate = registrationDate;
         this.lastUpdate = lastUpdate;
         this.disconnected = disconnected;
-        this.properties = properties;
+        this.properties = setProperties(properties)
     }
 
     public static Device minimalDevice(String deviceId) {
@@ -79,20 +79,20 @@ public class Device {
         this.lastUpdate = lastUpdate;
     }
 
-    public boolean isDisconnected() {
+    boolean isDisconnected() {
         return disconnected;
     }
 
-    public void setDisconnected(boolean disconnected) {
+    void setDisconnected(boolean disconnected) {
         this.disconnected = disconnected;
     }
 
-    public Map<String, Object> getProperties() {
-        return properties;
+    Map<String, Object> getProperties() {
+        properties
     }
 
-    public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
+    void setProperties(Map<String, Object> properties) {
+        this.properties = ImmutableMap.copyOf(properties);
     }
 
 }
