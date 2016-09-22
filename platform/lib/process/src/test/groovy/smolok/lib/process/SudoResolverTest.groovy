@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions
 import org.junit.Test
 
 import static smolok.lib.common.Properties.setSystemStringProperty
-import static smolok.lib.common.Properties.setThreadStringProperty
 import static smolok.lib.process.SudoResolver.resolveSudo
 
 class SudoResolverTest {

@@ -71,6 +71,8 @@ class OpenShiftPaas implements Paas {
 
     private final def startOpenShiftCommand
 
+    private final def ocPath
+
     // Constructors
 
     OpenShiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
@@ -80,6 +82,7 @@ class OpenShiftPaas implements Paas {
 
         def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
         startOpenShiftCommand = sudo(serverPath, 'start').workingDirectory(openshiftHome).build()
+        ocPath = downloadManager.fileFromExtractedDirectory("${OPENSHIFT_DISTRO}/${OPENSHIFT_DISTRO}", 'oc').absolutePath
     }
 
     // Platform operations
@@ -109,25 +112,33 @@ class OpenShiftPaas implements Paas {
     @Override
     void start() {
         if (!isStarted()) {
-            def isProvisioned = isProvisioned()
-            processManager.executeAsync(startOpenShiftCommand)
-            if (!isProvisioned) {
-                LOG.debug('OpenShift is not provisioned. Started provisioning...')
-                await('login prompt is displayed').atMost(60, SECONDS).until(condition{ loginPromptIsDisplayed() })
-                await().atMost(60, SECONDS).until({
-                    def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
-                    !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
-                            !loginOutput.startsWith('error: dial tcp')
-                } as Callable<Boolean>)
-                oc('new-project smolok')
-                await().atMost(60, SECONDS).until({ isOsStarted() } as Callable<Boolean>)
-                def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
-                Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
-                oc("new-app smolok/eventbus:${smolokVersion.get()}")
+            def openshiftStartJob
+            try {
+                def isProvisioned = isProvisioned()
+                openshiftStartJob = processManager.executeAsync(startOpenShiftCommand)
+                if (!isProvisioned) {
+                    LOG.debug('OpenShift is not provisioned. Started provisioning...')
+                    await('login prompt is displayed').atMost(60, SECONDS).until(condition { loginPromptIsDisplayed() })
+                    await().atMost(60, SECONDS).until({
+                        def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
+                        !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
+                                !loginOutput.startsWith('error: dial tcp')
+                    } as Callable<Boolean>)
+                    oc('new-project smolok')
+                    await().atMost(60, SECONDS).until({ isOsStarted() } as Callable<Boolean>)
+                    def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
+                    Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
+                    oc("new-app smolok/eventbus:${smolokVersion.get()}")
+                }
+                LOG.debug('Waiting for the event bus to start...')
+                await().atMost(3, MINUTES).until({ isStarted() } as Callable<Boolean>)
+                LOG.debug('Event bus has been started.')
+            } finally {
+                if(openshiftStartJob != null) {
+                    LOG.debug('Collecting possible exceptions from OpenShift start job.')
+                    openshiftStartJob.get()
+                }
             }
-            LOG.debug('Waiting for the event bus to start...')
-            await().atMost(3, MINUTES).until({ isStarted() } as Callable<Boolean>)
-            LOG.debug('Event bus has been started.')
         } else {
             LOG.debug('OpenShift already running - no need to start it.')
         }
@@ -181,8 +192,8 @@ class OpenShiftPaas implements Paas {
         oc(OC_STATUS).first().startsWith('In project ')
     }
 
-    private oc(String cmdx) {
-        processManager.execute(cmd(downloadManager.fileFromExtractedDirectory("${OPENSHIFT_DISTRO}/${OPENSHIFT_DISTRO}", 'oc').absolutePath + ' ' + cmdx))
+    private oc(String command) {
+        processManager.execute(cmd("${ocPath} ${command}"))
     }
 
 }
