@@ -26,6 +26,7 @@ import smolok.paas.ServiceEndpoint
 
 import java.nio.file.Paths
 import java.util.concurrent.Callable
+import java.util.concurrent.TimeoutException
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.MINUTES
@@ -136,7 +137,11 @@ class OpenShiftPaas implements Paas {
             } finally {
                 if(openshiftStartJob != null) {
                     LOG.debug('Collecting possible exceptions from OpenShift start job.')
-                    openshiftStartJob.get()
+                    try {
+                        openshiftStartJob.get(1, SECONDS)
+                    } catch (TimeoutException e) {
+                        LOG.debug('OpenShift process has been started without exceptions.')
+                    }
                 }
             }
         } else {
