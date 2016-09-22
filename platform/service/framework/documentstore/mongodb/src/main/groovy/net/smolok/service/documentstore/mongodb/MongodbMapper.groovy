@@ -22,11 +22,16 @@ import com.mongodb.DBObject
 import net.smolok.service.documentstore.api.QueryBuilder
 import org.apache.commons.lang3.Validate
 import org.bson.types.ObjectId
+import org.slf4j.LoggerFactory
+
+import static org.slf4j.LoggerFactory.getLogger
 
 /**
  * Converts DocumentStore canonical data (like documents and queries) into MongoDB structures (and reversely).
  */
 final class MongodbMapper {
+
+    private static final LOG = getLogger(MongodbMapper.class)
 
     static final def MONGO_ID = '_id'
 
@@ -98,15 +103,17 @@ final class MongodbMapper {
         return bson;
     }
 
-    Map<String, Object> mongoToCanonical(DBObject bson) {
-        Preconditions.checkNotNull(bson, "BSON passed to the conversion can't be null.");
-        def json = bson.toMap()
-        Object id = json.get("_id");
+    Map<String, Object> mongoToCanonical(DBObject mongoDocument) {
+        Validate.notNull(mongoDocument, 'BSON passed to the conversion cannot be null.')
+        LOG.debug('Converting MongoDB document {} into canonical format.', mongoDocument)
+
+        def canonicalDocument = mongoDocument.toMap()
+        def id = canonicalDocument.get('_id')
         if (id != null) {
-            json.remove("_id");
-            json.put(idField, id.toString());
+            canonicalDocument.remove('_id')
+            canonicalDocument.put(idField, id.toString());
         }
-        return json;
+        canonicalDocument
     }
 
     // Helpers

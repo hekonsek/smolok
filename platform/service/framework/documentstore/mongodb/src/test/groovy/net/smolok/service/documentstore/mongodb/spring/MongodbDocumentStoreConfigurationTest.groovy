@@ -330,7 +330,7 @@ class MongodbDocumentStoreConfigurationTest {
     }
 
     @Test
-    public void shouldFindByQueryWithIn() {
+    void shouldFindByQueryWithIn() {
         // Given
         documentStore.save(collection, serialize(invoice))
         def query = new QueryBuilder([invoiceIdIn: ['foo', 'bar']])
@@ -344,7 +344,7 @@ class MongodbDocumentStoreConfigurationTest {
     }
 
     @Test
-    public void shouldNotFindByQueryWithIn() {
+    void shouldNotFindByQueryWithIn() {
         // Given
         documentStore.save(collection, serialize(invoice))
         def query = new QueryBuilder([invoiceIdIn: ['baz', 'bar']])
@@ -384,7 +384,7 @@ class MongodbDocumentStoreConfigurationTest {
     }
 
     @Test
-    public void shouldFindByQueryBetweenDateRange() {
+    void shouldFindByQueryBetweenDateRange() {
         // Given
         invoice.timestamp = now().toDate()
         def todayInvoice = documentStore.save(collection, serialize(invoice))
@@ -405,85 +405,70 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices.first().myid).isEqualTo(todayInvoice)
     }
 
-//    @Test
-//    public void shouldCountPositiveByQuery() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceId(invoice.invoiceId);
-//
-//        // When
-//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices);
-//    }
+    @Test
+    void shouldCountPositiveByQuery() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceId: 'foo'])
 
-//    @Test
-//    public void shouldCountNegativeByQuery() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery().invoiceId("randomValue");
-//
-//        // When
-//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices);
-//    }
-//
-//    @Test
-//    public void shouldCountPositiveByQueryWithContains() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery();
-//        query.setInvoiceIdContains("voice");
-//
-//        // When
-//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(1, invoices);
-//    }
-//
-//    @Test
-//    public void shouldCountNegativeByQueryWithContains() {
-//        // Given
-//        documentService.save(invoice);
-//        InvoiceQuery query = new InvoiceQuery();
-//        query.setInvoiceIdContains("randomString");
-//
-//        // When
-//        long invoices = documentService.count(Invoice.class, new QueryBuilder(query));
-//
-//        // Then
-//        assertEquals(0, invoices);
-//    }
-//
-//    @Test
-//    public void shouldRemoveDocument() {
-//        // Given
-//        invoice = documentService.save(invoice);
-//
-//        // When
-//        documentService.remove(Invoice.class, invoice.id);
-//
-//        // Then
-//        long count = documentService.count(Invoice.class);
-//        assertEquals(0, count);
-//    }
-//
-//    @Test
-//    public void shouldSetCustomApiEndpointOptions() {
-//        for (Endpoint endpoint : camelContext.getEndpoints()) {
-//            if (endpoint.getEndpointUri().startsWith("http")) {
-//                NettyHttpEndpoint nettyEndpoint = (NettyHttpEndpoint) endpoint;
-//                assertEquals(1000, nettyEndpoint.getConfiguration().getRequestTimeout());
-//                assertEquals(20000, nettyEndpoint.getConfiguration().getConnectTimeout());
-//                return;
-//            }
-//        }
-//        fail("Can't find Netty endpoint with custom options.");
-//    }
+        // When
+        long invoices = documentStore.count(collection, query);
+
+        // Then
+        assertThat(invoices).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldCountNegativeByQuery() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceId: 'randomValue'])
+
+        // When
+        long invoices = documentStore.count(collection, query);
+
+        // Then
+        assertThat(invoices).isEqualTo(0)
+    }
+
+    @Test
+    public void shouldCountPositiveByQueryWithContains() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdContains: 'oo'])
+
+        // When
+        long invoices = documentStore.count(collection, query);
+
+        // Then
+        assertThat(invoices).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldCountNegativeByQueryWithContains() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        def query = new QueryBuilder([invoiceIdContains: 'invalidQuery'])
+
+        // When
+        long invoices = documentStore.count(collection, query);
+
+        // Then
+        assertThat(invoices).isEqualTo(0)
+    }
+
+    @Test
+    public void shouldRemoveDocument() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        documentStore.remove(collection, id);
+
+        // Then
+        long invoices = documentStore.count(collection, new QueryBuilder());
+        assertThat(invoices).isEqualTo(0)
+    }
 
     // Helpers
 
