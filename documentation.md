@@ -57,12 +57,22 @@ Smolok command line tool, execute the following command:
 
     bash <(curl -sL https://goo.gl/cLVVCF)
 
+In order to install Smolok, you should have Docker and Maven installed and present in your classpath. To install those
+on Ubuntu execte the following command:
+
+    curl -sSL https://get.docker.com/ | sh && apt-get install maven
+
 ## Command line tool
 
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
 Smolok command line tool, execute the following command:
 
     bash <(curl -sL https://goo.gl/cLVVCF)
+
+In order to install Smolok, you should have Docker and Maven installed and present in your classpath. To install those
+on Ubuntu execte the following command:
+
+    curl -sSL https://get.docker.com/ | sh && apt-get install maven
 
 ### Enforcing Smolok version
 
