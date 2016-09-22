@@ -26,11 +26,11 @@ import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 
-import static java.lang.System.setProperty
 import static net.smolok.service.device.api.Device.minimalDevice
 import static net.smolok.service.documentstore.api.QueryBuilder.queryBuilder
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
+import static smolok.lib.common.Properties.setIntProperty
 
 @RunWith(SpringRunner)
 @SpringBootTest(classes = Smolok.class)
@@ -41,8 +41,10 @@ class KapuaDeviceServiceConfigurationTest {
 
     @BeforeClass
     static void beforeClass() {
-        setProperty("spring.data.mongodb", findAvailableTcpPort() + "");
+        setIntProperty('spring.data.mongodb', findAvailableTcpPort())
     }
+
+    // Tests
 
     @Test
     void shouldRegisterAndGetDevice() {
@@ -60,18 +62,18 @@ class KapuaDeviceServiceConfigurationTest {
     void doubleRegistrationShouldUpdate() {
         // Given
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-        def countBeforeSecondRegistration = eventBus.fromBus('device.count', queryBuilder([:]), long.class)
+        def countBeforeSecondRegistration = eventBus.fromBus('device.count', queryBuilder(), long.class)
 
         // When
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-        def countAfterSecondRegistration = eventBus.fromBus('device.count', queryBuilder([:]), long.class)
+        def countAfterSecondRegistration = eventBus.fromBus('device.count', queryBuilder(), long.class)
 
         // Then
         assertThat(countBeforeSecondRegistration).isEqualTo(countAfterSecondRegistration)
     }
 
     @Test
-    public void shouldGenerateId() {
+    void shouldGenerateId() {
         // When
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
 
@@ -81,7 +83,7 @@ class KapuaDeviceServiceConfigurationTest {
     }
 
     @Test
-    public void shouldDeregisterDevice() {
+    void shouldDeregisterDevice() {
         // Given
         eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
 
@@ -94,7 +96,7 @@ class KapuaDeviceServiceConfigurationTest {
     }
 
     @Test
-    public void shouldNotGetDevice() {
+    void shouldNotGetDevice() {
         def device = eventBus.fromBus('device.get', 'someRandomDevice', Device.class)
         assertThat(device).isNull();
     }
@@ -110,73 +112,5 @@ class KapuaDeviceServiceConfigurationTest {
         // Then
         assertThat(devices).isEqualTo(1L)
     }
-
-//    @Test
-//    public void shouldSendHeartbeatDisconnected() {
-//        // Given
-//        device.setLastUpdate(new DateTime(device.getLastUpdate()).minusMinutes(2).toDate());
-//        connector.toBusAndWait(registerDevice(), device);
-//
-//        // When
-//        connector.toBusAndWait(deviceHeartbeat(device.getDeviceId()));
-//
-//        // Then
-//        List<String> disconnected = connector.fromBus(disconnected(), List.class);
-//        Truth.assertThat(disconnected).doesNotContain(device.getDeviceId());
-//    }
-//
-//    // Device metrics tests
-//
-//    @Test
-//    public void shouldReadEmptyMetric() {
-//        String metric = connector.fromBus(readDeviceMetric(device.getDeviceId(), randomAlphabetic(10)), String.class);
-//
-//        // Then
-//        Truth.assertThat(metric).isNull();
-//    }
-//
-//    @Test
-//    public void shouldReadStringMetric() {
-//        // Given
-//        connector.toBusAndWait(registerDevice(), device);
-//        String metric = randomAlphabetic(10);
-//        String value = randomAlphabetic(10);
-//        connector.toBusAndWait(writeDeviceMetric(device.getDeviceId(), metric), value);
-//
-//        // When
-//        String metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), String.class);
-//
-//        // Then
-//        Truth.assertThat(metricRead).isEqualTo(value);
-//    }
-//
-//    @Test
-//    public void shouldReadIntegerMetric() {
-//        // Given
-//        connector.toBusAndWait(registerDevice(), device);
-//        String metric = randomAlphabetic(10);
-//        int value = 666;
-//        connector.toBusAndWait(writeDeviceMetric(device.getDeviceId(), metric), value);
-//
-//        // When
-//        int metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), int.class);
-//
-//        // Then
-//        Truth.assertThat(metricRead).isEqualTo(value);
-//    }
-//
-//    @Test
-//    public void shouldPollStringMetric() {
-//        // Given
-//        device.setAddress("non empty");
-//        connector.toBusAndWait(registerDevice(), device);
-//        String metric = randomAlphabetic(10);
-//
-//        // When
-//        String metricRead = connector.fromBus(readDeviceMetric(device.getDeviceId(), metric), String.class);
-//
-//        // Then
-//        Truth.assertThat(metricRead).isEqualTo(metric);
-//    }
 
 }
