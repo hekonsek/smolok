@@ -1,26 +1,37 @@
 package smolok.lib.process
 
 import org.assertj.core.api.Assertions
-import org.junit.Ignore
 import org.junit.Test
 
 import static smolok.lib.common.Properties.setSystemStringProperty
 import static smolok.lib.process.SudoResolver.resolveSudo
 
-@Ignore
 class SudoResolverTest {
 
     @Test
-    void nonRootShouldUseSudo() {
+    void nonRootWithNonEmptyPasswordShouldUseSudoInPipe() {
         // Given
         setSystemStringProperty('user.name', 'notRoot')
-        def command = CommandBuilder.sudo('echo foo').build()
+        def command = CommandBuilder.sudo('echo foo').sudoPassword('nonEmptyPassword').build()
 
         // When
         def enhancedCommand = resolveSudo(command)
 
         // Then
         Assertions.assertThat(enhancedCommand.last()).contains('sudo')
+    }
+
+    @Test
+    void nonRootWithEmptyPasswordShouldUseSudoPrefix() {
+        // Given
+        setSystemStringProperty('user.name', 'notRoot')
+        def command = CommandBuilder.sudo('echo foo').sudoPassword('').build()
+
+        // When
+        def enhancedCommand = resolveSudo(command)
+
+        // Then
+        Assertions.assertThat(enhancedCommand.first()).isEqualTo('sudo')
     }
 
     @Test
