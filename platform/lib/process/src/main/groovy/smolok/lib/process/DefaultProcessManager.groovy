@@ -17,6 +17,8 @@
 package smolok.lib.process
 
 import static org.apache.commons.io.IOUtils.readLines
+import static smolok.lib.common.Properties.stringProperty
+import static smolok.lib.process.SudoResolver.resolveSudo
 
 /**
  * Default implementation of process manager based on JDK process API.
@@ -25,24 +27,11 @@ class DefaultProcessManager extends ExecutorBasedProcessManager {
 
     @Override
     List<String> execute(Command command) {
-        if(log.isDebugEnabled()) {
-            log.debug('About to execute command:', command.command())
-        }
+        log.debug('About to execute command: {}', command)
 
         try {
-            def commandSegments = command.command()
-
-            def sudoPassword = command.sudoPassword()
-            if(command.sudo()) {
-                if(sudoPassword == null) {
-                    throw new IllegalStateException('Sudo access is required to execute the command. Please set up SUDO_PASSWORD environment variable or JVM system property.')
-                } else if(System.getProperty("user.name") == 'root' || sudoPassword.isEmpty()) {
-                    commandSegments.add(0, 'sudo')
-                } else {
-                    commandSegments = ['/bin/bash', '-c', "echo '${sudoPassword}'| sudo -S ${commandSegments.join(' ')}".toString()]
-                }
-            }
-
+            def commandSegments = resolveSudo(command)
+            log.debug('Final command to be executed: {}', commandSegments)
             def processBuilder = new ProcessBuilder().redirectErrorStream(true).command(commandSegments)
             if(command.workingDirectory() != null) {
                 log.debug('Changing working directory to: {}', command.workingDirectory().absolutePath)
@@ -55,6 +44,7 @@ class DefaultProcessManager extends ExecutorBasedProcessManager {
             }
             output
         } catch (IOException e) {
+            log.debug('IO error during command execution:', e)
             throw new ProcessExecutionException(e)
         }
     }

@@ -1,6 +1,7 @@
 package smolok.lib.process
 
 import org.junit.Test
+import smolok.lib.common.Properties
 
 import java.util.concurrent.ExecutionException
 
