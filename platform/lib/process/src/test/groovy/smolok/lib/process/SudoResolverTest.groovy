@@ -1,15 +1,17 @@
 package smolok.lib.process
 
 import org.assertj.core.api.Assertions
+import org.junit.Ignore
 import org.junit.Test
 
 import static smolok.lib.common.Properties.setSystemStringProperty
 import static smolok.lib.process.SudoResolver.resolveSudo
 
+@Ignore
 class SudoResolverTest {
 
     @Test
-    void rootUseSudo() {
+    void rootShouldUseSudo() {
         // Given
         setSystemStringProperty('user.name', 'notRoot')
         def command = CommandBuilder.sudo('echo foo').build()
