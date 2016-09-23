@@ -22,6 +22,7 @@
 
     <modules>
         <module>bootstrap</module>
+        <module>eventbus-client</module>
         <module>binding</module>
         <module>documentstore</module>
     </modules>
