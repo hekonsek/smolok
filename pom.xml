@@ -53,7 +53,7 @@
         <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.5</nexus-staging-maven-plugin.version>
-        <spring-boot.version>1.4.0.RELEASE</spring-boot.version>
+        <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
 
         <!-- Docker configuration -->
         <mainClass>smolok.bootstrap.Smolok</mainClass>
