@@ -42,14 +42,18 @@ import static smolok.lib.common.Uuids.uuid
         MongodbDocumentStoreConfiguration.class])
 class MongodbDocumentStoreConfigurationTest {
 
+    @Autowired
+    DocumentStore documentStore
+
+    def mapper = new ObjectMapper()
+
+    // Data fixtures
+
     def collection = uuid()
 
     def invoice = new Invoice(invoiceId: 'foo')
 
-    def mapper = new ObjectMapper()
-
-    @Autowired
-    DocumentStore documentStore
+    // Store configuration fixtures
 
     @BeforeClass
     static void beforeClass() {
@@ -57,7 +61,67 @@ class MongodbDocumentStoreConfigurationTest {
         setIntProperty("spring.data.mongodb.port", findAvailableTcpPort())
     }
 
-    // Tests
+    // FindOne tests
+
+    @Test
+    void shouldFindOne() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def loadedDocument = documentStore.findOne(collection, id)
+
+        // Then
+        assertThat(loadedDocument).isNotNull()
+    }
+
+    @Test
+    void shouldNotFindOne() {
+        // Given
+        def randomId = ObjectId.get().toString()
+
+        // When
+        def invoice = documentStore.findOne(collection, randomId)
+
+        // Then
+        assertThat(invoice).isNull()
+    }
+
+    @Test
+    void findOneShouldContainsID() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def loadedDocument = documentStore.findOne(collection, id)
+
+        // Then
+        assertThat(loadedDocument.myid).isEqualTo(id)
+    }
+
+    @Test
+    void findOneShouldContainMongoID() {
+        // Given
+        def id = documentStore.save(collection, serialize(invoice))
+
+        // When
+        def loadedDocument = documentStore.findOne(collection, id)
+
+        // Then
+        assertThat(loadedDocument._id).isNull()
+    }
+
+    @Test(expected = NullPointerException.class)
+    void findOneShouldValidateNullId() {
+        documentStore.findOne(collection, null)
+    }
+
+    @Test(expected = NullPointerException.class)
+    void findOneShouldValidateNullCollection() {
+        documentStore.findOne(null, 'someId')
+    }
+
+    // Other tests
 
     @Test
     void shouldCountInvoice() {
@@ -69,18 +133,6 @@ class MongodbDocumentStoreConfigurationTest {
 
         // Then
         assertThat(count).isEqualTo(1)
-    }
-
-    @Test
-    void shouldFindOne() {
-        // Given
-        def id = documentStore.save(collection, serialize(invoice))
-
-        // When
-        def loadedInvoice = documentStore.findOne(collection, id)
-
-        // Then
-        assertThat(loadedInvoice).isNotNull()
     }
 
     @Test
@@ -207,15 +259,6 @@ class MongodbDocumentStoreConfigurationTest {
 
         // Then
         assertThat(invoices).isEmpty()
-    }
-
-    @Test
-    public void shouldNotFindOne() {
-        // When
-        def invoice = documentStore.findOne(collection, ObjectId.get().toString())
-
-        // Then
-        assertThat(invoice).isNull()
     }
 
     @Test

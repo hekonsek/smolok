@@ -92,15 +92,15 @@ final class MongodbMapper {
     }
 
     DBObject canonicalToMongo(Map<String, Object> document) {
-        Preconditions.checkNotNull(document, "JSON passed to the conversion can't be null.");
+        Validate.notNull(document, 'JSON passed to the conversion cannot be null.')
 
-        def bson = new BasicDBObject(document)
-        Object id = bson.get(idField);
+        def mongoDocument = new BasicDBObject(document)
+        def id = mongoDocument.get(idField)
         if (id != null) {
-            bson.removeField(idField);
-            bson.put("_id", new ObjectId(id.toString()));
+            mongoDocument.removeField(idField);
+            mongoDocument.put(MONGO_ID, new ObjectId(id.toString()));
         }
-        return bson;
+        mongoDocument
     }
 
     Map<String, Object> mongoToCanonical(DBObject mongoDocument) {
@@ -108,9 +108,9 @@ final class MongodbMapper {
         LOG.debug('Converting MongoDB document {} into canonical format.', mongoDocument)
 
         def canonicalDocument = mongoDocument.toMap()
-        def id = canonicalDocument.get('_id')
+        def id = canonicalDocument.get(MONGO_ID)
         if (id != null) {
-            canonicalDocument.remove('_id')
+            canonicalDocument.remove(MONGO_ID)
             canonicalDocument.put(idField, id.toString());
         }
         canonicalDocument
@@ -126,7 +126,7 @@ final class MongodbMapper {
     private void addRestriction(BasicDBObject query, String propertyWithOperator, String propertyOperator, String operator, Object value) {
         def property = propertyWithOperator.replaceAll(propertyOperator + '$', "")
         if(property == idField) {
-            property = '_id'
+            property = MONGO_ID
             value = new ObjectId((String) value)
         }
         if (query.containsField(property)) {

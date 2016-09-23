@@ -62,6 +62,9 @@ class MongodbDocumentStore implements DocumentStore {
 
     @Override
     Map<String, Object> findOne(String collection, String documentId) {
+        Validate.notNull(documentId, 'Document ID expected not to be null.')
+        Validate.notNull(collection, 'Document collection expected not to be null.')
+
         LOG.debug('Looking up for document with ID {} from collection {}.', documentId, collection)
         nullOr(documentCollection(collection).findOne(new ObjectId(documentId))) { mongodbMapper.mongoToCanonical(it) }
     }
