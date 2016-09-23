@@ -38,7 +38,7 @@ import static smolok.lib.common.Properties.setIntProperty;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MongoAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class,
         MongodbDocumentStoreConfiguration.class, MongodbDeviceRegistryServiceConfiguration.class})
-public class MongoDbDeviceRegistryServiceTest {
+public class DocumentStoreDeviceRegistryServiceTest {
 
     @Autowired
     DeviceRegistryService registryService;
@@ -54,26 +54,15 @@ public class MongoDbDeviceRegistryServiceTest {
 
     static Random rnd = new Random();
 
-    private BigInteger scopedId = BigInteger.valueOf(rnd.nextLong());
+    BigInteger scopedId = BigInteger.valueOf(rnd.nextLong());
+
+    SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(scopedId);
 
     // Tests
 
     @Test
-    public void shouldReturnDeviceWithScopedId() throws KapuaException {
-        // Given
-        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(scopedId);
-
-        // When
-        Device device = registryService.create(deviceCreator);
-
-        // Then
-        assertThat(device.getScopeId().getId()).isEqualTo(deviceCreator.getScopeId().getId());
-        assertThat(device.getId().getId()).isNotNull();
-    }
-
-    @Test
     public void shouldRegisterDevice() throws KapuaException {
-        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(BigInteger.TEN);
+        // Given
         Device device = registryService.create(deviceCreator);
 
         // When
@@ -84,9 +73,18 @@ public class MongoDbDeviceRegistryServiceTest {
     }
 
     @Test
+    public void shouldReturnDeviceWithScopedId() throws KapuaException {
+        // When
+        Device device = registryService.create(deviceCreator);
+
+        // Then
+        assertThat(device.getScopeId().getId()).isEqualTo(deviceCreator.getScopeId().getId());
+        assertThat(device.getId().getId()).isNotNull();
+    }
+
+    @Test
     public void shouldFindByClientId() throws KapuaException {
         // Given
-        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(BigInteger.TEN);
         deviceCreator.setClientId("clientId");
         Device device = registryService.create(deviceCreator);
 
@@ -100,7 +98,6 @@ public class MongoDbDeviceRegistryServiceTest {
     @Test
     public void shouldUpdateDevice() throws KapuaException {
         // Given
-        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(BigInteger.TEN);
         Device device = registryService.create(deviceCreator);
         device.setClientId("clientId");
         registryService.update(device);
@@ -115,7 +112,6 @@ public class MongoDbDeviceRegistryServiceTest {
     @Test
     public void shouldDeleteDevice() throws KapuaException {
         // Given
-        SimpleDeviceCreator deviceCreator = new SimpleDeviceCreator(BigInteger.TEN);
         Device device = registryService.create(deviceCreator);
 
         // When

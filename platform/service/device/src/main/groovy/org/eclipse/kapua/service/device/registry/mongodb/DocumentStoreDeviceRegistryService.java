@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.*;
-import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery;
-import net.smolok.service.documentstore.api.*;
+import net.smolok.service.documentstore.api.DocumentStore;
 import net.smolok.service.documentstore.api.QueryBuilder;
 import org.eclipse.kapua.service.device.registry.*;
 
@@ -17,7 +16,7 @@ import java.util.Random;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
-public class MongoDbDeviceRegistryService implements DeviceRegistryService {
+public class DocumentStoreDeviceRegistryService implements DeviceRegistryService {
 
     private final ObjectMapper objectMapper = new ObjectMapper().
             configure(FAIL_ON_UNKNOWN_PROPERTIES, false).
@@ -33,7 +32,7 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
 
     // Constructors
 
-    public MongoDbDeviceRegistryService(DocumentStore documentStore, Mongo mongo, String db, String collection) {
+    public DocumentStoreDeviceRegistryService(DocumentStore documentStore, Mongo mongo, String db, String collection) {
         this.documentStore = documentStore;
         this.mongo = mongo;
         this.db = db;
@@ -65,19 +64,17 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
         Map<String, Object> existingDeviceMap = existingDevice.toMap();
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
         normalize(existingDeviceMap);
-        existingDeviceMap.put("id", existingDeviceMap.get("_id").toString());
-        existingDeviceMap.remove("_id");
         documentStore.save(collection, existingDeviceMap);
         return new SimpleDevice();
     }
 
     @Override
     public Device find(KapuaId scopeId, KapuaId entityId) throws KapuaException {
-        DBCursor devices = devicesCollection().find(deviceId(scopeId, entityId));
-        if (devices.hasNext()) {
-            return dbObjectToDevice(devices.next());
+        List<Map<String, Object>> devices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue())));
+        if (devices.isEmpty()) {
+            return null;
         }
-        return null;
+        return mapToDevice(devices.get(0));
     }
 
     @Override
@@ -145,7 +142,11 @@ public class MongoDbDeviceRegistryService implements DeviceRegistryService {
                 Map<String, Object> value = (Map<String, Object>) device.get(key);
                 device.put(key, ((BigInteger) value.get("id")).longValue());
             }
+            if (key.equals("id")) {
+                device.put("kapuaid", device.get("id"));
+            }
         }
+        device.remove("id");
     }
 
 }
