@@ -59,11 +59,20 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public Device update(Device device) throws KapuaException {
-        DBCursor devices = devicesCollection().find(deviceId(device.getScopeId(), device.getId()));
-        DBObject existingDevice = devices.next();
-        Map<String, Object> existingDeviceMap = existingDevice.toMap();
+        List<Map<String, Object>> existingDevices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "kapuaid", device.getId().getId().longValue())));
+        if(existingDevices.isEmpty()) {
+            return null;
+        }
+
+        Map<String, Object> existingDeviceMap = existingDevices.get(0);
+
+        String documentId = existingDeviceMap.get("id").toString();
+        existingDeviceMap.put("clientId", device.getClientId());
         existingDeviceMap.putAll(objectMapper.convertValue(device, Map.class));
-        normalize(existingDeviceMap);
+        existingDeviceMap.put("id", documentId);
+        Map<String, Object> value = (Map<String, Object>) existingDeviceMap.get("scopeId");
+        existingDeviceMap.put("scopeId", ((BigInteger) value.get("id")).longValue());
+
         documentStore.save(collection, existingDeviceMap);
         return new SimpleDevice();
     }
@@ -134,19 +143,6 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         deviceMap.put("id", deviceMap.get("kapuaid"));
         deviceMap.remove("kapuaid");
         return objectMapper.convertValue(deviceMap, SimpleDevice.class);
-    }
-
-    private void normalize(Map<String, Object> device) {
-        for (String key : device.keySet()) {
-            if (key.equals("id") || key.equals("scopeId")) {
-                Map<String, Object> value = (Map<String, Object>) device.get(key);
-                device.put(key, ((BigInteger) value.get("id")).longValue());
-            }
-            if (key.equals("id")) {
-                device.put("kapuaid", device.get("id"));
-            }
-        }
-        device.remove("id");
     }
 
 }
