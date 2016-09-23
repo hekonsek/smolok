@@ -16,23 +16,33 @@
  */
 package net.smolok.service.documentstore.api
 /**
- * Document stores can be used to perform CRUD operations on messages formatted as documents i.e. JSON-like
- * structures.
+ * Document stores can be used to perform CRUD operations on messages formatted as hierarchical documents. All the data
+ * structures as as arguments for operations and returned by the operations are supposed to be easily serialized into
+ * hierarchical data structures.
  */
 interface DocumentStore {
 
-    String save(String collection, Map<String, Object> pojo);
+    /**
+     * Persists document into a store. If document doesn't contain ID, the former will be considered a new document and
+     * new ID will be assigned to it during creation process. Documents with ID are updated.
+     *
+     * @param collection name of the target collection
+     * @param document document to be persisted
+     * @return ID assigned to the persisted object
+     */
+    String save(String collection, Map<String, Object> document)
 
-    Map<String, Object> findOne(String collection, String id);
+    Map<String, Object> findOne(String collection, String id)
 
-    List<Map<String, Object>> findMany(String collection, List<String> ids);
+    List<Map<String, Object>> findMany(String collection, List<String> ids)
 
-    List<Map<String,Object>> find(String collection, QueryBuilder queryBuilder);
+    List<Map<String,Object>> find(String collection, QueryBuilder queryBuilder)
 
     /**
      * Returns the number of the documents in the given collection.
      *
      * @param collection to query against.
+     * @param queryBuilder defined filtering criteria for the counting process
      * @return number of documents. Returns 0 for non-existing collections as well.
      */
     long count(String collection, QueryBuilder queryBuilder)
