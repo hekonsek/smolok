@@ -47,7 +47,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Non-Smolok testing dependencies -->
+        <!-- External testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -64,5 +64,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <!-- Plugins -->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
