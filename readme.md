@@ -12,7 +12,7 @@ Smolok is based on the top of the leading open source projects including [Apache
 
 ## Getting started
 
-[![Version](https://img.shields.io/badge/smolok-0.0.4-blue.svg)](https://github.com/smolok/smolok)
+[![Version](https://img.shields.io/badge/smolok-0.0.5-blue.svg)](https://github.com/smolok/smolok)
 
 In order to get started with Smolok you have to install Docker client on your computer. This is the only real
 requirement to start playing with Smolok and IoT.

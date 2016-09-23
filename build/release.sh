@@ -23,3 +23,5 @@ OLD_VERSION=0.0.4
 NEW_VERSION=0.0.5
 
 sed -i -e "s/${OLD_VERSION}/${NEW_VERSION}/g" readme.md platform/cmd/src/main/bash/cmd
+
+mvn clean install -Pdocker -DskipTests
