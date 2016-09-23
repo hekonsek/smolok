@@ -2,6 +2,7 @@ package smolok.eventbus.client.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
+import org.apache.camel.ProducerTemplate
 import org.apache.camel.builder.RouteBuilder
 import org.junit.BeforeClass
 import org.junit.Test
@@ -26,6 +27,9 @@ class EventBusClientConfigurationTest {
 
     @Autowired
     EventBus eventBus
+
+    @Autowired
+    ProducerTemplate producerTemplate
 
     @BeforeClass
     static void beforeClass() {
@@ -84,6 +88,17 @@ class EventBusClientConfigurationTest {
 
         // Then
         assertThat(response).isEqualTo(new Response(body: 'foo'))
+    }
+
+    // Camel component tests
+
+    @Test
+    void shouldReceiveResponseFromCamelComponent() {
+        // When
+        def response = producerTemplate.requestBody('eventbus:echo', payload, String.class)
+
+        // Then
+        assertThat(response).isEqualTo(payload)
     }
 
     // Test classes
