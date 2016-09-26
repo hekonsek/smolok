@@ -1,23 +1,19 @@
 package smolok.cmd.commands
 
-import smolok.cmd.Command
+import smolok.cmd.BaseCommand
 import smolok.cmd.OutputSink
 import smolok.status.StatusResolver
 
-class CloudStatusCommand implements Command {
+class CloudStatusCommand extends BaseCommand {
 
     private final StatusResolver statusResolver
 
     CloudStatusCommand(StatusResolver statusResolver) {
+        super('cloud', 'status')
         this.statusResolver = statusResolver
     }
 
     // Handler operations
-
-    @Override
-    boolean supports(String... command) {
-        command[0] == 'cloud' && command[1] == 'status'
-    }
 
     @Override
     void handle(OutputSink outputSink, String... command) {

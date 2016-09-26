@@ -8,6 +8,8 @@ class BaseCommandTest {
 
     def command = new TestCommand()
 
+    // Tests
+
     @Test
     void shouldSupportCommand() {
         def supports = command.supports('this', 'is', 'my', 'command')
@@ -38,15 +40,30 @@ class BaseCommandTest {
         assertThat(fooValue).isEqualTo('bar')
     }
 
+    @Test
+    void shouldRequestHelp() {
+        def helpRequested = command.helpRequested('this', 'is', 'my', 'command', '--help')
+        assertThat(helpRequested).isTrue()
+    }
+
+    // Test command classes
+
     static class TestCommand extends BaseCommand {
 
         TestCommand() {
-            super(['this', 'is', 'my', 'command'] as String[])
+            super('this', 'is', 'my', 'command')
         }
 
         @Override
         void handle(OutputSink outputSink, String... command) {
 
+        }
+
+        @Override
+        String help() {
+            '''Use this command like that:
+
+foo bar baz'''
         }
 
     }

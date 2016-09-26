@@ -25,6 +25,16 @@ abstract class BaseCommand implements Command {
         true
     }
 
+    @Override
+    boolean helpRequested(String... command) {
+        hasOption(command, 'help')
+    }
+
+    @Override
+    String help() {
+        'No help available for the command.'
+    }
+
     protected String option(String[] command, String optionName, String defaultValue) {
         def optionFound = command.find{ it.startsWith("--${optionName}=") }
         optionFound != null ? optionFound.replaceFirst(/--${optionName}=/, '') : defaultValue

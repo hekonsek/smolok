@@ -16,7 +16,7 @@ class SparkSubmitCommand extends BaseCommand {
 
     // Constructors
     SparkSubmitCommand(Docker docker) {
-        super(['spark', 'submit'] as String[])
+        super('spark', 'submit')
         this.docker = docker
     }
 

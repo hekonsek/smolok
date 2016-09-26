@@ -35,7 +35,12 @@ class CommandDispatcher {
         try {
             def handler = commands.find { it.supports(command) }
             Validate.notNull(handler, "Cannot find handler for the command: ${flatCommand}")
-            handler.handle(outputSink, command)
+
+            if(handler.helpRequested(command)) {
+                outputSink.out(handler.help())
+            } else {
+                handler.handle(outputSink, command)
+            }
         } catch (Exception e) {
             outputSink.out(e.message)
             LOG.info('Exception catch during command execution:', e)
