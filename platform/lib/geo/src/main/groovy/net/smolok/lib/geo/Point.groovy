@@ -19,16 +19,22 @@ package net.smolok.lib.geo
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode
-class Point {
+class Point implements Serializable {
+
+    // Members
 
     private final double lat
 
     private final double lng
 
+    // Constructors
+
     Point(double lat, double lng) {
         this.lat = lat
         this.lng = lng
     }
+
+    // Factory methods
 
     static Point point(double lat, double lng) {
         new Point(lat, lng)
@@ -37,11 +43,11 @@ class Point {
     // Getters & setters
 
     double lat() {
-        return lat
+        lat
     }
 
     double lng() {
-        return lng
+        lng
     }
 
 }
