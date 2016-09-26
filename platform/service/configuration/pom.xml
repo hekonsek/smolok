@@ -12,6 +12,10 @@
     <artifactId>smolok-service-configuration</artifactId>
     <name>${artifactId}</name>
 
+    <properties>
+        <image.target>service-configuration</image.target>
+    </properties>
+
     <dependencies>
         <!-- Smolok dependencies -->
         <dependency>

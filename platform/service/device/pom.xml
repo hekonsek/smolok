@@ -12,8 +12,16 @@
     <artifactId>smolok-service-device</artifactId>
     <name>${project.artifactId}</name>
 
+    <properties>
+        <image.target>service-device</image.target>
+    </properties>
+
     <dependencies>
         <!-- Internal dependencies -->
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-bootstrap</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
