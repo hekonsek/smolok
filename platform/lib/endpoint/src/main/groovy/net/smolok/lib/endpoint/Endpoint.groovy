@@ -8,14 +8,21 @@ class Endpoint {
 
     private final ProducerTemplate producerTemplate
 
-    List<RequestConverter> requestConverters
+    private final List<RequestConverter> requestConverters
 
-    RequestConverter defaultRequestConverter
+    private final RequestConverter defaultRequestConverter
 
-    Endpoint(ProducerTemplate producerTemplate, List<RequestConverter> requestConverters, RequestConverter defaultRequestConverter) {
+    private final List<Initializer> initializers
+
+    Endpoint(ProducerTemplate producerTemplate, List<RequestConverter> requestConverters, RequestConverter defaultRequestConverter, List<Initializer> initializers) {
         this.producerTemplate = producerTemplate
         this.requestConverters = requestConverters
         this.defaultRequestConverter = defaultRequestConverter
+        this.initializers = initializers
+    }
+
+    void start() {
+        initializers.each { it.initialize(producerTemplate.camelContext) }
     }
 
     // Endpoint operations
