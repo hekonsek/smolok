@@ -1,5 +1,8 @@
 package smolok.cmd
 
+import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.OutputSink
+
 class TestCommand extends BaseCommand {
 
     TestCommand() {

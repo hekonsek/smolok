@@ -1,7 +1,7 @@
 package smolok.cmd.commands
 
-import smolok.cmd.BaseCommand
-import smolok.cmd.OutputSink
+import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.OutputSink
 import smolok.paas.Paas
 
 class CloudStartCommand extends BaseCommand {

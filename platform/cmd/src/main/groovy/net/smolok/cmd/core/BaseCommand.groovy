@@ -1,4 +1,4 @@
-package smolok.cmd
+package net.smolok.cmd.core
 
 import org.apache.commons.lang3.ArrayUtils
 

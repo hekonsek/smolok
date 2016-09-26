@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.cmd.Command
-import smolok.cmd.CommandDispatcher
-import smolok.cmd.OutputSink
-import smolok.cmd.StdoutOutputSink
+import net.smolok.cmd.core.Command
+import net.smolok.cmd.core.CommandDispatcher
+import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.StdoutOutputSink
 import smolok.cmd.commands.CloudStartCommand
 import smolok.cmd.commands.CloudStatusCommand
 import smolok.cmd.commands.SdcardInstallRaspbianCommand

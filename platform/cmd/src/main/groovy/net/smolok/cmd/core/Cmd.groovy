@@ -1,4 +1,4 @@
-package smolok.cmd
+package net.smolok.cmd.core
 
 import org.springframework.context.ConfigurableApplicationContext
 import smolok.bootstrap.Smolok

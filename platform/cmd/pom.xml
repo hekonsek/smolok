@@ -21,7 +21,7 @@
 
     <properties>
         <!-- Docker image configuration -->
-        <mainClass>smolok.cmd.Cmd</mainClass>
+        <mainClass>net.smolok.cmd.core.Cmd</mainClass>
         <image.target>cmd</image.target>
     </properties>
 

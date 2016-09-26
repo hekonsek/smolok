@@ -2,8 +2,8 @@ package smolok.cmd.commands
 
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory
-import smolok.cmd.BaseCommand
-import smolok.cmd.OutputSink
+import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.OutputSink
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ServiceStartupResults
 import smolok.lib.docker.Docker

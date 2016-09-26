@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
-import smolok.cmd.Command
-import smolok.cmd.CommandDispatcher
-import smolok.cmd.InMemoryOutputSink
+import net.smolok.cmd.core.Command
+import net.smolok.cmd.core.CommandDispatcher
+import net.smolok.cmd.core.InMemoryOutputSink
 import smolok.cmd.TestCommand
 import smolok.lib.docker.Docker
 import smolok.paas.Paas
