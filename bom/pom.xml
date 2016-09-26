@@ -111,6 +111,11 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>smolok-lib-endpoint</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-lib-process</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
