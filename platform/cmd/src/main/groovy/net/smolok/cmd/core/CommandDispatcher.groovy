@@ -3,6 +3,7 @@ package net.smolok.cmd.core
 import org.apache.commons.lang3.Validate
 
 import static org.slf4j.LoggerFactory.getLogger
+import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 
 /**
  * Dispatcher find appropriate handler to execute the command and perform the actual execution.
@@ -27,6 +28,12 @@ class CommandDispatcher {
     void handleCommand(String... command) {
         if (command.length == 0) {
             outputSink.out('Cannot execute empty command.')
+            return
+        }
+
+        if(command[0] == '--help') {
+            def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
+            outputSink.out("Welcome to Smolok v${smolokVersion}.")
             return
         }
 

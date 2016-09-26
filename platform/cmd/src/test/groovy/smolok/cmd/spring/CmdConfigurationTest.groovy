@@ -171,8 +171,19 @@ class CmdConfigurationTest {
         assertThat(outputSink.output().first()).matches('Cannot execute empty command.')
     }
 
+    // Help tests
+
     @Test
-    void shouldDisplayHelp() {
+    void shouldDisplayGlobalHelp() {
+        // When
+        commandHandler.handleCommand('--help')
+
+        // Then
+        assertThat(outputSink.output().first()).startsWith('Welcome')
+    }
+
+    @Test
+    void shouldDisplayCommandHelp() {
         // When
         commandHandler.handleCommand('this', 'is', 'my', 'command', '--help')
 
