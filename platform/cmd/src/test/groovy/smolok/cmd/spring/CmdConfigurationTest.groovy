@@ -5,13 +5,15 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
+import smolok.cmd.Command
 import smolok.cmd.CommandDispatcher
 import smolok.cmd.InMemoryOutputSink
+import smolok.cmd.TestCommand
 import smolok.lib.docker.Docker
 import smolok.paas.Paas
 
@@ -23,14 +25,19 @@ import static smolok.lib.docker.ContainerStatus.running
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = [CmdConfigurationTest.class, Smolok.class])
 @Configuration
 class CmdConfigurationTest {
 
     @Bean
     InMemoryOutputSink outputSink() {
         new InMemoryOutputSink()
+    }
+
+    @Bean
+    Command testCommand() {
+        new TestCommand()
     }
 
     @Autowired
@@ -162,6 +169,15 @@ class CmdConfigurationTest {
 
         // Then
         assertThat(outputSink.output().first()).matches('Cannot execute empty command.')
+    }
+
+    @Test
+    void shouldDisplayHelp() {
+        // When
+        commandHandler.handleCommand('this', 'is', 'my', 'command', '--help')
+
+        // Then
+        assertThat(outputSink.output().first().split(/\n/).toList()).hasSize(3)
     }
 
 }
