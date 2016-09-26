@@ -35,13 +35,13 @@ class EndpointConfigurationTest {
 
     @Test
     void shouldSendMap() {
-        def response = endpoint.request(echoEndpoint, '[foo: "bar"]', null)
+        def response = endpoint.request(echoEndpoint, '[foo: "bar"]')
         assertThat(response).isEqualTo('{foo=bar}')
     }
 
     @Test
     void shouldSendPrefixedGroovyBody() {
-        def response = endpoint.request(echoEndpoint, 'groovy:"foo"', null)
+        def response = endpoint.request(echoEndpoint, 'groovy:"foo"')
         assertThat(response).isEqualTo('foo')
     }
 
@@ -55,13 +55,13 @@ class EndpointConfigurationTest {
 
     @Test
     void shouldResponseWithStringByDefault() {
-        def response = endpoint.request(echoEndpoint, '"foo"', null)
+        def response = endpoint.request(echoEndpoint, '"foo"')
         assertThat(response).isEqualTo('foo')
     }
 
     @Test
     void shouldExchangeNull() {
-        def response = endpoint.request(echoEndpoint, 'null', null)
+        def response = endpoint.request(echoEndpoint, 'null')
         assertThat(response).isEqualTo('null')
     }
 
