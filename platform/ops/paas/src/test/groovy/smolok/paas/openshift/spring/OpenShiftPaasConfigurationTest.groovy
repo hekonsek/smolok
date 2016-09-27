@@ -17,23 +17,23 @@
 package smolok.paas.openshift.spring
 
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
-import smolok.lib.common.Properties
 import smolok.paas.Paas
 
+import static com.jayway.awaitility.Awaitility.await
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.common.Awaitilities.condition
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Smolok.class)
 class OpenShiftPaasConfigurationTest {
 
-    // Collaborators fixtures
+    // Test subject fixtures
 
     @Autowired
     Paas paas
@@ -41,33 +41,25 @@ class OpenShiftPaasConfigurationTest {
     @Before
     void before() {
         paas.reset()
+        paas.start()
     }
 
     // Tests
 
     @Test
     void shouldStart() {
-        // When
-        paas.start()
-
         // Then
         assertThat(paas.started).isTrue()
     }
 
     @Test
     void shouldProvisionAfterStart() {
-        // When
-        paas.start()
-
         // Then
         assertThat(paas.provisioned).isTrue()
     }
 
     @Test
     void shouldStop() {
-        // Given
-        paas.start()
-
         // When
         paas.stop()
 
@@ -77,9 +69,6 @@ class OpenShiftPaasConfigurationTest {
 
     @Test
     void shouldStopAfterReset() {
-        // Given
-        paas.start()
-
         // When
         paas.reset()
 
@@ -89,6 +78,13 @@ class OpenShiftPaasConfigurationTest {
 
     @Test
     void shouldStartEventBus() {
+        // Then
+        def eventBusService = paas.services().find { it.name == 'eventbus' }
+        assertThat(eventBusService).isNotNull()
+    }
+
+    @Test
+    void shouldNotStartEventBusTwice() {
         // When
         paas.start()
 
@@ -98,16 +94,14 @@ class OpenShiftPaasConfigurationTest {
     }
 
     @Test
-    void shouldNotStartEventBusTwice() {
-        // Given
-        paas.start()
-
+    void shouldStartMongoService() {
         // When
-        paas.start()
+        paas.startService('mongo')
 
         // Then
-        def eventBusService = paas.services().find { it.name == 'eventbus' }
-        assertThat(eventBusService).isNotNull()
+        await().until(condition {paas.services().find { it.name == 'mongo' } != null})
+        def mongoService = paas.services().find { it.name == 'mongo' }
+        assertThat(mongoService).isNotNull()
     }
 
 }

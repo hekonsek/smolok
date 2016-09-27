@@ -186,6 +186,11 @@ class OpenShiftPaas implements Paas {
         }
     }
 
+    @Override
+    void startService(String serviceLocator) {
+        oc("new-app ${serviceLocator}")
+    }
+
     // Helpers
 
     private loginPromptIsDisplayed() {

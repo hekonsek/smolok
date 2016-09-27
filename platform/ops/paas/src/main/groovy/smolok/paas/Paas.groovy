@@ -39,4 +39,6 @@ interface Paas {
 
     List<ServiceEndpoint> services()
 
+    void startService(String serviceLocator)
+
 }
