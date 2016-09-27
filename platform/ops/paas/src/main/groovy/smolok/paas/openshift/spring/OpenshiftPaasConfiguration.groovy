@@ -22,6 +22,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
+import smolok.paas.DeviceServiceImageLocatorResolver
+import smolok.paas.ImageLocatorResolver
 import smolok.paas.Paas
 import smolok.paas.openshift.OpenShiftPaas
 
@@ -36,8 +38,13 @@ class OpenshiftPaasConfiguration {
      */
     @Bean(initMethod = 'init')
     @ConditionalOnMissingBean
-    Paas paas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
-        new OpenShiftPaas(downloadManager, processManager, amqpProbe)
+    Paas paas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe, List<ImageLocatorResolver> imageLocatorResolvers) {
+        new OpenShiftPaas(downloadManager, processManager, amqpProbe, imageLocatorResolvers)
+    }
+
+    @Bean
+    DeviceServiceImageLocatorResolver deviceServiceImageLocatorResolver() {
+        new DeviceServiceImageLocatorResolver()
     }
 
 }

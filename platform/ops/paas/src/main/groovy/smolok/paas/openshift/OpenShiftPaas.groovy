@@ -21,6 +21,7 @@ import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
+import smolok.paas.ImageLocatorResolver
 import smolok.paas.Paas
 import smolok.paas.ServiceEndpoint
 
@@ -66,6 +67,8 @@ class OpenShiftPaas implements Paas {
 
     private final AmqpProbe amqpProbe
 
+    private final List<ImageLocatorResolver> imageLocatorResolvers
+
     private final def openshiftHome = Paths.get(SystemUtils.getUserHome().absolutePath, '.smolok', 'openshift').toFile()
 
     // Cached variables
@@ -76,10 +79,11 @@ class OpenShiftPaas implements Paas {
 
     // Constructors
 
-    OpenShiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe) {
+    OpenShiftPaas(DownloadManager downloadManager, ProcessManager processManager, AmqpProbe amqpProbe, List<ImageLocatorResolver> imageLocatorResolvers) {
         this.downloadManager = downloadManager
         this.processManager = processManager
         this.amqpProbe = amqpProbe
+        this.imageLocatorResolvers = imageLocatorResolvers
 
         def serverPath = Paths.get(downloadManager.downloadedFile(OPENSHIFT_DISTRO).absolutePath, OPENSHIFT_DISTRO, 'openshift').toFile().absolutePath
         startOpenShiftCommand = sudo(serverPath, 'start').workingDirectory(openshiftHome).build()
@@ -188,6 +192,10 @@ class OpenShiftPaas implements Paas {
 
     @Override
     void startService(String serviceLocator) {
+        def imageResolver = imageLocatorResolvers.find{ it.canResolveImage(serviceLocator) }
+        if(imageResolver != null) {
+            serviceLocator = imageResolver.resolveImage(serviceLocator)
+        }
         oc("new-app ${serviceLocator}")
     }
 
