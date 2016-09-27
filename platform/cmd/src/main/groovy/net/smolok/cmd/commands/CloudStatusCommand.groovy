@@ -1,4 +1,4 @@
-package smolok.cmd.commands
+package net.smolok.cmd.commands
 
 import net.smolok.cmd.core.BaseCommand
 import net.smolok.cmd.core.OutputSink

@@ -1,4 +1,4 @@
-package smolok.cmd.commands
+package net.smolok.cmd.commands
 
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory

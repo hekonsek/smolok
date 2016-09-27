@@ -37,6 +37,10 @@
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
+            <artifactId>smolok-lib-endpoint</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-status</artifactId>
         </dependency>
 

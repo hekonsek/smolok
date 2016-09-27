@@ -1,5 +1,6 @@
 package smolok.cmd.commands
 
+import net.smolok.cmd.commands.SparkSubmitCommand
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito

@@ -1,6 +1,7 @@
-package smolok.cmd.spring
+package net.smolok.cmd.core.spring
 
 import net.smolok.lib.download.DownloadManager
+import net.smolok.lib.endpoint.Endpoint
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -9,11 +10,12 @@ import net.smolok.cmd.core.Command
 import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.OutputSink
 import net.smolok.cmd.core.StdoutOutputSink
-import smolok.cmd.commands.CloudStartCommand
-import smolok.cmd.commands.CloudStatusCommand
-import smolok.cmd.commands.SdcardInstallRaspbianCommand
-import smolok.cmd.commands.SparkStartCommand
-import smolok.cmd.commands.SparkSubmitCommand
+import net.smolok.cmd.commands.CloudStartCommand
+import net.smolok.cmd.commands.CloudStatusCommand
+import net.smolok.cmd.commands.EndpointCommand
+import net.smolok.cmd.commands.SdcardInstallRaspbianCommand
+import net.smolok.cmd.commands.SparkStartCommand
+import net.smolok.cmd.commands.SparkSubmitCommand
 
 import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
@@ -67,6 +69,11 @@ class CmdConfiguration {
     @Bean
     SparkSubmitCommand sparkSubmitCommand(Docker docker) {
         new SparkSubmitCommand(docker)
+    }
+
+    @Bean
+    EndpointCommand endpointCommand(Endpoint endpoint) {
+        new EndpointCommand(endpoint)
     }
 
 }

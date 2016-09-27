@@ -1,5 +1,6 @@
 package smolok.cmd.spring
 
+import org.apache.camel.builder.RouteBuilder
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
@@ -38,6 +39,16 @@ class CmdConfigurationTest {
     @Bean
     Command testCommand() {
         new TestCommand()
+    }
+
+    @Bean
+    RouteBuilder routeBuilder() {
+        new RouteBuilder() {
+            @Override
+            void configure() {
+                from('direct:echo').log('Echo!')
+            }
+        }
     }
 
     @Autowired
@@ -189,6 +200,17 @@ class CmdConfigurationTest {
 
         // Then
         assertThat(outputSink.output().first().split(/\n/).toList()).hasSize(3)
+    }
+
+    // Endpoint command tests
+
+    @Test
+    void shouldSendMessageToEndpoint() {
+        // When
+        commandHandler.handleCommand('endpoint', 'direct:echo', '[foo: "bar"]')
+
+        // Then
+        assertThat(outputSink.output().first()).isEqualTo('{foo=bar}')
     }
 
 }

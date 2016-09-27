@@ -1,4 +1,4 @@
-package smolok.cmd.commands
+package net.smolok.cmd.commands
 
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.Validate
