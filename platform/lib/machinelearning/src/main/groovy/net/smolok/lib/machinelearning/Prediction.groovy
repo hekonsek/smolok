@@ -17,7 +17,7 @@ class Prediction {
         this.confidence = confidence
     }
 
-    String vectorId() {
+    String id() {
         return vectorId
     }
 
