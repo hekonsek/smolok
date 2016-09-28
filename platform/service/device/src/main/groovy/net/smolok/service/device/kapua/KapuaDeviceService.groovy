@@ -16,6 +16,8 @@
  */
 package net.smolok.service.device.kapua
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.ObjectMapper
 import net.smolok.service.device.api.Device
 import net.smolok.service.device.api.DeviceService
 import net.smolok.service.documentstore.api.QueryBuilder
@@ -23,12 +25,15 @@ import org.eclipse.kapua.service.device.registry.Device as KapuaDevice
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.KapuaEid
 import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery
+import org.eclipse.kapua.service.device.registry.mongodb.SimpleDevice
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
 import smolok.service.binding.Tenant
 
 import static smolok.lib.common.Lang.nullOr
 
 class KapuaDeviceService implements DeviceService {
+
+    def mapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
 
     // Collaborators
 
@@ -74,7 +79,7 @@ class KapuaDeviceService implements DeviceService {
     void register(@Tenant String tenant, Device device) {
         def existingDevice = kapuaService.findByClientId(tenantId(tenant), device.deviceId)
         if(existingDevice != null) {
-            kapuaService.update(existingDevice)
+            kapuaService.update(updateDevice(existingDevice, device))
         } else {
             def deviceCreator = new SimpleDeviceCreator(tenantMapper.tenantMapping(tenant))
             deviceCreator.clientId = device.deviceId
@@ -84,7 +89,10 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     void update(@Tenant String tenant, Device device) {
-
+        def existingDevice = kapuaService.findByClientId(tenantId(tenant), device.deviceId)
+        if(existingDevice != null) {
+            kapuaService.update(updateDevice(existingDevice, device))
+        }
     }
 
     @Override
@@ -114,6 +122,26 @@ class KapuaDeviceService implements DeviceService {
         device.lastUpdate = kapuaDevice.lastEventOn
 
         device
+    }
+
+    private KapuaDevice deviceToKapuaDevice(Device device) {
+        def kapuaDevice = new SimpleDevice()
+        kapuaDevice.clientId = device.deviceId
+        kapuaDevice.scopeId = device.properties.kapuaScopeId
+        kapuaDevice.id = device.properties.kapuaId
+
+        kapuaDevice.createdOn = device.registrationDate
+        kapuaDevice.lastEventOn = device.lastUpdate
+
+        kapuaDevice
+    }
+
+    private KapuaDevice updateDevice(KapuaDevice existingDevice, Device device) {
+        def ex = mapper.convertValue(existingDevice, Map.class)
+        ex.putAll(mapper.convertValue(deviceToKapuaDevice(device), Map.class))
+        ex.id = ex.id.id
+        ex.scopeId = ex.scopeId.id
+        mapper.convertValue(ex, SimpleDevice.class)
     }
 
 }

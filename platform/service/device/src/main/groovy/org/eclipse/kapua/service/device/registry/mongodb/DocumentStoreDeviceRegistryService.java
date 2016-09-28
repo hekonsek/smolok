@@ -46,7 +46,10 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
         device.put("kapuaid", id);
         device.put("clientId", deviceCreator.getClientId());
+
         device.put("createdOn", new Date());
+        device.put("lastEventOn", new Date());
+
         documentStore.save(collection, objectMapper.convertValue(device, Map.class));
 
         SimpleDevice result = new SimpleDevice();

@@ -161,7 +161,9 @@ public class SimpleDevice implements Device {
     }
 
     public void setModifiedBy(KapuaId modifiedBy) {
-        this.modifiedBy = modifiedBy.getId();
+        if(modifiedBy != null) {
+            this.modifiedBy = modifiedBy.getId();
+        }
     }
 
     public void setModifiedOn(Date modifiedOn) {
@@ -174,7 +176,9 @@ public class SimpleDevice implements Device {
     }
 
     public void setCreatedBy(KapuaId createdBy) {
-        this.createdBy = createdBy.getId();
+        if(createdBy != null) {
+            this.createdBy = createdBy.getId();
+        }
     }
 
     @Override
@@ -447,7 +451,9 @@ public class SimpleDevice implements Device {
     }
 
     public void setPreferredUserId(KapuaId preferredUserId) {
-        this.preferredUserId = preferredUserId.getId();
+        if(preferredUserId != null) {
+            this.preferredUserId = preferredUserId.getId();
+        }
     }
 
 }
