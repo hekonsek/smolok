@@ -1,3 +1,19 @@
+/**
+ * Licensed to the Smolok under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.smolok.service.device.kapua
 
 import net.smolok.service.device.api.Device
@@ -10,7 +26,11 @@ import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuer
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
 import smolok.service.binding.Tenant
 
+import static smolok.lib.common.Lang.nullOr
+
 class KapuaDeviceService implements DeviceService {
+
+    // Collaborators
 
     private final DeviceRegistryService kapuaService
 
@@ -27,11 +47,7 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     Device get(@Tenant String tenant, String deviceId) {
-        def kapuaDevice = kapuaService.findByClientId(tenantId(tenant), deviceId)
-        if(kapuaDevice == null) {
-            return null
-        }
-        kapuaDeviceToDevice(kapuaDevice)
+        nullOr(kapuaService.findByClientId(tenantId(tenant), deviceId)) { kapuaDeviceToDevice(it) }
     }
 
     @Override
@@ -67,7 +83,7 @@ class KapuaDeviceService implements DeviceService {
     }
 
     @Override
-    void update(Device device) {
+    void update(@Tenant String tenant, Device device) {
 
     }
 
@@ -78,7 +94,7 @@ class KapuaDeviceService implements DeviceService {
     }
 
     @Override
-    void heartbeat(String deviceId) {
+    void heartbeat(@Tenant String tenant, String deviceId) {
 
     }
 
@@ -93,6 +109,10 @@ class KapuaDeviceService implements DeviceService {
         device.deviceId = kapuaDevice.clientId
         device.properties.kapuaScopeId = kapuaDevice.scopeId.id
         device.properties.kapuaId = kapuaDevice.id.id
+
+        device.registrationDate = kapuaDevice.createdOn
+        device.lastUpdate = kapuaDevice.lastEventOn
+
         device
     }
 

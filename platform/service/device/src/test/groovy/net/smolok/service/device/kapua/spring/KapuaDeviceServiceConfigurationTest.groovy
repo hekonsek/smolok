@@ -128,4 +128,40 @@ class KapuaDeviceServiceConfigurationTest {
         assertThat(devices.toList()).hasSize(1)
     }
 
+    @Test
+    void foundDevicedShouldRememberKapuaId() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+
+        // When
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+
+        // Then
+        assertThat(devices[0].properties.kapuaId).isNotNull()
+    }
+
+    @Test
+    void foundDevicedShouldRememberKapuaScopeId() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+
+        // When
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+
+        // Then
+        assertThat(devices[0].properties.kapuaScopeId).isNotNull()
+    }
+
+    @Test
+    void shouldLoadRegistrationDateFromKapua() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+
+        // When
+        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+
+        // Then
+        assertThat(device.registrationDate).isNotNull()
+    }
+
 }

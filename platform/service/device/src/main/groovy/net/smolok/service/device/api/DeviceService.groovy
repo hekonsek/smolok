@@ -40,10 +40,10 @@ public interface DeviceService {
      */
     void register(@Tenant String tenant, Device device);
 
-    void update(Device device);
+    void update(@Tenant String tenant, Device device);
 
     void deregister(@Tenant String tenant, String deviceId);
 
-    void heartbeat(String deviceId);
+    void heartbeat(@Tenant String tenant, String deviceId);
 
 }

@@ -9,10 +9,7 @@ import net.smolok.service.documentstore.api.QueryBuilder;
 import org.eclipse.kapua.service.device.registry.*;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
@@ -49,6 +46,7 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
         device.put("kapuaid", id);
         device.put("clientId", deviceCreator.getClientId());
+        device.put("createdOn", new Date());
         documentStore.save(collection, objectMapper.convertValue(device, Map.class));
 
         SimpleDevice result = new SimpleDevice();
@@ -65,6 +63,8 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         }
 
         Map<String, Object> existingDeviceMap = existingDevices.get(0);
+
+        existingDeviceMap.put("lastEventOn", new Date());
 
         String documentId = existingDeviceMap.get("id").toString();
         existingDeviceMap.put("clientId", device.getClientId());
