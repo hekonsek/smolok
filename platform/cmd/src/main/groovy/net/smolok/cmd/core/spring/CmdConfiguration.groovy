@@ -1,5 +1,6 @@
 package net.smolok.cmd.core.spring
 
+import net.smolok.cmd.commands.ServiceStartCommand
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
 import org.springframework.beans.factory.annotation.Value
@@ -23,7 +24,7 @@ import smolok.paas.Paas
 import smolok.status.StatusResolver
 
 /**
- * Configuration of command line tool.
+ * Configuration of the command line tool.
  */
 @Configuration
 class CmdConfiguration {
@@ -62,6 +63,18 @@ class CmdConfiguration {
     }
 
     @Bean
+    EndpointCommand endpointCommand(Endpoint endpoint) {
+        new EndpointCommand(endpoint)
+    }
+
+    @Bean
+    ServiceStartCommand serviceStartCommand(Paas paas) {
+        new ServiceStartCommand(paas)
+    }
+
+    // Spark commands
+
+    @Bean
     SparkStartCommand sparkStartCommand(Docker docker) {
         new SparkStartCommand(docker)
     }
@@ -69,11 +82,6 @@ class CmdConfiguration {
     @Bean
     SparkSubmitCommand sparkSubmitCommand(Docker docker) {
         new SparkSubmitCommand(docker)
-    }
-
-    @Bean
-    EndpointCommand endpointCommand(Endpoint endpoint) {
-        new EndpointCommand(endpoint)
     }
 
 }

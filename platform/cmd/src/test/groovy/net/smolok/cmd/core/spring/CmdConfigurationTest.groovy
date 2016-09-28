@@ -229,4 +229,30 @@ class CmdConfigurationTest {
         assertThat(outputSink.output().first()).isEqualTo('{foo=bar}')
     }
 
+    // cloud service-start test
+
+    @Test
+    void shouldStartDeviceService() {
+        // Given
+        paas.start()
+
+        // When
+        commandHandler.handleCommand('service-start', 'device')
+
+        // Then
+        assertThat(outputSink.output().last()).containsIgnoringCase('started')
+    }
+
+    @Test
+    void shouldNotStartInvalidServiceLocator() {
+        // Given
+        paas.start()
+
+        // When
+        commandHandler.handleCommand('service-start', 'invalidCommand')
+
+        // Then
+        assertThat(outputSink.output()[1]).containsIgnoringCase('problem starting service container')
+    }
+
 }

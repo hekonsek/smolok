@@ -196,7 +196,7 @@ class OpenShiftPaas implements Paas {
         if(imageResolver != null) {
             serviceLocator = imageResolver.resolveImage(serviceLocator)
         }
-        oc("new-app ${serviceLocator}")
+        Validate.isTrue(!oc("new-app ${serviceLocator}").first().contains('error'), 'Problem starting service container.')
     }
 
     // Helpers
@@ -210,7 +210,7 @@ class OpenShiftPaas implements Paas {
         oc(OC_STATUS).first().startsWith('In project ')
     }
 
-    private oc(String command) {
+    private List<String> oc(String command) {
         processManager.execute(cmd("${ocPath} ${command}"))
     }
 
