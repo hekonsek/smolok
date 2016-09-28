@@ -96,9 +96,6 @@ class OpenShiftPaasConfigurationTest {
 
     @Test
     void shouldStartMongoService() {
-        // Given
-        paas.start()
-
         // When
         paas.startService('mongo')
 
