@@ -29,8 +29,6 @@ class Device {
 
     private Date lastUpdate
 
-    private boolean disconnected
-
     private def properties = new HashMap<String, Object>()
 
     // Constructors
@@ -38,11 +36,10 @@ class Device {
     public Device() {
     }
 
-    public Device(String deviceId, Date registrationDate, Date lastUpdate, boolean disconnected, Map<String, Object> properties) {
+    public Device(String deviceId, Date registrationDate, Date lastUpdate, Map<String, Object> properties) {
         this.deviceId = deviceId;
         this.registrationDate = registrationDate;
         this.lastUpdate = lastUpdate;
-        this.disconnected = disconnected;
         this.properties = setProperties(properties)
     }
 
@@ -55,36 +52,28 @@ class Device {
     // Getters and setters
 
 
-    public String getDeviceId() {
-        return deviceId;
+    String getDeviceId() {
+        deviceId
     }
 
-    public void setDeviceId(String deviceId) {
+    void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
+    Date getRegistrationDate() {
+        registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
 
-    public Date getLastUpdate() {
+    Date getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
+    void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    boolean isDisconnected() {
-        return disconnected;
-    }
-
-    void setDisconnected(boolean disconnected) {
-        this.disconnected = disconnected;
     }
 
     Map<String, Object> getProperties() {
@@ -92,7 +81,7 @@ class Device {
     }
 
     void setProperties(Map<String, Object> properties) {
-        this.properties = ImmutableMap.copyOf(properties);
+        this.properties = ImmutableMap.copyOf(properties)
     }
 
 }

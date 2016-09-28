@@ -28,7 +28,7 @@ public interface DeviceService {
 
     Device get(@Tenant String tenant, String deviceId);
 
-    List<Device> find(QueryBuilder queryBuilder);
+    List<Device> find(@Tenant String tenant, QueryBuilder queryBuilder);
 
     long count(@Tenant String tenant, QueryBuilder queryBuilder);
 

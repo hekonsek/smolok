@@ -31,6 +31,7 @@ import static net.smolok.service.documentstore.api.QueryBuilder.queryBuilder
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.lib.common.Properties.setIntProperty
+import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner)
 @SpringBootTest(classes = Smolok.class)
@@ -43,6 +44,8 @@ class KapuaDeviceServiceConfigurationTest {
     static void beforeClass() {
         setIntProperty('spring.data.mongodb', findAvailableTcpPort())
     }
+
+    def clientId = uuid()
 
     // Tests
 
@@ -111,6 +114,18 @@ class KapuaDeviceServiceConfigurationTest {
 
         // Then
         assertThat(devices).isEqualTo(1L)
+    }
+
+    @Test
+    void shouldFindDevices() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+
+        // When
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+
+        // Then
+        assertThat(devices.toList()).hasSize(1)
     }
 
 }

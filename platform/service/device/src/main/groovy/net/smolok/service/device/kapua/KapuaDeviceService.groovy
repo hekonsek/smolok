@@ -9,6 +9,8 @@ import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuer
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
 import smolok.service.binding.Tenant
 
+import org.eclipse.kapua.service.device.registry.Device as KapuaDevice
+
 class KapuaDeviceService implements DeviceService {
 
     private final DeviceRegistryService kapuaService
@@ -23,16 +25,18 @@ class KapuaDeviceService implements DeviceService {
         if(kapuaDevice == null) {
             return null
         }
-        def device = new Device()
-        device.deviceId = kapuaDevice.clientId
-        device.properties.kapuaScopeId = kapuaDevice.scopeId.id
-        device.properties.kapuaId = kapuaDevice.id.id
-        device
+        kapuaDeviceToDevice(kapuaDevice)
     }
 
     @Override
-    List<Device> find(QueryBuilder queryBuilder) {
-        kapuaService.query(queryBuilder)
+    List<Device> find(@Tenant String tenant, QueryBuilder queryBuilder) {
+        if(queryBuilder.query.containsKey('deviceId')) {
+            queryBuilder.query.put('clientId', queryBuilder.query.get('deviceId'))
+            queryBuilder.query.remove('deviceId')
+        }
+        kapuaService.query(new DocumentStoreDeviceQuery(new KapuaEid(tenant.hashCode().toBigInteger()), queryBuilder)).collect{
+            kapuaDeviceToDevice(it)
+        }
     }
 
     @Override
@@ -70,6 +74,16 @@ class KapuaDeviceService implements DeviceService {
     @Override
     void heartbeat(String deviceId) {
 
+    }
+
+    // Helpers
+
+    Device kapuaDeviceToDevice(KapuaDevice kapuaDevice) {
+        def device = new Device()
+        device.deviceId = kapuaDevice.clientId
+        device.properties.kapuaScopeId = kapuaDevice.scopeId.id
+        device.properties.kapuaId = kapuaDevice.id.id
+        device
     }
 
 }
