@@ -1,4 +1,4 @@
-package net.smolok.lib.spark.ml
+package net.smolok.lib.machinelearning
 
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.classification.LogisticRegressionModel
@@ -9,9 +9,9 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 
-import static TrainingFeatureVector.matching
-import static TrainingFeatureVector.notMatching
-import static net.smolok.lib.spark.ml.IdentifiableFeatureVector.identifiableVector
+import static net.smolok.lib.machinelearning.IdentifiableFeatureVector.identifiableVector
+import static net.smolok.lib.machinelearning.TrainingFeatureVector.matching
+import static net.smolok.lib.machinelearning.TrainingFeatureVector.notMatching
 
 class PredictionEngine {
 

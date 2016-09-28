@@ -9,7 +9,7 @@
         <version>0.0.6-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-lib-spark</artifactId>
+    <artifactId>smolok-lib-machinelearning</artifactId>
     <name>${artifactId}</name>
 
     <properties>
@@ -26,7 +26,10 @@
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.11</artifactId>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

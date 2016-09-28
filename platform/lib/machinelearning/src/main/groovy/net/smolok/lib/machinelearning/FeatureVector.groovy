@@ -1,4 +1,4 @@
-package net.smolok.lib.spark.ml
+package net.smolok.lib.machinelearning
 
 class FeatureVector {
 
