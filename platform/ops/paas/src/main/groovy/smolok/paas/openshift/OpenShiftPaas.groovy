@@ -19,6 +19,7 @@ package smolok.paas.openshift
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
+import smolok.lib.common.Lang
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.ImageLocatorResolver
@@ -193,10 +194,9 @@ class OpenShiftPaas implements Paas {
     @Override
     void startService(String serviceLocator) {
         def imageResolver = imageLocatorResolvers.find{ it.canResolveImage(serviceLocator) }
-        if(imageResolver != null) {
-            imageResolver.resolveImage(serviceLocator).each {
-                Validate.isTrue(!oc("new-app ${it}").first().contains('error'), "Problem starting service container: ${it}")
-            }
+        def images = imageResolver == null ? [serviceLocator] : imageResolver.resolveImage(serviceLocator)
+        images.each {
+            Validate.isTrue(!oc("new-app ${it}").first().contains('error'), "Problem starting service container: ${it}")
         }
     }
 
