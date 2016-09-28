@@ -9,7 +9,7 @@
         <version>0.0.6-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-cmd</artifactId>
+    <artifactId>smolok-cmd-core</artifactId>
     <name>${artifactId}</name>
 
     <licenses>
@@ -19,26 +19,31 @@
         </license>
     </licenses>
 
-    <properties>
-        <!-- Docker image configuration -->
-        <mainClass>net.smolok.cmd.core.Cmd</mainClass>
-    </properties>
-
     <dependencies>
-        <!-- Internal dependencies -->
+        <!-- Smolok dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-cmd-core</artifactId>
+            <artifactId>smolok-lib-download</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-lib-docker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-lib-endpoint</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-status</artifactId>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

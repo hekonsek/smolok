@@ -71,7 +71,7 @@
         <!-- Enforcing tests ordering -->
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-cmd</artifactId>
+            <artifactId>smolok-cmd-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

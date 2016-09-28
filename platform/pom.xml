@@ -15,6 +15,7 @@
 
     <modules>
         <module>lib</module>
+        <module>cmd-core</module>
         <module>cmd</module>
         <module>ops</module>
         <module>service</module>

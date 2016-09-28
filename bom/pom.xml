@@ -56,7 +56,7 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
-                <artifactId>smolok-cmd</artifactId>
+                <artifactId>smolok-cmd-core</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
             <dependency>
