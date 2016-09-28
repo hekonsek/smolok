@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      host: ${MONGO_SERVICE_HOST:localhost}
+      port: ${MONGO_SERVICE_PORT:27017}

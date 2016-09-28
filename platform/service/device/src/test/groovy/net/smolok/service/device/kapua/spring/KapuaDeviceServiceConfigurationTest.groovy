@@ -42,7 +42,7 @@ class KapuaDeviceServiceConfigurationTest {
 
     @BeforeClass
     static void beforeClass() {
-        setIntProperty('spring.data.mongodb', findAvailableTcpPort())
+        setIntProperty('spring.data.mongodb.port', findAvailableTcpPort())
     }
 
     def clientId = uuid()
