@@ -1,8 +1,11 @@
 package net.smolok.service.device.kapua.spring
 
+import net.smolok.service.device.kapua.HashCodeTenantMapper
 import net.smolok.service.device.kapua.KapuaDeviceService
+import net.smolok.service.device.kapua.TenantMapper
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.mongodb.spring.MongodbDeviceRegistryServiceConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -14,8 +17,14 @@ import smolok.service.binding.ServiceEventProcessor
 class KapuaDeviceServiceConfiguration {
 
     @Bean(name = 'device')
-    KapuaDeviceService deviceService(DeviceRegistryService deviceRegistryService) {
-        new KapuaDeviceService(deviceRegistryService)
+    KapuaDeviceService deviceService(DeviceRegistryService deviceRegistryService, TenantMapper tenantMapper) {
+        new KapuaDeviceService(deviceRegistryService, tenantMapper)
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    TenantMapper tenantMapper() {
+        new HashCodeTenantMapper()
     }
 
     @Bean

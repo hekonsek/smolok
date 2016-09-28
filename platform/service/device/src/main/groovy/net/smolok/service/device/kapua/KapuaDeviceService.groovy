@@ -3,25 +3,31 @@ package net.smolok.service.device.kapua
 import net.smolok.service.device.api.Device
 import net.smolok.service.device.api.DeviceService
 import net.smolok.service.documentstore.api.QueryBuilder
+import org.eclipse.kapua.service.device.registry.Device as KapuaDevice
 import org.eclipse.kapua.service.device.registry.DeviceRegistryService
 import org.eclipse.kapua.service.device.registry.KapuaEid
 import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
 import smolok.service.binding.Tenant
 
-import org.eclipse.kapua.service.device.registry.Device as KapuaDevice
-
 class KapuaDeviceService implements DeviceService {
 
     private final DeviceRegistryService kapuaService
 
-    KapuaDeviceService(DeviceRegistryService kapuaService) {
+    private final TenantMapper tenantMapper
+
+    // Constructors
+
+    KapuaDeviceService(DeviceRegistryService kapuaService, TenantMapper tenantMapper) {
         this.kapuaService = kapuaService
+        this.tenantMapper = tenantMapper
     }
+
+    // Operations
 
     @Override
     Device get(@Tenant String tenant, String deviceId) {
-        def kapuaDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), deviceId)
+        def kapuaDevice = kapuaService.findByClientId(tenantId(tenant), deviceId)
         if(kapuaDevice == null) {
             return null
         }
@@ -34,7 +40,7 @@ class KapuaDeviceService implements DeviceService {
             queryBuilder.query.put('clientId', queryBuilder.query.get('deviceId'))
             queryBuilder.query.remove('deviceId')
         }
-        kapuaService.query(new DocumentStoreDeviceQuery(new KapuaEid(tenant.hashCode().toBigInteger()), queryBuilder)).collect{
+        kapuaService.query(new DocumentStoreDeviceQuery(tenantId(tenant), queryBuilder)).collect{
             kapuaDeviceToDevice(it)
         }
     }
@@ -45,16 +51,16 @@ class KapuaDeviceService implements DeviceService {
             queryBuilder.query.put('clientId', queryBuilder.query.get('deviceId'))
             queryBuilder.query.remove('deviceId')
         }
-        kapuaService.count(new DocumentStoreDeviceQuery(new KapuaEid(tenant.hashCode().toBigInteger()), queryBuilder))
+        kapuaService.count(new DocumentStoreDeviceQuery(tenantId(tenant), queryBuilder))
     }
 
     @Override
     void register(@Tenant String tenant, Device device) {
-        def existingDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), device.deviceId)
+        def existingDevice = kapuaService.findByClientId(tenantId(tenant), device.deviceId)
         if(existingDevice != null) {
             kapuaService.update(existingDevice)
         } else {
-            def deviceCreator = new SimpleDeviceCreator(tenant.hashCode().toBigInteger())
+            def deviceCreator = new SimpleDeviceCreator(tenantMapper.tenantMapping(tenant))
             deviceCreator.clientId = device.deviceId
             kapuaService.create(deviceCreator)
         }
@@ -67,7 +73,7 @@ class KapuaDeviceService implements DeviceService {
 
     @Override
     void deregister(@Tenant String tenant, String deviceId) {
-        def existingDevice = kapuaService.findByClientId(new KapuaEid(tenant.hashCode().toBigInteger()), deviceId)
+        def existingDevice = kapuaService.findByClientId(tenantId(tenant), deviceId)
         kapuaService.delete(existingDevice.scopeId, existingDevice.id)
     }
 
@@ -78,7 +84,11 @@ class KapuaDeviceService implements DeviceService {
 
     // Helpers
 
-    Device kapuaDeviceToDevice(KapuaDevice kapuaDevice) {
+    private KapuaEid tenantId(String tenantName) {
+        new KapuaEid(tenantMapper.tenantMapping(tenantName))
+    }
+
+    private Device kapuaDeviceToDevice(KapuaDevice kapuaDevice) {
         def device = new Device()
         device.deviceId = kapuaDevice.clientId
         device.properties.kapuaScopeId = kapuaDevice.scopeId.id
