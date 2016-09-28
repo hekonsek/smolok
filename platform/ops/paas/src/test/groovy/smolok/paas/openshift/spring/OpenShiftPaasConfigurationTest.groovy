@@ -26,6 +26,7 @@ import smolok.bootstrap.Smolok
 import smolok.paas.Paas
 
 import static com.jayway.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.MINUTES
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Awaitilities.condition
 
@@ -95,11 +96,14 @@ class OpenShiftPaasConfigurationTest {
 
     @Test
     void shouldStartMongoService() {
+        // Given
+        paas.start()
+
         // When
         paas.startService('mongo')
 
         // Then
-        await().until(condition {paas.services().find { it.name == 'mongo' } != null})
+        await().atMost(1, MINUTES).until(condition {paas.services().find { it.name == 'mongo' } != null})
         def mongoService = paas.services().find { it.name == 'mongo' }
         assertThat(mongoService).isNotNull()
     }
