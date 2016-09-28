@@ -194,9 +194,10 @@ class OpenShiftPaas implements Paas {
     void startService(String serviceLocator) {
         def imageResolver = imageLocatorResolvers.find{ it.canResolveImage(serviceLocator) }
         if(imageResolver != null) {
-            serviceLocator = imageResolver.resolveImage(serviceLocator)
+            imageResolver.resolveImage(serviceLocator).each {
+                Validate.isTrue(!oc("new-app ${serviceLocator}").first().contains('error'), 'Problem starting service container.')
+            }
         }
-        Validate.isTrue(!oc("new-app ${serviceLocator}").first().contains('error'), 'Problem starting service container.')
     }
 
     // Helpers
