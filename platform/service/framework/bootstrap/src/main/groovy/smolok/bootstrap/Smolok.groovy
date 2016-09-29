@@ -26,8 +26,8 @@ class Smolok {
      */
     @Bean
     AMQPComponent amqp(
-            @Value('${amqp.host:localhost}') String host,
-            @Value('${amqp.port:5672}') int port) {
+            @Value('${EVENTBUS_SERVICE_HOST:localhost}') String host,
+            @Value('${EVENTBUS_SERVICE_PORT:5672}') int port) {
         amqpComponent("failover:(amqp://${host}:${port})")
     }
 

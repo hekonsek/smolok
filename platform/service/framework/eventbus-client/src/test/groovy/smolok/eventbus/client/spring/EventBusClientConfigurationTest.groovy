@@ -33,7 +33,7 @@ class EventBusClientConfigurationTest {
 
     @BeforeClass
     static void beforeClass() {
-        System.setProperty('amqp.port', "${findAvailableTcpPort()}")
+        System.setProperty('EVENTBUS_SERVICE_PORT', "${findAvailableTcpPort()}")
     }
 
     @Bean
