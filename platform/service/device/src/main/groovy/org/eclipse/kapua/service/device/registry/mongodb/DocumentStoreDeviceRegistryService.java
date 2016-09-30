@@ -1,6 +1,5 @@
 package org.eclipse.kapua.service.device.registry.mongodb;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.*;
@@ -8,16 +7,18 @@ import net.smolok.service.documentstore.api.DocumentStore;
 import net.smolok.service.documentstore.api.QueryBuilder;
 import org.eclipse.kapua.service.device.registry.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 public class DocumentStoreDeviceRegistryService implements DeviceRegistryService {
 
     private final ObjectMapper objectMapper = new ObjectMapper().
             configure(FAIL_ON_UNKNOWN_PROPERTIES, false).
-            setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            setSerializationInclusion(NON_NULL);
 
     private final DocumentStore documentStore;
 
@@ -50,7 +51,7 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         device.put("createdOn", new Date());
         device.put("lastEventOn", new Date());
 
-        documentStore.save(collection, objectMapper.convertValue(device, Map.class));
+        documentStore.save(tenantCollection(deviceCreator.getScopeId()), objectMapper.convertValue(device, Map.class));
 
         SimpleDevice result = new SimpleDevice();
         result.setScopeId(deviceCreator.getScopeId().getId());
@@ -60,7 +61,7 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public Device update(Device device) throws KapuaException {
-        List<Map<String, Object>> existingDevices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "kapuaid", device.getId().getId().longValue())));
+        List<Map<String, Object>> existingDevices = documentStore.find(tenantCollection(device.getScopeId()), new QueryBuilder(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "kapuaid", device.getId().getId().longValue())));
         if(existingDevices.isEmpty()) {
             return null;
         }
@@ -76,13 +77,13 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         Map<String, Object> value = (Map<String, Object>) existingDeviceMap.get("scopeId");
         existingDeviceMap.put("scopeId", ((BigInteger) value.get("id")).longValue());
 
-        documentStore.save(collection, existingDeviceMap);
+        documentStore.save(tenantCollection(device.getScopeId()), existingDeviceMap);
         return new SimpleDevice();
     }
 
     @Override
     public Device find(KapuaId scopeId, KapuaId entityId) throws KapuaException {
-        List<Map<String, Object>> devices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue())));
+        List<Map<String, Object>> devices = documentStore.find(tenantCollection(scopeId), new QueryBuilder(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue())));
         if (devices.isEmpty()) {
             return null;
         }
@@ -93,12 +94,12 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
     public DeviceListResult query(KapuaQuery<Device> query) throws KapuaException {
         if(query.getPredicate() instanceof AttributePredicate) {
             AttributePredicate attributePredicate = (AttributePredicate) query.getPredicate();
-            List<Map<String, Object>> devices = documentStore.find(collection, new QueryBuilder(ImmutableMap.of(attributePredicate.getAttributeName(), attributePredicate.getAttributeValue())));
+            List<Map<String, Object>> devices = documentStore.find(tenantCollection(query.getScopeId()), new QueryBuilder(ImmutableMap.of(attributePredicate.getAttributeName(), attributePredicate.getAttributeValue())));
             DeviceListResult result = new DeviceListResultImpl();
             devices.forEach(device -> result.add(mapToDevice(device)));
             return result;
         } else if(query instanceof DocumentStoreDeviceQuery) {
-            List<Map<String, Object>> devices = documentStore.find(collection, ((DocumentStoreDeviceQuery) query).queryBuilder());
+            List<Map<String, Object>> devices = documentStore.find(tenantCollection(query.getScopeId()), ((DocumentStoreDeviceQuery) query).queryBuilder());
             DeviceListResult result = new DeviceListResultImpl();
             devices.forEach(device -> result.add(mapToDevice(device)));
             return result;
@@ -114,12 +115,12 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public void delete(KapuaId scopeId, KapuaId deviceId) throws KapuaException {
-        devicesCollection().remove(deviceId(scopeId, deviceId));
+        devicesCollection(scopeId).remove(deviceId(scopeId, deviceId));
     }
 
     @Override
     public Device findByClientId(KapuaId scopeId, String clientId) throws KapuaException {
-        DBCursor devices = devicesCollection().find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "clientId", clientId)));
+        DBCursor devices = devicesCollection(scopeId).find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "clientId", clientId)));
         if (devices.hasNext()) {
             return dbObjectToDevice(devices.next());
         }
@@ -128,8 +129,12 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     // Helpers
 
-    private DBCollection devicesCollection() {
-        return mongo.getDB(db).getCollection(collection);
+    private String tenantCollection(KapuaId scopeId) {
+        return collection + "_" + scopeId.getId();
+    }
+
+    private DBCollection devicesCollection(KapuaId scopeId) {
+        return mongo.getDB(db).getCollection(tenantCollection(scopeId));
     }
 
     private DBObject deviceId(KapuaId scopeId, KapuaId entityId) {
