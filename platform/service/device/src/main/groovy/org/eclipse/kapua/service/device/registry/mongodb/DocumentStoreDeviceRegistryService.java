@@ -7,7 +7,6 @@ import net.smolok.service.documentstore.api.DocumentStore;
 import net.smolok.service.documentstore.api.QueryBuilder;
 import org.eclipse.kapua.service.device.registry.*;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -43,7 +42,7 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
     public Device create(DeviceCreator deviceCreator) throws KapuaException {
         long id = new Random().nextLong();
 
-        DBObject device = new BasicDBObject();
+        Map<String,Object> device = new HashMap<>();
         device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
         device.put("kapuaid", id);
         device.put("clientId", deviceCreator.getClientId());
@@ -115,7 +114,11 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public void delete(KapuaId scopeId, KapuaId deviceId) throws KapuaException {
-        devicesCollection(scopeId).remove(deviceId(scopeId, deviceId));
+        List<Map<String, Object>> devices = documentStore.find(tenantCollection(scopeId), new QueryBuilder(ImmutableMap.of("kapuaid", deviceId.getId().longValue())));
+        if (devices.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        documentStore.remove(tenantCollection(scopeId), devices.get(0).get("id").toString());
     }
 
     @Override
@@ -135,10 +138,6 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     private DBCollection devicesCollection(KapuaId scopeId) {
         return mongo.getDB(db).getCollection(tenantCollection(scopeId));
-    }
-
-    private DBObject deviceId(KapuaId scopeId, KapuaId entityId) {
-        return new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue()));
     }
 
     private Device dbObjectToDevice(DBObject dbObject) {
