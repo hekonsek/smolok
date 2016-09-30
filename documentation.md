@@ -12,6 +12,9 @@ Smolok is based on the top of the leading open source projects including [Apache
 
 ## High level overview
 
+This section describes the high-level summary of the features provided by Smolok. Read this if you are interested in
+learning what value can Smolok bring to you.
+
 ### Features summary
 
 Smolok platform provides the following features enabling Big Data for connected devices:
@@ -19,6 +22,7 @@ Smolok platform provides the following features enabling Big Data for connected 
 - command line administration tool
 - PaaS infrastructure
 - messaging infrastructure
+- application services
 
 #### Command line administration tool
 
@@ -34,6 +38,7 @@ a single shell command. The command line administration tool provides the follow
 
 Smolok provisions Kubernetes-based PaaS backend that handles container-based deployment of the cloud services. In particular
 PaaS provides:
+- easy deployment of the services
 - basic application nodes health-checks
 - restarting crashed and stalled nodes
 - services discovery
@@ -48,6 +53,11 @@ Smolok provisions and manages messaging infrastructure that can be used for the 
 - queue system
 - publish/subscribe notification infrastructure
 
+#### Application services
+
+Smolok provides out of the box backend services enabling IoT, Big Data and Machine Learning applications. For example:
+- device management service
+
 ### Common use cases
 
 #### Install command line tool
@@ -61,6 +71,27 @@ In order to install Smolok, you should have Docker and Maven installed and prese
 on Ubuntu execte the following command:
 
     curl -sSL https://get.docker.com/ | sh && apt-get install maven
+
+#### Checking status of the Smolok cloud
+
+So you have installed Smolok Cloud and you would like to check if everything went OK? Enter the `smolok cloud status`
+command then:
+
+    smolok cloud status
+
+The status command displays information about current state of the Smolok Cloud. In particular `eventbus.canSend` metric
+can tell you if the Smolok Event Bus is up and operational:
+
+    $ smolok cloud status
+    eventbus.canSend	true
+
+#### Starting device management service
+
+Now when you have your Smolok Cloud started, you probably would like to connect some device into it. Usually before you
+connect any device into your event bus, you would like to register it into a device management service. In order to
+start device management service, execute the following command:
+
+    smolok service-start device
 
 ## Command line tool
 
@@ -110,12 +141,22 @@ If there are issues with some components of Smolok, it will be reported to the s
     $ smolok cloud status
     eventbus.canSend	false	Warning!
 
-## Spark support
+### Services
+
+#### Starting device management service
+
+Now when you have your Smolok Cloud started, you probably would like to connect some device into it. Usually before you
+connect any device into your event bus, you would like to register it into a device management service. In order to
+start device management service, execute the following command:
+
+    smolok service-start device
+
+### Spark support
 
 Smolok comes with a first-class citizen support for Apache Spark. Spark is usually used to analyze data sent through
 Smolok and exchanged between devices.
 
-### Installing and starting standalone Apache Spark cluster
+#### Installing and starting standalone Apache Spark cluster
 
 In order to install and start standalone Apache Spark cluster (dockerized Spark master and worker nodes connected
 together) on your machine, execute the following command:
@@ -125,7 +166,7 @@ together) on your machine, execute the following command:
 This command ensures that cluster is installed and properly started - components of the cluster that are already started
 or installed, will be skipped from the process.
 
-#### Installing and starting master/worker node only
+##### Installing and starting master/worker node only
 
 You can also choose to start master or worker node only:
 
@@ -136,7 +177,7 @@ If you would like to connect worker node to a certain Spark cluster, use `--mast
 
     smolok spark start worker --master=spark://mysparkmaster.com:7077
 
-#### Setting up Spark node network
+##### Setting up Spark node network
 
 You can also use `--host` option to specify the hostname on which given Spark node should listen on
 (default is `localhost`):
@@ -156,7 +197,7 @@ You can also use `localIP` option for worker node:
 
     smolok spark start worker --host=myspark.com --localIP=192.168.1.2
 
-### Submitting job into Spark cluster
+#### Submitting job into Spark cluster
 
 In order to submit jar containing Spark job into the local Spark cluster, put your jar into `/var/smolok/spark/jobs`
 directory and execute the following command:
