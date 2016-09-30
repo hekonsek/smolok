@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 package net.smolok.service.device.api
-
-import com.google.common.collect.ImmutableMap;
-
 /**
  * Represents information about device registered in a cloud service.
  */
@@ -81,7 +78,7 @@ class Device {
     }
 
     void setProperties(Map<String, Object> properties) {
-        this.properties = ImmutableMap.copyOf(properties)
+        this.properties = new HashMap<>(properties)
     }
 
 }

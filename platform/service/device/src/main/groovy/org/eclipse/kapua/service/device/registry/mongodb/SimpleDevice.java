@@ -4,6 +4,8 @@ import org.eclipse.kapua.service.device.registry.*;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class SimpleDevice implements Device {
@@ -83,6 +85,10 @@ public class SimpleDevice implements Device {
     private Properties entityAttributes;
 
     private BigInteger preferredUserId;
+
+    // Smolok extensions
+
+    private Map<String, Object> properties = new HashMap<>();
 
     public String getDisplayName() {
         return displayName;
@@ -456,4 +462,11 @@ public class SimpleDevice implements Device {
         }
     }
 
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
 }

@@ -17,6 +17,7 @@
 package net.smolok.service.device.kapua.spring
 
 import net.smolok.service.device.api.Device
+import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,7 +35,7 @@ import static smolok.lib.common.Properties.setIntProperty
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = Smolok.class)
+@SpringBootTest(classes = Smolok)
 class KapuaDeviceServiceConfigurationTest {
 
     @Autowired
@@ -45,26 +46,27 @@ class KapuaDeviceServiceConfigurationTest {
         setIntProperty('spring.data.mongodb.port', findAvailableTcpPort())
     }
 
-    def clientId = uuid()
+    def deviceId = uuid()
+
+    @Before
+    void before() {
+        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
+    }
 
     // Tests
 
     @Test
     void shouldRegisterAndGetDevice() {
-        // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-
         // When
-        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        def device = eventBus.fromBus('device.get', deviceId, Device.class)
 
         // Then
-        assertThat(device.deviceId).isEqualTo('myDevice')
+        assertThat(device.deviceId).isEqualTo(deviceId)
     }
 
     @Test
     void doubleRegistrationShouldUpdate() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
         def countBeforeSecondRegistration = eventBus.fromBus('device.count', queryBuilder(), long.class)
 
         // When
@@ -119,10 +121,10 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldFindDevices() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
 
         // When
-        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
 
         // Then
         assertThat(devices.toList()).hasSize(1)
@@ -131,10 +133,10 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void foundDevicedShouldRememberKapuaId() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
 
         // When
-        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
 
         // Then
         assertThat(devices[0].properties.kapuaId).isNotNull()
@@ -143,10 +145,10 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void foundDevicedShouldRememberKapuaScopeId() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(clientId))
+        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
 
         // When
-        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: clientId]), Device[].class)
+        Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
 
         // Then
         assertThat(devices[0].properties.kapuaScopeId).isNotNull()
@@ -162,6 +164,21 @@ class KapuaDeviceServiceConfigurationTest {
 
         // Then
         assertThat(device.registrationDate).isNotNull()
+    }
+
+    @Test
+    void shouldUpdateDevice() {
+        // Given
+        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        device.properties.foo = 'bar'
+
+        // When
+        eventBus.toBusAndWait('device.update', device)
+
+        // Then
+        def updatedDevice = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        assertThat(updatedDevice.properties.foo).isEqualTo('bar')
     }
 
 }

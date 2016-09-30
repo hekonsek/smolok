@@ -115,6 +115,7 @@ class KapuaDeviceService implements DeviceService {
     private Device kapuaDeviceToDevice(KapuaDevice kapuaDevice) {
         def device = new Device()
         device.deviceId = kapuaDevice.clientId
+        device.properties = kapuaDevice.properties
         device.properties.kapuaScopeId = kapuaDevice.scopeId.id
         device.properties.kapuaId = kapuaDevice.id.id
 
@@ -127,8 +128,12 @@ class KapuaDeviceService implements DeviceService {
     private KapuaDevice deviceToKapuaDevice(Device device) {
         def kapuaDevice = new SimpleDevice()
         kapuaDevice.clientId = device.deviceId
+
         kapuaDevice.scopeId = device.properties.kapuaScopeId
         kapuaDevice.id = device.properties.kapuaId
+        kapuaDevice.properties = device.properties
+        kapuaDevice.properties.remove('kapuaScopeId')
+        kapuaDevice.properties.remove('kapuaId')
 
         kapuaDevice.createdOn = device.registrationDate
         kapuaDevice.lastEventOn = device.lastUpdate
