@@ -43,7 +43,6 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         long id = new Random().nextLong();
 
         Map<String,Object> device = new HashMap<>();
-        device.put("scopeId", deviceCreator.getScopeId().getId().longValue());
         device.put("kapuaid", id);
         device.put("clientId", deviceCreator.getClientId());
 
@@ -60,7 +59,7 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public Device update(Device device) throws KapuaException {
-        List<Map<String, Object>> existingDevices = documentStore.find(tenantCollection(device.getScopeId()), new QueryBuilder(ImmutableMap.of("scopeId", device.getScopeId().getId().longValue(), "kapuaid", device.getId().getId().longValue())));
+        List<Map<String, Object>> existingDevices = documentStore.find(tenantCollection(device.getScopeId()), new QueryBuilder(ImmutableMap.of("kapuaid", device.getId().getId().longValue())));
         if(existingDevices.isEmpty()) {
             return null;
         }
@@ -82,11 +81,11 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public Device find(KapuaId scopeId, KapuaId entityId) throws KapuaException {
-        List<Map<String, Object>> devices = documentStore.find(tenantCollection(scopeId), new QueryBuilder(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "kapuaid", entityId.getId().longValue())));
+        List<Map<String, Object>> devices = documentStore.find(tenantCollection(scopeId), new QueryBuilder(ImmutableMap.of("kapuaid", entityId.getId().longValue())));
         if (devices.isEmpty()) {
             return null;
         }
-        return mapToDevice(devices.get(0));
+        return mapToDevice(scopeId, devices.get(0));
     }
 
     @Override
@@ -95,12 +94,12 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
             AttributePredicate attributePredicate = (AttributePredicate) query.getPredicate();
             List<Map<String, Object>> devices = documentStore.find(tenantCollection(query.getScopeId()), new QueryBuilder(ImmutableMap.of(attributePredicate.getAttributeName(), attributePredicate.getAttributeValue())));
             DeviceListResult result = new DeviceListResultImpl();
-            devices.forEach(device -> result.add(mapToDevice(device)));
+            devices.forEach(device -> result.add(mapToDevice(query.getScopeId(), device)));
             return result;
         } else if(query instanceof DocumentStoreDeviceQuery) {
             List<Map<String, Object>> devices = documentStore.find(tenantCollection(query.getScopeId()), ((DocumentStoreDeviceQuery) query).queryBuilder());
             DeviceListResult result = new DeviceListResultImpl();
-            devices.forEach(device -> result.add(mapToDevice(device)));
+            devices.forEach(device -> result.add(mapToDevice(query.getScopeId(), device)));
             return result;
         } else {
             throw new IllegalArgumentException();
@@ -123,9 +122,9 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
 
     @Override
     public Device findByClientId(KapuaId scopeId, String clientId) throws KapuaException {
-        DBCursor devices = devicesCollection(scopeId).find(new BasicDBObject(ImmutableMap.of("scopeId", scopeId.getId().longValue(), "clientId", clientId)));
+        DBCursor devices = devicesCollection(scopeId).find(new BasicDBObject(ImmutableMap.of("clientId", clientId)));
         if (devices.hasNext()) {
-            return dbObjectToDevice(devices.next());
+            return dbObjectToDevice(scopeId, devices.next());
         }
         return null;
     }
@@ -140,15 +139,16 @@ public class DocumentStoreDeviceRegistryService implements DeviceRegistryService
         return mongo.getDB(db).getCollection(tenantCollection(scopeId));
     }
 
-    private Device dbObjectToDevice(DBObject dbObject) {
-        return mapToDevice(dbObject.toMap());
+    private Device dbObjectToDevice(KapuaId scopeId, DBObject dbObject) {
+        return mapToDevice(scopeId, dbObject.toMap());
     }
 
-    private Device mapToDevice(Map<String, Object> dbObject) {
+    private Device mapToDevice(KapuaId scopeId, Map<String, Object> dbObject) {
         Map<String, Object> deviceMap = new HashMap<>();
         deviceMap.putAll(dbObject);
         deviceMap.put("id", deviceMap.get("kapuaid"));
         deviceMap.remove("kapuaid");
+        deviceMap.put("scopeId", scopeId.getId());
         return objectMapper.convertValue(deviceMap, SimpleDevice.class);
     }
 
