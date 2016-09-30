@@ -29,7 +29,7 @@ class EventBusConfiguration {
 
     @Bean(initMethod = 'start', destroyMethod = 'stop')
     BrokerService broker(
-            @Value('${EVENTBUS_SERVICE_HOST:0.0.0.0}') String host,
+            @Value('${EVENTBUS_HOST:0.0.0.0}') String host,
             @Value('${EVENTBUS_SERVICE_PORT:5672}') int port,
             @Value('${EVENTBUS_PERSISTENCE:false}') boolean persistence) {
         def broker = new BrokerService()
