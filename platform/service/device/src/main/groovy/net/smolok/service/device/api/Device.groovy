@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 package net.smolok.service.device.api
+
+import org.apache.commons.lang3.Validate
+
 /**
  * Represents information about device registered in a cloud service.
  */
@@ -30,20 +33,18 @@ class Device {
 
     // Constructors
 
-    public Device() {
+    Device() {
     }
 
-    public Device(String deviceId, Date registrationDate, Date lastUpdate, Map<String, Object> properties) {
-        this.deviceId = deviceId;
+    Device(String deviceId, Date registrationDate, Date lastUpdate, Map<String, Object> properties) {
+        this.deviceId = Validate.notBlank(deviceId, 'Device ID cannot be blank.')
         this.registrationDate = registrationDate;
         this.lastUpdate = lastUpdate;
         this.properties = setProperties(properties)
     }
 
-    public static Device minimalDevice(String deviceId) {
-        Device device = new Device();
-        device.setDeviceId(deviceId);
-        return device;
+    static Device device(String deviceId) {
+        new Device(deviceId: deviceId)
     }
 
     // Getters and setters

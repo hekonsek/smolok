@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 
-import static net.smolok.service.device.api.Device.minimalDevice
+import static net.smolok.service.device.api.Device.device
 import static net.smolok.service.documentstore.api.QueryBuilder.queryBuilder
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
@@ -50,7 +50,7 @@ class KapuaDeviceServiceConfigurationTest {
 
     @Before
     void before() {
-        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
+        eventBus.toBusAndWait('device.register', device(deviceId))
     }
 
     // Tests
@@ -70,7 +70,7 @@ class KapuaDeviceServiceConfigurationTest {
         def countBeforeSecondRegistration = eventBus.fromBus('device.count', queryBuilder(), long.class)
 
         // When
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        eventBus.toBusAndWait('device.register', device('myDevice'))
         def countAfterSecondRegistration = eventBus.fromBus('device.count', queryBuilder(), long.class)
 
         // Then
@@ -80,7 +80,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldGenerateId() {
         // When
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        eventBus.toBusAndWait('device.register', device('myDevice'))
 
         // Then
         def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
@@ -89,14 +89,11 @@ class KapuaDeviceServiceConfigurationTest {
 
     @Test
     void shouldDeregisterDevice() {
-        // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
-
         // When
-        eventBus.toBusAndWait('device.deregister', 'myDevice')
+        eventBus.toBusAndWait('device.deregister', deviceId)
 
         // Then
-        def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
+        def device = eventBus.fromBus('device.get', deviceId, Device.class)
         assertThat(device).isNull()
     }
 
@@ -109,7 +106,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldCountDevices() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('countDevice'))
+        eventBus.toBusAndWait('device.register', device('countDevice'))
 
         // When
         def devices = eventBus.fromBus('device.count', queryBuilder([deviceId: 'countDevice']), long.class)
@@ -121,7 +118,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldFindDevices() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
+        eventBus.toBusAndWait('device.register', device(deviceId))
 
         // When
         Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
@@ -133,7 +130,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void foundDevicedShouldRememberKapuaId() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
+        eventBus.toBusAndWait('device.register', device(deviceId))
 
         // When
         Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
@@ -145,7 +142,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void foundDevicedShouldRememberKapuaScopeId() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice(deviceId))
+        eventBus.toBusAndWait('device.register', device(deviceId))
 
         // When
         Device[] devices = eventBus.fromBus('device.find', queryBuilder([deviceId: deviceId]), Device[].class)
@@ -157,7 +154,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldLoadRegistrationDateFromKapua() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        eventBus.toBusAndWait('device.register', device('myDevice'))
 
         // When
         def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
@@ -169,7 +166,7 @@ class KapuaDeviceServiceConfigurationTest {
     @Test
     void shouldUpdateDevice() {
         // Given
-        eventBus.toBusAndWait('device.register', minimalDevice('myDevice'))
+        eventBus.toBusAndWait('device.register', device('myDevice'))
         def device = eventBus.fromBus('device.get', 'myDevice', Device.class)
         device.properties.foo = 'bar'
 
