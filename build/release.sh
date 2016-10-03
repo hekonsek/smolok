@@ -17,10 +17,18 @@
 
 set -e
 
+OLD_VERSION="${1}"
+NEW_VERSION="${2}"
+
+if [ -z "${OLD_VERSION}" ] || [ -z "${NEW_VERSION}" ]; then
+    echo 'Please specify the latest and the new version of Smolok. For example:'
+    echo
+    echo '  build/release.sh 0.0.5 0.0.6'
+    exit
+fi
+
 mvn -Darguments='-Dmaven.test.skip=true' release:prepare release:perform
 
-OLD_VERSION=0.0.5
-NEW_VERSION=0.0.6
 
 sed -i -e "s/${OLD_VERSION}/${NEW_VERSION}/g" readme.md platform/cmd/src/main/bash/cmd
 
