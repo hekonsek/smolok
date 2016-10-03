@@ -5,11 +5,13 @@ import org.apache.spark.ml.classification.LogisticRegressionModel
 import org.apache.spark.ml.feature.LabeledPoint
 import org.apache.spark.ml.linalg.DenseVector
 import org.apache.spark.ml.linalg.Vectors
-import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.Row
 import org.apache.spark.sql.SparkSession
 
+import static org.slf4j.LoggerFactory.getLogger
+
 class PredictionEngine {
+
+    private static final LOG = getLogger(PredictionEngine.class)
 
     private final SparkSession spark
 
@@ -22,14 +24,17 @@ class PredictionEngine {
     }
 
     void train(List<TrainingFeatureVector> trainingData) {
-        def dataFrame = spark.createDataFrame(trainingData.collect{ new LabeledPoint(it.targetFeature ? 1 : 0, Vectors.dense(it.featureVector)) }, LabeledPoint.class)
+        LOG.debug('About to train model using training data: {}', trainingData)
+
+        def vectors = trainingData.collect { new LabeledPoint(it.targetFeature ? 1 : 0, Vectors.dense(it.featureVector)) }
+        def dataFrame = spark.createDataFrame(vectors, LabeledPoint.class)
         model = logisticRegression.train(dataFrame)
     }
 
     List<Prediction> predict(List<IdentifiableFeatureVector> featureVectors) {
-        Dataset<Row> test = spark.createDataFrame(featureVectors.collect{ new LabeledPoint(1, Vectors.dense(it.featureVector)) }, LabeledPoint.class);
-        Dataset<Row> results = model.transform(test);
-        Dataset<Row> rows = results.select("features", "prediction", "probability")
+        def test = spark.createDataFrame(featureVectors.collect{ new LabeledPoint(1, Vectors.dense(it.featureVector)) }, LabeledPoint.class);
+        def results = model.transform(test)
+        def rows = results.select("features", "prediction", "probability")
         rows.collectAsList().collect {
             def sourceVector = ((DenseVector) it.get(0)).values()
             def id = featureVectors.find{ it.featureVector == sourceVector }.id
