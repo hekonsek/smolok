@@ -65,12 +65,19 @@ Smolok provides out of the box backend services enabling IoT, Big Data and Machi
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
 Smolok command line tool, execute the following command:
 
-    bash <(curl -sL https://goo.gl/cLVVCF)
+    bash <(curl -sL https://goo.gl/fn110N)
 
 In order to install Smolok, you should have Docker and Maven installed and present in your classpath. To install those
 on Ubuntu execte the following command:
 
     curl -sSL https://get.docker.com/ | sh && apt-get install maven
+
+To install Docker and Maven on CentOS execute the following command:
+
+    curl -sSL https://get.docker.com/ | sh && \
+      wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo \
+      -O /etc/yum.repos.d/epel-apache-maven.repo && \
+      yum install apache-maven
 
 #### Checking status of the Smolok cloud
 
@@ -98,7 +105,7 @@ start device management service, execute the following command:
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
 Smolok command line tool, execute the following command:
 
-    bash <(curl -sL https://goo.gl/cLVVCF)
+    bash <(curl -sL https://goo.gl/fn110N)
 
 In order to install Smolok, you should have Docker and Maven installed and present in your classpath. To install those
 on Ubuntu execte the following command:
