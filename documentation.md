@@ -74,7 +74,7 @@ on Ubuntu execte the following command:
 
 To install Docker and Maven on CentOS execute the following command:
 
-    curl -sSL https://get.docker.com/ | sh && \
+    curl -sSL https://get.docker.com/ | sh && sudo systemctl enable docker.service && sudo systemctl start docker && \
       wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo \
       -O /etc/yum.repos.d/epel-apache-maven.repo && \
       yum install apache-maven
@@ -111,6 +111,13 @@ In order to install Smolok, you should have Docker and Maven installed and prese
 on Ubuntu execte the following command:
 
     curl -sSL https://get.docker.com/ | sh && apt-get install maven
+
+To install Docker and Maven on CentOS execute the following command:
+
+    curl -sSL https://get.docker.com/ | sh && sudo systemctl enable docker.service && sudo systemctl start docker && \
+      wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo \
+      -O /etc/yum.repos.d/epel-apache-maven.repo && \
+      yum install apache-maven
 
 ### Enforcing Smolok version
 
