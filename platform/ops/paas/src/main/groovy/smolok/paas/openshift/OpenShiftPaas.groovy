@@ -125,11 +125,7 @@ class OpenShiftPaas implements Paas {
                 if (!isProvisioned) {
                     LOG.debug('OpenShift is not provisioned. Started provisioning...')
                     await('login prompt is displayed').atMost(60, SECONDS).until(condition { loginPromptIsDisplayed() })
-                    await().atMost(60, SECONDS).until({
-                        def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
-                        !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
-                                !loginOutput.startsWith('error: dial tcp')
-                    } as Callable<Boolean>)
+                    await('OpenShift server is ready to login').atMost(60, SECONDS).until(condition { openShiftServerIsReadyToLogin() })
                     oc('new-project smolok')
                     await().atMost(60, SECONDS).until({ isOsStarted() } as Callable<Boolean>)
                     def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
@@ -205,6 +201,12 @@ class OpenShiftPaas implements Paas {
     private loginPromptIsDisplayed() {
         def statusOutput = oc(OC_STATUS).first()
         statusOutput.contains('You must be logged in to the server') || statusOutput.contains('Missing or incomplete configuration info')
+    }
+
+    private openShiftServerIsReadyToLogin() {
+        def loginOutput = oc('login https://localhost:8443 -u admin -p admin --insecure-skip-tls-verify=true').first()
+        !loginOutput.startsWith('Error from server: User "admin" cannot get users at the cluster scope') &&
+                !loginOutput.startsWith('error: dial tcp')
     }
 
     private isOsStarted() {
