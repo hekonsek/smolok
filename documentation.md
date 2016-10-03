@@ -60,6 +60,8 @@ Smolok provides out of the box backend services enabling IoT, Big Data and Machi
 
 ### Common use cases
 
+This section briefly describes common use cases of Smolok platform.
+
 #### Install command line tool
 
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
