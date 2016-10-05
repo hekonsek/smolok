@@ -10,7 +10,11 @@ import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
  */
 class CommandDispatcher {
 
+    // Logger
+
     private final static LOG = getLogger(CommandDispatcher.class)
+
+    // Collaborators
 
     private final OutputSink outputSink
 
@@ -26,6 +30,7 @@ class CommandDispatcher {
     // Operations
 
     void handleCommand(String... command) {
+        LOG.debug('Executing command: {}', command.toList())
         if (command.length == 0) {
             outputSink.out('Cannot execute empty command. Use --help option to list available commands.')
             return
