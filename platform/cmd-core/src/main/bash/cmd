@@ -22,7 +22,9 @@ fi
 mkdir -p ~/.smolok/logs
 
 if [ ! -e ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar ] || [ ! -z `echo ${SMOLOK_VERSION} | grep SNAPSHOT` ]; then
+  echo 'Downloading Smolok command line tool...'
   mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=net.smolok:smolok-cmd:${SMOLOK_VERSION}:jar:fat -DremoteRepositories=http://repo1.maven.apache.org/maven2,https://oss.sonatype.org/content/repositories/snapshots >> ~/.smolok/logs/cmd 2>&1
+    echo 'Downloaded Smolok command line tool.'
 fi
 
 java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar "$@"
