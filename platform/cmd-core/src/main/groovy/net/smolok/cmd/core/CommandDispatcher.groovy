@@ -27,7 +27,7 @@ class CommandDispatcher {
 
     void handleCommand(String... command) {
         if (command.length == 0) {
-            outputSink.out('Cannot execute empty command.')
+            outputSink.out('Cannot execute empty command. Use --help option to list available commands.')
             return
         }
 
