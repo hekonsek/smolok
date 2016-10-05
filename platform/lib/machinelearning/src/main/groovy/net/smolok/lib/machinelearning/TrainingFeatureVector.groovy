@@ -1,10 +1,10 @@
 package net.smolok.lib.machinelearning
 
-class TrainingFeatureVector extends FeatureVector {
+abstract class TrainingFeatureVector<T> extends FeatureVector {
 
-    boolean targetFeature
+    T targetFeature
 
-    TrainingFeatureVector(double[] featureVector, boolean targetFeature) {
+    TrainingFeatureVector(T targetFeature, double ... featureVector) {
         super(featureVector)
         this.targetFeature = targetFeature
     }
@@ -12,19 +12,11 @@ class TrainingFeatureVector extends FeatureVector {
     TrainingFeatureVector() {
     }
 
-    static TrainingFeatureVector matching(double[] featureVector) {
-        new TrainingFeatureVector(featureVector, true)
-    }
-
-    static TrainingFeatureVector notMatching(double[] featureVector) {
-        new TrainingFeatureVector(featureVector, false)
-    }
-
-    boolean getTargetFeature() {
+    T getTargetFeature() {
         return targetFeature
     }
 
-    void setTargetFeature(boolean targetFeature) {
+    void setTargetFeature(T targetFeature) {
         this.targetFeature = targetFeature
     }
 

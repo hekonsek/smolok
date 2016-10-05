@@ -7,11 +7,11 @@ class Prediction {
 
     private final String vectorId
 
-    private final boolean result
+    private final double result
 
     private final int confidence
 
-    Prediction(String vectorId, boolean result, int confidence) {
+    Prediction(String vectorId, double result, int confidence) {
         this.vectorId = vectorId
         this.result = result
         this.confidence = confidence
@@ -21,8 +21,12 @@ class Prediction {
         return vectorId
     }
 
-    boolean result() {
-        return result
+    double result() {
+        result
+    }
+
+    boolean binaryResult() {
+        result != 0.0d
     }
 
     int confidence() {
