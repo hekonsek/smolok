@@ -195,7 +195,7 @@ class CmdConfigurationTest {
         commandHandler.handleCommand()
 
         // Then
-        assertThat(outputSink.output().first()).matches('Cannot execute empty command.')
+        assertThat(outputSink.output().first()).matches(/Cannot execute empty command.+/)
     }
 
     // Help tests
