@@ -2,7 +2,7 @@ package net.smolok.lib.machinelearning
 
 class FeatureVector {
 
-    double[] featureVector
+    private double[] featureVector
 
     FeatureVector(double... featureVector) {
         this.featureVector = featureVector
@@ -11,12 +11,8 @@ class FeatureVector {
     FeatureVector() {
     }
 
-    double[] getFeatureVector() {
-        return featureVector
-    }
-
-    void setFeatureVector(double[] featureVector) {
-        this.featureVector = featureVector
+    double[] featureVector() {
+        featureVector
     }
 
 }

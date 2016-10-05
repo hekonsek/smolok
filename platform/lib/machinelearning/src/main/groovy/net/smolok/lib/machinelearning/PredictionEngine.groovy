@@ -34,7 +34,7 @@ class PredictionEngine {
             if (targetFeature instanceof Boolean) {
                 targetFeature = targetFeature ? 1 : 0
             }
-            new LabeledPoint((double) targetFeature, Vectors.dense(it.featureVector))
+            new LabeledPoint((double) targetFeature, Vectors.dense(it.featureVector()))
         }
         def dataFrame = spark.createDataFrame(vectors, LabeledPoint.class)
 
@@ -65,14 +65,14 @@ class PredictionEngine {
 
     List<Prediction> predict(List<IdentifiableFeatureVector> featureVectors) {
         def test = spark.createDataFrame(featureVectors.collect {
-            new LabeledPoint(1, Vectors.dense(it.featureVector))
+            new LabeledPoint(1, Vectors.dense(it.featureVector()))
         }, LabeledPoint.class);
         def results = model.transform(test)
         def rows = multiclass ? results.select("features", "prediction") :  results.select("features", "prediction", "probability")
 
         rows.collectAsList().collect {
             def sourceVector = ((DenseVector) it.get(0)).values()
-            def id = featureVectors.find { it.featureVector == sourceVector }.id
+            def id = featureVectors.find { it.featureVector() == sourceVector }.id
             def prediction = (double) it.get(1)
             def confidence = multiclass ? -1 : (((DenseVector) it.get(2)).values()[1] * 100d) as int
             new Prediction(id, prediction, confidence)
