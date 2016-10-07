@@ -1,5 +1,8 @@
 # Smolok - Big Data for connected devices
 
+[![Version](https://img.shields.io/badge/smolok-0.0.6-blue.svg)](https://github.com/smolok/smolok)
+[![Build](https://api.travis-ci.org/smolok/smolok.svg)](https://travis-ci.org/smolok/smolok/)
+
 Smolok is a big data platform for connected devices, where *device* can be a piece of the IoT (Internet Of Things) hardware,
 smart phone, tablet, web browser or external IT system.
 
@@ -11,7 +14,5 @@ Smolok is based on the top of the leading open source projects including [Apache
 [Eclipse IoT stack](http://iot.eclipse.org) (particularly on the [Eclipse Kapua](https://projects.eclipse.org/proposals/eclipse-kapua) project).
 
 ## Documentation
-
-[![Version](https://img.shields.io/badge/smolok-0.0.6-blue.svg)](https://github.com/smolok/smolok)
 
 Documentation of the project can be found [here](documentation.md).
