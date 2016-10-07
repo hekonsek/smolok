@@ -126,6 +126,11 @@ To install Docker and Maven on CentOS 7.2 execute the following command:
       -O /etc/yum.repos.d/epel-apache-maven.repo && \
       yum install apache-maven
 
+In order to verify that command line tool has been properly installed, execute the following command:
+
+    $ smolok --help
+    Welcome to Smolok v0.0.6.
+
 ### Enforcing Smolok version
 
 You can tell Spark command line tool to use given Smolok version by setting `SMOLOK_VERSION` environment variable.
