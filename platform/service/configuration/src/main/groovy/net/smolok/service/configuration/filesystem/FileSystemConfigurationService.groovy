@@ -12,7 +12,7 @@ class FileSystemConfigurationService implements ConfigurationService {
     FileSystemConfigurationService(File root) {
         this.root = root
 
-        Validate.isTrue(root.parentFile.mkdirs(), "Cannot create parent directory for configuration: ${root.parent}")
+        Validate.isTrue(root.parentFile.exists() || root.parentFile.mkdirs(), "Cannot create parent directory for configuration: ${root.parent}")
         root.createNewFile()
     }
 
