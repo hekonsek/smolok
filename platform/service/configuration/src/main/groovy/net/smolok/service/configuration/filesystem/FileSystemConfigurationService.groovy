@@ -2,6 +2,8 @@ package net.smolok.service.configuration.filesystem
 
 import net.smolok.service.configuration.api.ConfigurationService
 
+import static smolok.lib.common.Lang.nullOr
+
 class FileSystemConfigurationService implements ConfigurationService {
 
     private final File root
@@ -9,22 +11,32 @@ class FileSystemConfigurationService implements ConfigurationService {
     FileSystemConfigurationService(File root) {
         this.root = root
 
+        root.parentFile.mkdirs()
         root.createNewFile()
     }
 
     @Override
     String get(String key) {
-        def properties = new Properties()
-        properties.load(root.newInputStream())
-        properties.getProperty(key)
+        synchronized (this) {
+            def propertiesInputStream = root.newInputStream()
+            try {
+                def properties = new Properties()
+                properties.load(propertiesInputStream)
+                properties.getProperty(key)
+            } finally {
+                nullOr(propertiesInputStream) { it.close() }
+            }
+        }
     }
 
     @Override
     void put(String key, String value) {
-        def properties = new Properties()
-        properties.load(root.newInputStream())
-        properties.setProperty(key, value)
-        properties.store(root.newOutputStream(), '')
+        synchronized (this) {
+            def properties = new Properties()
+            properties.load(root.newInputStream())
+            properties.setProperty(key, value)
+            properties.store(root.newOutputStream(), '')
+        }
     }
 
 }
