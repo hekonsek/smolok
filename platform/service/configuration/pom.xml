@@ -17,18 +17,17 @@
     </properties>
 
     <dependencies>
-        <!-- Smolok dependencies -->
+        <!-- Internal dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-lib-common</artifactId>
+            <artifactId>smolok-bootstrap</artifactId>
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
         </dependency>
 
-        <!-- Non-Smolok dependencies -->
+        <!-- External dependencies -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -50,11 +49,6 @@
         </dependency>
 
         <!-- Smolok testing dependencies -->
-        <dependency>
-            <groupId>net.smolok</groupId>
-            <artifactId>smolok-bootstrap</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-eventbus</artifactId>
