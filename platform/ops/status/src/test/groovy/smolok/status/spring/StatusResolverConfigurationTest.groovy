@@ -19,8 +19,8 @@ import static smolok.lib.process.Command.cmd
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = [Smolok.class, StatusResolverConfigurationTest.class])
+@RunWith(SpringRunner)
+@SpringBootTest(classes = [Smolok, StatusResolverConfigurationTest])
 class StatusResolverConfigurationTest {
 
     // Tests subject
