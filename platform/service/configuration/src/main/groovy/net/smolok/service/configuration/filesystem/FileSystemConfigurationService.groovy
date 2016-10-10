@@ -1,6 +1,7 @@
 package net.smolok.service.configuration.filesystem
 
 import net.smolok.service.configuration.api.ConfigurationService
+import org.apache.commons.lang3.Validate
 
 import static smolok.lib.common.Lang.nullOr
 
@@ -11,7 +12,7 @@ class FileSystemConfigurationService implements ConfigurationService {
     FileSystemConfigurationService(File root) {
         this.root = root
 
-        root.parentFile.mkdirs()
+        Validate.isTrue(root.parentFile.mkdirs(), "Cannot create parent directory for configuration: ${root.parent}")
         root.createNewFile()
     }
 
