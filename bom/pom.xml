@@ -182,6 +182,12 @@
                 <artifactId>jts-core</artifactId>
                 <version>${jts.version}</version>
             </dependency>
+            <!-- Camel AMQP pulls netty-all, we need to be sure that it is compatible with our version used by Vert.x -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-proton</artifactId>
