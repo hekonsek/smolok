@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
 import smolok.paas.Paas
+import smolok.paas.openshift.OpenShiftPaas
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.MINUTES
@@ -37,7 +38,7 @@ class OpenShiftPaasConfigurationTest {
     // Test subject fixtures
 
     @Autowired
-    Paas paas
+    OpenShiftPaas paas
 
     @Before
     void before() {
@@ -82,6 +83,13 @@ class OpenShiftPaasConfigurationTest {
         // Then
         def eventBusService = paas.services().find { it.name == 'eventbus' }
         assertThat(eventBusService).isNotNull()
+    }
+
+    @Test
+    void shouldStartConfigurationService() {
+        // Then
+        def configurationService = paas.oc('get pod').find{ it.contains('service-configuration') && it.contains('Running') }
+        assertThat(configurationService).isNotNull()
     }
 
     @Test

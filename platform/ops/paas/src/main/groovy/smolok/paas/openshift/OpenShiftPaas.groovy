@@ -131,6 +131,7 @@ class OpenShiftPaas implements Paas {
                     def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                     Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                     oc("new-app smolok/eventbus:${smolokVersion.get()}")
+                    oc("new-app smolok/service-configuration:${smolokVersion.get()}")
                 }
                 LOG.debug('Waiting for the event bus to start...')
                 await().atMost(3, MINUTES).until({ isStarted() } as Callable<Boolean>)
@@ -213,7 +214,7 @@ class OpenShiftPaas implements Paas {
         oc(OC_STATUS).first().startsWith('In project ')
     }
 
-    private List<String> oc(String command) {
+    List<String> oc(String command) {
         processManager.execute(cmd("${ocPath} ${command}"))
     }
 
