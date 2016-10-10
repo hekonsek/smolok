@@ -132,6 +132,7 @@ class OpenShiftPaas implements Paas {
                     Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                     oc("new-app smolok/eventbus:${smolokVersion.get()}")
                     oc("new-app smolok/service-configuration:${smolokVersion.get()}")
+                    oc('volume rc/service-configuration-1 --add --name=smolok --mount-path=/var/smolok')
                 }
                 LOG.debug('Waiting for the event bus to start...')
                 await().atMost(3, MINUTES).until({ isStarted() } as Callable<Boolean>)
