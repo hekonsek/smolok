@@ -16,6 +16,7 @@
  */
 package smolok.paas.openshift.spring
 
+import com.jayway.awaitility.Awaitility
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
+import smolok.lib.common.Awaitilities
 import smolok.paas.Paas
 import smolok.paas.openshift.OpenShiftPaas
 
@@ -88,8 +90,9 @@ class OpenShiftPaasConfigurationTest {
     @Test
     void shouldStartConfigurationService() {
         // Then
-        def configurationService = paas.oc('get pod').find{ it.contains('service-configuration') && it.contains('Running') }
-        assertThat(configurationService).isNotNull()
+        await().atMost(1, MINUTES).until condition {
+            paas.oc('get pod').find{ it.contains('service-configuration') && it.contains('Running') } != null
+        }
     }
 
     @Test
