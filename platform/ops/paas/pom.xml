@@ -10,7 +10,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-paas</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
 
     <licenses>
         <license>
@@ -36,26 +36,24 @@
             <artifactId>awaitility</artifactId>
         </dependency>
 
+        <!-- Optional Spring Boot runtime -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Internal testing dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- External testing dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
