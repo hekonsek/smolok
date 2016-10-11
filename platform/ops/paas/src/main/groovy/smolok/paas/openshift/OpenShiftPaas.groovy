@@ -19,7 +19,6 @@ package smolok.paas.openshift
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
-import smolok.lib.common.Lang
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
 import smolok.paas.ImageLocatorResolver
@@ -127,7 +126,7 @@ class OpenShiftPaas implements Paas {
                     await('login prompt is displayed').atMost(60, SECONDS).until(condition { loginPromptIsDisplayed() })
                     await('OpenShift server is ready to login').atMost(60, SECONDS).until(condition { openShiftServerIsReadyToLogin() })
                     oc('new-project smolok')
-                    await().atMost(60, SECONDS).until({ isOsStarted() } as Callable<Boolean>)
+                    await('OpenShift project has been set.').atMost(60, SECONDS).until(condition { isProjectSet() })
                     def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                     Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                     oc("new-app smolok/eventbus:${smolokVersion.get()}")
@@ -211,7 +210,7 @@ class OpenShiftPaas implements Paas {
                 !loginOutput.startsWith('error: dial tcp')
     }
 
-    private isOsStarted() {
+    private isProjectSet() {
         oc(OC_STATUS).first().startsWith('In project ')
     }
 
