@@ -10,7 +10,14 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-docker-spark-base</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <properties>
         <image.target>spark-base</image.target>
