@@ -22,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class BaseCommandTest {
 
+    def output = new InMemoryOutputSink()
+
     def command = new TestCommand()
 
     // Tests
@@ -60,6 +62,11 @@ class BaseCommandTest {
     void shouldRequestHelp() {
         def helpRequested = command.helpRequested('this', 'is', 'my', 'command', '--help')
         assertThat(helpRequested).isTrue()
+    }
+
+    @Test(expected = IllegalArgumentException)
+    void shouldDetectUnsupportedOption() {
+        command.handle(output, 'this', 'is', 'my', 'command', '--someOption')
     }
 
 }

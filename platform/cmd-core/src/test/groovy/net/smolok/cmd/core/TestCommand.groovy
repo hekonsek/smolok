@@ -24,7 +24,12 @@ class TestCommand extends BaseCommand {
 
     @Override
     void handle(OutputSink outputSink, String... command) {
+        validateOptions(command)
+    }
 
+    @Override
+    Optional<List<String>> supportedOptions() {
+        Optional.of([])
     }
 
     @Override

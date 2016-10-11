@@ -59,6 +59,21 @@ abstract class BaseCommand implements Command {
         'No help available for the command.'
     }
 
+    @Override
+    Optional<List<String>> supportedOptions() {
+        Optional.empty()
+    }
+
+    protected validateOptions(String[] command) {
+        if(supportedOptions().present) {
+            def optionsPassed = command.findAll{ it.startsWith('--') }.collect{ it.substring(2) }
+            optionsPassed.removeAll(supportedOptions().get())
+            if(!optionsPassed.isEmpty()) {
+                throw new IllegalArgumentException("Unsupported options used: ${optionsPassed.join(' ')}")
+            }
+        }
+    }
+
     protected String option(String[] command, String optionName, String defaultValue) {
         def optionFound = command.find{ it.startsWith("--${optionName}=") }
         optionFound != null ? optionFound.replaceFirst(/--${optionName}=/, '') : defaultValue

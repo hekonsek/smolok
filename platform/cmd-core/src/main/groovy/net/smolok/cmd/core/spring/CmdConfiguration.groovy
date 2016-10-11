@@ -1,5 +1,6 @@
 package net.smolok.cmd.core.spring
 
+import net.smolok.cmd.commands.CloudResetCommand
 import net.smolok.cmd.commands.ServiceStartCommand
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
@@ -46,6 +47,11 @@ class CmdConfiguration {
     @Bean
     CloudStartCommand cloudStartCommand(Paas paas) {
         new CloudStartCommand(paas)
+    }
+
+    @Bean
+    CloudResetCommand cloudResetCommand(Paas paas) {
+        new CloudResetCommand(paas)
     }
 
     @Bean

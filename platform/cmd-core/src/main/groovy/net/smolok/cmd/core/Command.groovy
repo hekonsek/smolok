@@ -22,4 +22,6 @@ interface Command {
 
     String help()
 
+    Optional<List<String>> supportedOptions()
+
 }

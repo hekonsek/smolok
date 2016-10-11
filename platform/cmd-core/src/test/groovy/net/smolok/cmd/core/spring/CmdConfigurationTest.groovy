@@ -135,6 +135,15 @@ class CmdConfigurationTest {
         assertThat(eventBusStatus).startsWith("${EVENTBUS_CAN_SEND_METRIC_KEY}\t${true}")
     }
 
+    @Test
+    void cloudResetShouldNotAcceptOptions() {
+        // When
+        commandHandler.handleCommand('cloud', 'reset', '--someOption')
+
+        // Then
+        assertThat(outputSink.output().first()).contains('Unsupported options used')
+    }
+
     // "smolok sdcard install-raspbian" tests
 
     @Test
