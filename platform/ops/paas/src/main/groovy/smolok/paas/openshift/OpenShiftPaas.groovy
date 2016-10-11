@@ -16,6 +16,7 @@
  */
 package smolok.paas.openshift
 
+import com.jayway.awaitility.core.ConditionTimeoutException
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
@@ -125,8 +126,13 @@ class OpenShiftPaas implements Paas {
                     LOG.debug('OpenShift is not provisioned. Started provisioning...')
                     await('login prompt is displayed').atMost(60, SECONDS).until(condition { loginPromptIsDisplayed() })
                     await('OpenShift server is ready to login').atMost(60, SECONDS).until(condition { openShiftServerIsReadyToLogin() })
-                    oc('new-project smolok')
-                    await('OpenShift project has been set.').atMost(60, SECONDS).until(condition { isProjectSet() })
+                    def newProjectOutput
+                    try {
+                        newProjectOutput = oc('new-project smolok')
+                        await('OpenShift project has been set.').atMost(60, SECONDS).until(condition { isProjectSet() })
+                    } catch (ConditionTimeoutException e) {
+                        new RuntimeException("Cannot create new project. Output: ${newProjectOutput}", e)
+                    }
                     def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
                     Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
                     oc("new-app smolok/eventbus:${smolokVersion.get()}")
