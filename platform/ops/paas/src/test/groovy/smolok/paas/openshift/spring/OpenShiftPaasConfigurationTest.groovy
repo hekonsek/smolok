@@ -16,7 +16,6 @@
  */
 package smolok.paas.openshift.spring
 
-import com.jayway.awaitility.Awaitility
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
-import smolok.lib.common.Awaitilities
-import smolok.paas.Paas
 import smolok.paas.openshift.OpenShiftPaas
 
 import static com.jayway.awaitility.Awaitility.await
