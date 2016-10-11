@@ -49,7 +49,7 @@ PaaS provides:
 
 Smolok provisions and manages messaging infrastructure that can be used for the following purposes:
 - messaging backend for connected devices
-- centralized event bus connecting devices and subsystems together
+- centralized AMQP-based event bus connecting devices and subsystems together
 - queue system
 - publish/subscribe notification infrastructure
 
@@ -85,6 +85,20 @@ In order to verify that command line tool has been properly installed, execute t
 
     $ smolok --help
     Welcome to Smolok v0.0.6.
+
+#### Starting Smolok Cloud
+
+In order to start Smolok Cloud, just execute the following command:
+
+    smolok cloud start
+
+And you should see output similar to the following one:
+
+    $ smolok cloud start
+    Starting Smolok Cloud...
+    Smolok Cloud started.
+
+At this point Smolok Cloud is started. In particular Kubernetes server and AMQP-based event bus are up and running.
 
 #### Checking status of the Smolok cloud
 
@@ -145,11 +159,19 @@ Smolok Cloud is an actual backend platform used by Smolok to enable inter-device
 services connected together via AMQP-based event bus. Under the hood Smolok Cloud relies on Docker and
 [Kubernetes](http://kubernetes.io).
 
-### Installing and starting Smolok Cloud
+### Starting Smolok Cloud
 
 In order to start Smolok Cloud, just execute the following command:
 
     smolok cloud start
+
+And you should see output similar to the following one:
+
+    $ smolok cloud start
+    Starting Smolok Cloud...
+    Smolok Cloud started.
+
+At this point Smolok Cloud is started. In particular Kubernetes server and AMQP-based event bus are up and running.
 
 ### Checking Smolok Cloud status
 
