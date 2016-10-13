@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM java:8u91
+FROM smolok/spark-base:${project.version}
 
 MAINTAINER Henryk Konsek <hekonsek@gmail.com>
 

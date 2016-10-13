@@ -2,6 +2,7 @@ package net.smolok.cmd.core.spring
 
 import net.smolok.cmd.commands.CloudResetCommand
 import net.smolok.cmd.commands.ServiceStartCommand
+import net.smolok.cmd.commands.ZeppelinStartCommand
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
 import org.springframework.beans.factory.annotation.Value
@@ -90,4 +91,10 @@ class CmdConfiguration {
         new SparkSubmitCommand(docker)
     }
 
+    // Zeppelin commands
+
+    @Bean
+    ZeppelinStartCommand zeppelinStartCommand(Docker docker) {
+        new ZeppelinStartCommand(docker)
+    }
 }

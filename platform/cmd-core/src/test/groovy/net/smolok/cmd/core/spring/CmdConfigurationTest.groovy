@@ -264,4 +264,12 @@ class CmdConfigurationTest {
         assertThat(outputSink.output()[1]).containsIgnoringCase('problem starting service container')
     }
 
+    @Test
+    void shouldStartZeppelin() {
+        // When
+        commandHandler.handleCommand(command('zeppelin start'))
+
+        // Then
+        assertThat(docker.status('zeppelin')).isIn(created, running)
+    }
 }

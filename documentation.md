@@ -266,6 +266,43 @@ Default value for `--master` in `client` deploy mode is `spark://localhost:7077`
 
 After job submission docker container is automatically removed, but this can be disabled using `--keep-logs` option.
 
+## Zeppelin support
+
+Smolok comes with support for Apache Zeppelin which integrates easily with Apache Spark cluster setup by Smolok.
+
+### Installing Apache Zeppelin
+
+To install Apache Zeppelin you just need to execute following command:
+
+    smolok zeppelin start
+
+This command ensures that application is installed and properly started - if application is already started
+or installed, will skipped the process.
+
+### Start options
+
+ Command | Description | Default value
+ --- | --- | ---
+ --master | Spark master url | spark://localhost:6066 or spark://localhost:7077 depends on deploy-mode
+ --localIP | Spark local IP |  |
+ --port | Zeppelin http port | 8080 |
+ --confDir | Zeppelin configuration directory | /opt/zeppelin/conf
+ --notebookDir | Zeppelin notebook directory | /opt/zeppelin/notebook
+
+Any other options will be passed to spark submit command eg. --deploy-mode cluster --driver-memory 2G etc.
+
+### Persist notebooks locally
+
+If you need to persist notebooks locally there is mounded volume `/var/smolok/zeppelin` so you can use if as follow:
+
+    smolok zeppelin start --notebookDir=/var/smolok/zeppelin/notebook
+
+This way notebooks will be stored in `/var/smolok/zeppelin/notebook` directory
+
+### Start command example
+
+    smolok zeppelin start --localIP=192.168.0.108 --port=8182 --deploy-mode client --executor-memory 2G
+
 ## Raspberry Pi support
 
 Smolok comes with a dedicated support for Raspberry Pi 3 which makes it easier to connect IoT gateways based on this

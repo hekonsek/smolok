@@ -38,7 +38,7 @@ abstract class ExecutorBasedProcessManager implements ProcessManager {
     }
 
     static String[] command(String command) {
-        command.split(/\s+/)
+        command.split(/\s+(?=([^"]*"[^"]*")*[^"]*$)/) // don't split values by whitespaces inside " "
     }
 
 }
