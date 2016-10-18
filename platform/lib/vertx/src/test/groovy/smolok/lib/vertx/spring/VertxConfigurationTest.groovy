@@ -75,4 +75,13 @@ class VertxConfigurationTest {
         await().until({ amqpServer.messages.get('xxx') != null  } as Callable<Boolean>)
     }
 
+    @Test
+    void shouldSendAmqpRequest() {
+        // When
+        def response = amqpProbe.request('localhost', port, 'xxx', 'yyy')
+
+        // Then
+        assertThat(response).isEqualTo('yyy')
+    }
+
 }

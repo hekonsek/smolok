@@ -8,6 +8,7 @@ import io.vertx.proton.ProtonMessageHandler
 import io.vertx.proton.ProtonReceiver
 import io.vertx.proton.ProtonServer
 import io.vertx.proton.ProtonSession
+import org.apache.qpid.proton.amqp.messaging.AmqpValue
 import org.apache.qpid.proton.message.Message
 
 class AmqpServer {
@@ -35,6 +36,12 @@ class AmqpServer {
                 }).receiverOpenHandler { ProtonReceiver receiver ->
                     receiver.handler { ProtonDelivery delivery, Message msg ->
                         messages.get(msg.address, []).add(msg)
+                        if(msg.replyTo != null) {
+                            def x = Message.Factory.create()
+                            x.address = msg.replyTo
+                            x.body = new AmqpValue(((AmqpValue) msg.body).value)
+                            connection.open().createSender(msg.replyTo).open().send(x)
+                        }
                     }.open()
                 }
             }
