@@ -56,6 +56,7 @@ Smolok provisions and manages messaging infrastructure that can be used for the 
 #### Application services
 
 Smolok provides out of the box backend services enabling IoT, Big Data and Machine Learning applications. For example:
+- centralized configuration service
 - device management service
 
 ### Common use cases
@@ -98,7 +99,7 @@ And you should see output similar to the following one:
     Starting Smolok Cloud...
     Smolok Cloud started.
 
-At this point Smolok Cloud is started. In particular Kubernetes server and AMQP-based event bus are up and running.
+At this point Smolok Cloud is started. In particular Kubernetes server, AMQP-based event bus and configuration service are up and running.
 
 #### Checking status of the Smolok cloud
 
@@ -171,7 +172,7 @@ And you should see output similar to the following one:
     Starting Smolok Cloud...
     Smolok Cloud started.
 
-At this point Smolok Cloud is started. In particular Kubernetes server and AMQP-based event bus are up and running.
+At this point Smolok Cloud is started. In particular Kubernetes server, AMQP-based event bus and configuration service are up and running.
 
 ### Checking Smolok Cloud status
 
@@ -191,9 +192,16 @@ If there are issues with some components of Smolok, it will be reported to the s
 
 ### Services
 
-#### Starting device management service
+#### Configuration service
 
-Now when you have your Smolok Cloud started, you probably would like to connect some device into it. Usually before you
+One of the services that comes with Smolok Cloud out of the box is Configuration Service. It is distributed key-value
+service that can be read and modified using Event Bus.
+
+Default Configuration Service started with Smolok Cloud is based Java properties file stored on the Kubernetes volume.
+
+#### Device management service
+
+When you have your Smolok Cloud started, you probably would like to connect some device into it. Usually before you
 connect any device into your event bus, you would like to register it into a device management service. In order to
 start device management service, execute the following command:
 
