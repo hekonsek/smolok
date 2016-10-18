@@ -49,7 +49,7 @@ class AmqpProbe {
     // Helpers
 
     private <T> T amqpExchange(String host, int port, String channel, Object body, Class<T> responseType) {
-        def responseAvailable = new CountDownLatch(1)
+        def responseAvailable = new CountDownLatch(responseType == null ? 1 : 2)
         def delivered = false
         T response = null
 
