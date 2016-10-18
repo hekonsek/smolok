@@ -53,25 +53,21 @@ class AmqpProbe {
         def delivered = false
         T response = null
 
-        connect(host, port, new Handler<AsyncResult<ProtonConnection>>() {
+        ProtonClient.create(vertx).connect(host, port, new Handler<AsyncResult<ProtonConnection>>() {
             @Override
             void handle(AsyncResult<ProtonConnection> connectionResponse) {
                 if(connectionResponse.succeeded()) {
+                    def replyTo = Uuids.uuid()
                     def message = Message.Factory.create()
                     if(responseType != null) {
-                        def replyTo = Uuids.uuid()
                         message.setReplyTo(replyTo)
                     }
                     message.setAddress(channel)
                     message.body = new AmqpValue(body)
-                    connectionResponse.result().open().
-                            createSender(channel).open().send(message, new Handler<ProtonDelivery>() {
-                        @Override
-                        void handle(ProtonDelivery protonDelivery) {
-                            delivered = true
-                            responseAvailable.countDown()
-                        }
-                    })
+                    connectionResponse.result().open().createSender(channel).open().send(message) { ProtonDelivery protonDelivery ->
+                        delivered = true
+                        responseAvailable.countDown()
+                    }
 
                     if(responseType != null) {
                         connectionResponse.result().open().sessionOpenHandler(new Handler<ProtonSession>() {
@@ -80,11 +76,13 @@ class AmqpProbe {
                                 protonSession.open();
                             }
                         }).receiverOpenHandler { ProtonReceiver receiver ->
-                            receiver.handler { ProtonDelivery delivery, Message msg ->
-                                response = ((AmqpValue) msg.body).value
-                                responseAvailable.countDown()
+                            if(receiver.remoteTarget.address == replyTo) {
+                                receiver.handler { ProtonDelivery delivery, Message msg ->
+                                    response = ((AmqpValue) msg.body).value
+                                    responseAvailable.countDown()
 
-                            }.open()
+                                }.open()
+                            }
                         }
                     }
                 } else {
@@ -102,10 +100,6 @@ class AmqpProbe {
         } catch (InterruptedException e) {
             throw new IllegalStateException()
         }
-    }
-
-    private void connect(String host, int port, Handler<AsyncResult<ProtonConnection>> connectionHandler) {
-        ProtonClient.create(vertx).connect(host, port, connectionHandler)
     }
 
 }
