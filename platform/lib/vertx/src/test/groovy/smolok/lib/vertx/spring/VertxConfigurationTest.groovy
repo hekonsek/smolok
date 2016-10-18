@@ -9,12 +9,15 @@ import io.vertx.proton.ProtonReceiver
 import io.vertx.proton.ProtonServer
 import io.vertx.proton.ProtonSession
 import org.apache.qpid.proton.message.Message
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.context.annotation.Bean
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.lib.vertx.AmqpProbe
+import smolok.lib.vertx.AmqpServer
 
 import java.util.concurrent.Callable
 
@@ -23,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = VertxConfiguration.class)
+@SpringApplicationConfiguration(classes = [VertxConfigurationTest, VertxConfiguration])
 class VertxConfigurationTest {
 
     // Tests subject
@@ -38,14 +41,22 @@ class VertxConfigurationTest {
 
     // Configuration fixtures
 
-    def port = findAvailableTcpPort()
+    static def port = findAvailableTcpPort()
+
+    @Bean(initMethod = 'start')
+    AmqpServer amqpServer(Vertx vertx) {
+        new AmqpServer(vertx, port)
+    }
+
+    @Autowired
+    AmqpServer amqpServer
 
     // Tests
 
     @Test
     void shouldNotConnectToAmqp() {
         // When
-        def canSend = amqpProbe.canSendMessageTo('localhost', port)
+        def canSend = amqpProbe.canSendMessageTo('localhost', 6666)
 
         // Then
         assertThat(canSend).isFalse()
@@ -53,35 +64,15 @@ class VertxConfigurationTest {
 
     @Test
     void shouldConnectToAmqp() {
-        // Given
-        startProtonServer()
-
         // Then
         await().until({ amqpProbe.canSendMessageTo('localhost', port) } as Callable<Boolean>)
     }
 
-    // Helpers
-
-    void startProtonServer() {
-        ProtonServer.create(vertx).connectHandler(new Handler<ProtonConnection>() {
-            @Override
-            void handle(ProtonConnection connection) {
-                connection.open().sessionOpenHandler(new Handler<ProtonSession>() {
-                    @Override
-                    void handle(ProtonSession protonSession) {
-                        protonSession.open();
-                    }
-                }).receiverOpenHandler(new Handler<ProtonReceiver>() {
-                    @Override
-                    void handle(ProtonReceiver receiver) {
-                        receiver.handler(new ProtonMessageHandler() {
-                            @Override
-                            void handle(ProtonDelivery delivery, Message msg) {}
-                        }).open()
-                    }
-                })
-            }
-        }).listen(port)
+    @Test
+    void shouldSendMessageToAmqpServer() {
+        // Then
+        amqpProbe.send('localhost', port, 'xxx', 'yyy')
+        await().until({ amqpServer.messages.get('xxx') != null  } as Callable<Boolean>)
     }
 
 }
