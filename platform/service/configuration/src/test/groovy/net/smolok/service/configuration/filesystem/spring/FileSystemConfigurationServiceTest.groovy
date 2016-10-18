@@ -29,6 +29,8 @@ class FileSystemConfigurationServiceTest {
         setSystemStringProperty('configuration.file', createTempFile('smolok', 'test').absolutePath)
     }
 
+    // Tests
+
     @Test
     void shouldReadStoredProperty() {
         // Given
@@ -39,6 +41,19 @@ class FileSystemConfigurationServiceTest {
 
         // Then
         assertThat(property).isEqualTo('value')
+    }
+
+    @Test
+    void shouldOverrideProperty() {
+        // Given
+        eventBus.toBusAndWait('configuration.put', 'oldValue', arguments(key))
+        eventBus.toBusAndWait('configuration.put', 'newValue', arguments(key))
+
+        // When
+        def property = eventBus.fromBus('configuration.get', key, String.class)
+
+        // Then
+        assertThat(property).isEqualTo('newValue')
     }
 
 }

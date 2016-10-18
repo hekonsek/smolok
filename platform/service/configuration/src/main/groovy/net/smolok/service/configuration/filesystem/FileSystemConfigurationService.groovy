@@ -33,10 +33,17 @@ class FileSystemConfigurationService implements ConfigurationService {
     @Override
     void put(String key, String value) {
         synchronized (this) {
-            def properties = new Properties()
-            properties.load(root.newInputStream())
-            properties.setProperty(key, value)
-            properties.store(root.newOutputStream(), '')
+            def propertiesInput = root.newInputStream()
+            def propertiesOutput = root.newOutputStream()
+            try {
+                def properties = new Properties()
+                properties.load(propertiesInput)
+                properties.setProperty(key, value)
+                properties.store(propertiesOutput, '')
+            } finally {
+                nullOr(propertiesInput) { it.close() }
+                nullOr(propertiesOutput) { it.close() }
+            }
         }
     }
 
