@@ -30,73 +30,38 @@ class AmqpProbe {
     }
 
     boolean canSendMessageTo(String host, int port) {
-        amqpExchange(host, port, STATUS_CHANNEL, 'ping')
+        try {
+            amqpExchange(host, port, STATUS_CHANNEL, 'ping', null)
+            true
+        } catch (IllegalStateException e) {
+            false
+        }
     }
 
     void send(String host, int port, String channel, Object body) {
-        isTrue(amqpExchange(host, port, channel, body))
+        amqpExchange(host, port, channel, body, null)
     }
 
     Object request(String host, int port, String channel, Object body) {
-        def responseAvailable = new CountDownLatch(1)
-        Object response = null
-
-        connect(host, port, new Handler<AsyncResult<ProtonConnection>>() {
-            @Override
-            void handle(AsyncResult<ProtonConnection> connectionResponse) {
-                if(connectionResponse.succeeded()) {
-                    def message = Message.Factory.create()
-                    def replyTo = Uuids.uuid()
-                    message.setReplyTo(replyTo)
-                    message.setAddress(channel)
-                    message.body = new AmqpValue(body)
-
-                    connectionResponse.result().open().
-                            createSender(channel).open().send(message, new Handler<ProtonDelivery>() {
-                        @Override
-                        void handle(ProtonDelivery protonDelivery) {
-//                            delivered = true
-//                            responseAvailable.countDown()
-                        }
-                    })
-
-                    connectionResponse.result().open().sessionOpenHandler(new Handler<ProtonSession>() {
-                        @Override
-                        void handle(ProtonSession protonSession) {
-                            protonSession.open();
-                        }
-                    }).receiverOpenHandler { ProtonReceiver receiver ->
-                        receiver.handler { ProtonDelivery delivery, Message msg ->
-                            response = ((AmqpValue) msg.body).value
-                            responseAvailable.countDown()
-
-                        }.open()
-                    }
-                } else {
-                    responseAvailable.countDown()
-                }
-            }
-        })
-
-        try {
-            responseAvailable.await(15, SECONDS)
-            response
-        } catch (InterruptedException e) {
-            response
-        }
+        amqpExchange(host, port, channel, body, Object.class)
     }
 
     // Helpers
 
-    private boolean amqpExchange(String host, int port, String channel, Object body) {
+    private <T> T amqpExchange(String host, int port, String channel, Object body, Class<T> responseType) {
         def responseAvailable = new CountDownLatch(1)
         def delivered = false
+        T response = null
 
         connect(host, port, new Handler<AsyncResult<ProtonConnection>>() {
             @Override
             void handle(AsyncResult<ProtonConnection> connectionResponse) {
                 if(connectionResponse.succeeded()) {
                     def message = Message.Factory.create()
+                    if(responseType != null) {
+                        def replyTo = Uuids.uuid()
+                        message.setReplyTo(replyTo)
+                    }
                     message.setAddress(channel)
                     message.body = new AmqpValue(body)
                     connectionResponse.result().open().
@@ -107,6 +72,21 @@ class AmqpProbe {
                             responseAvailable.countDown()
                         }
                     })
+
+                    if(responseType != null) {
+                        connectionResponse.result().open().sessionOpenHandler(new Handler<ProtonSession>() {
+                            @Override
+                            void handle(ProtonSession protonSession) {
+                                protonSession.open();
+                            }
+                        }).receiverOpenHandler { ProtonReceiver receiver ->
+                            receiver.handler { ProtonDelivery delivery, Message msg ->
+                                response = ((AmqpValue) msg.body).value
+                                responseAvailable.countDown()
+
+                            }.open()
+                        }
+                    }
                 } else {
                     responseAvailable.countDown()
                 }
@@ -115,9 +95,12 @@ class AmqpProbe {
 
         try {
             responseAvailable.await(15, SECONDS)
-            delivered && responseAvailable.count == 0
+            if(!(delivered && responseAvailable.count == 0)) {
+                throw new IllegalStateException()
+            }
+            responseType == null ? null : response
         } catch (InterruptedException e) {
-            false
+            throw new IllegalStateException()
         }
     }
 
