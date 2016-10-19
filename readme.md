@@ -3,6 +3,8 @@
 [![Version](https://img.shields.io/badge/smolok-0.0.8-blue.svg)](https://github.com/smolok/smolok/releases)
 [![Build](https://api.travis-ci.org/smolok/smolok.svg)](https://travis-ci.org/smolok/smolok/)
 
+[![Build](smolok.png)](https://github.com/smolok/smolok)
+
 Smolok is a big data platform for connected devices, where *device* can be a piece of the IoT (Internet Of Things) hardware,
 smart phone, tablet, web browser or external IT system.
 
@@ -16,3 +18,7 @@ Smolok is based on the top of the leading open source projects including [Apache
 ## Documentation
 
 Documentation of the project can be found [here](documentation.md).
+
+## Credits
+
+Vintage unicorn logo has been designed by [Freepik](http://www.freepik.com/free-photos-vectors/vintage).
