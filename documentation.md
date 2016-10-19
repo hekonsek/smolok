@@ -1,5 +1,7 @@
 # Smolok - Big Data for connected devices
 
+[![Build](smolok.png)](https://github.com/smolok/smolok)
+
 Smolok is a big data platform for connected devices, where *device* can be a piece of the IoT (Internet Of Things) hardware,
 smart phone, tablet, web browser or external IT system.
 
