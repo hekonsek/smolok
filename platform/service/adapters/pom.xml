@@ -5,19 +5,16 @@
 
     <parent>
         <groupId>net.smolok</groupId>
-        <artifactId>smolok-platform</artifactId>
+        <artifactId>smolok-platform-service</artifactId>
         <version>0.0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>smolok-platform-service</artifactId>
+    <artifactId>smolok-platform-service-adapters</artifactId>
     <name>${artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>framework</module>
-        <module>adapters</module>
-        <module>configuration</module>
-        <module>device</module>
+        <module>rest</module>
     </modules>
 
 </project>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.smolok</groupId>
+        <artifactId>smolok-platform-service-adapters</artifactId>
+        <version>0.0.9-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>smolok-adapter-rest</artifactId>
+    <name>${artifactId}</name>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-netty4-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-groovy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-encoding-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-eventbus-client</artifactId>
+        </dependency>
+
+        <!-- Optional runtime -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-encoding-json</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-eventbus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-bootstrap</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-binding</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.truth</groupId>
+            <artifactId>truth</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
