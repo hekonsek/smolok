@@ -272,4 +272,14 @@ class CmdConfigurationTest {
         // Then
         assertThat(docker.status('zeppelin')).isIn(created, running)
     }
+
+    @Test
+    void sparkSubmitShouldReturnValidErrorMesssageOnStart() {
+        // When
+        commandHandler.handleCommand(command('spark submit'))
+
+        // Then
+        assertThat(outputSink.output()[0]).doesNotContain('exec format error')
+        assertThat(outputSink.output()[0]).containsIgnoringCase('Error: Cannot load main class from JAR file')
+    }
 }
