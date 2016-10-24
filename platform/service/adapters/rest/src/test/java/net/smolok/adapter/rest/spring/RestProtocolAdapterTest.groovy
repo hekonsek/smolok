@@ -25,6 +25,8 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringRunner
@@ -34,19 +36,24 @@ import smolok.encoding.spi.PayloadEncoding
 import smolok.service.binding.ServiceBinding
 import smolok.service.binding.ServiceEventProcessor
 
-import static org.springframework.util.SocketUtils.findAvailableTcpPort
+import static smolok.eventbus.client.Header.smolokHeaderKey
+import static smolok.lib.common.Networks.findAvailableTcpPort
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringRunner)
 @SpringBootTest(classes = [Smolok, RestProtocolAdapterTest])
-public class RestProtocolAdapterTest {
+class RestProtocolAdapterTest {
+
+    // Collaborators fixtures
 
     def json = new ObjectMapper()
 
     def rest = new RestTemplate()
 
+    // Configuration fixtures
+
     static int restPort = findAvailableTcpPort()
 
-    String baseURL = "http://localhost:" + restPort + "/test/";
+    String baseURL = "http://localhost:${restPort}/test/"
 
     @BeforeClass
     static void beforeCloudPlatformStarted() {
@@ -54,7 +61,7 @@ public class RestProtocolAdapterTest {
     }
 
     @Autowired
-     PayloadEncoding payloadEncoding
+    PayloadEncoding payloadEncoding
 
     // Tests
 
@@ -65,14 +72,23 @@ public class RestProtocolAdapterTest {
     }
 
     @Test
-    public void shouldInvokePostOperation() {
+    void shouldInvokeGetOperationWithArgumentHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(smolokHeaderKey(0), ['1'])
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        def response = rest.exchange(baseURL + "count", HttpMethod.GET, entity, Map.class).body
+        Truth.assertThat(response.get("payload")).isEqualTo(1);
+    }
+
+    @Test
+    void shouldInvokePostOperation() {
         byte[] request = payloadEncoding.encode(ImmutableMap.of("foo", "bar"));
         Object payload = rest.postForObject(baseURL + "sizeOf", request, Map.class).get("payload");
         Truth.assertThat(payload).isEqualTo(1);
     }
 
     @Test
-    public void shouldPassUriAndBody() {
+    public void shouldUseUriAndBody() {
         byte[] request = payloadEncoding.encode(ImmutableMap.of("foo", "bar"));
         Object payload = rest.postForObject(baseURL + "numberPlusSizeOf/1", request, Map.class).get("payload");
         Truth.assertThat(payload).isEqualTo(2);
@@ -118,7 +134,7 @@ public class RestProtocolAdapterTest {
 
     @Bean
     ServiceBinding testServiceBinding(ServiceEventProcessor serviceEventProcessor) {
-        return new ServiceBinding(serviceEventProcessor, "test");
+        new ServiceBinding(serviceEventProcessor, "test");
     }
 
 }
