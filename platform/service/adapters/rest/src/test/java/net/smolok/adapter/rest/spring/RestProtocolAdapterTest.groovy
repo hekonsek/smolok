@@ -18,7 +18,7 @@ package net.smolok.adapter.rest.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.ImmutableMap
-import com.google.common.truth.Truth
+import org.assertj.core.api.Assertions
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,6 +36,7 @@ import smolok.encoding.spi.PayloadEncoding
 import smolok.service.binding.ServiceBinding
 import smolok.service.binding.ServiceEventProcessor
 
+import static org.assertj.core.api.Assertions.assertThat
 import static smolok.eventbus.client.Header.smolokHeaderKey
 import static smolok.lib.common.Networks.findAvailableTcpPort
 
@@ -68,7 +69,7 @@ class RestProtocolAdapterTest {
     @Test
     void shouldInvokeGetOperation() {
         Map response = json.readValue(new URL(baseURL + "count/1"), Map.class);
-        Truth.assertThat(response.get("payload")).isEqualTo(1);
+        assertThat(response.get("payload")).isEqualTo(1);
     }
 
     @Test
@@ -77,27 +78,27 @@ class RestProtocolAdapterTest {
         headers.put(smolokHeaderKey(0), ['1'])
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         def response = rest.exchange(baseURL + "count", HttpMethod.GET, entity, Map.class).body
-        Truth.assertThat(response.get("payload")).isEqualTo(1);
+        assertThat(response.get("payload")).isEqualTo(1);
     }
 
     @Test
     void shouldInvokePostOperation() {
         byte[] request = payloadEncoding.encode(ImmutableMap.of("foo", "bar"));
         Object payload = rest.postForObject(baseURL + "sizeOf", request, Map.class).get("payload");
-        Truth.assertThat(payload).isEqualTo(1);
+        assertThat(payload).isEqualTo(1);
     }
 
     @Test
     public void shouldUseUriAndBody() {
         byte[] request = payloadEncoding.encode(ImmutableMap.of("foo", "bar"));
         Object payload = rest.postForObject(baseURL + "numberPlusSizeOf/1", request, Map.class).get("payload");
-        Truth.assertThat(payload).isEqualTo(2);
+        assertThat(payload).isEqualTo(2);
     }
 
     @Test
     public void shouldHandleOptions() {
         Set<HttpMethod> options = rest.optionsForAllow(baseURL + "count/1");
-        Truth.assertThat(options).isEmpty();
+        assertThat(options).isEmpty();
     }
 
     // Beans fixtures
