@@ -83,6 +83,10 @@ class EventBus {
     }
 
     private <T> T convertResponse(Object body, Class<T> responseType) {
+        if(body == null) {
+            return null
+        }
+
         if(body.class == byte[].class && (isContainer(responseType) || isPojo(responseType))) {
             mapper.readValue((byte[])body, responseType)
         } else {

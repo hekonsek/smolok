@@ -14,10 +14,12 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
+import smolok.eventbus.client.Header
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.eventbus.client.Header.arguments
+import static smolok.eventbus.client.Header.smolokHeaderKey
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -99,6 +101,24 @@ class EventBusClientConfigurationTest {
 
         // Then
         assertThat(response).isEqualTo(payload)
+    }
+
+    @Test
+    void shouldReceiveSmolokArgumentFromCamel() {
+        // When
+        def response = producerTemplate.requestBodyAndHeader('eventbus:echoArgument', payload, smolokHeaderKey(0), 'foo', String.class)
+
+        // Then
+        assertThat(response).isEqualTo('foo')
+    }
+
+    @Test
+    void shouldNotReceiveSmolokArgumentFromCamel() {
+        // When
+        def response = producerTemplate.requestBodyAndHeader('eventbus:echoArgument', payload, smolokHeaderKey(1000), 'foo', String.class)
+
+        // Then
+        assertThat(response).isNull()
     }
 
     // Test classes
