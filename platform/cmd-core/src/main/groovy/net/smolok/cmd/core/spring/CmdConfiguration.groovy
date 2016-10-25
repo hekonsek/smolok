@@ -1,5 +1,6 @@
 package net.smolok.cmd.core.spring
 
+import net.smolok.cmd.commands.AdapterStartCommand
 import net.smolok.cmd.commands.CloudResetCommand
 import net.smolok.cmd.commands.ServiceStartCommand
 import net.smolok.cmd.commands.ZeppelinStartCommand
@@ -79,6 +80,11 @@ class CmdConfiguration {
         new ServiceStartCommand(paas)
     }
 
+    @Bean
+    AdapterStartCommand adapterStartCommand(Paas paas) {
+        new AdapterStartCommand(paas)
+    }
+
     // Spark commands
 
     @Bean
@@ -97,4 +103,5 @@ class CmdConfiguration {
     ZeppelinStartCommand zeppelinStartCommand(Docker docker) {
         new ZeppelinStartCommand(docker)
     }
+
 }

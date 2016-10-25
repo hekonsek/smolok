@@ -253,6 +253,18 @@ class CmdConfigurationTest {
     }
 
     @Test
+    void shouldStartRestAdapter() {
+        // Given
+        paas.start()
+
+        // When
+        commandHandler.handleCommand('adapter-start', 'rest')
+
+        // Then
+        assertThat(outputSink.output().last()).containsIgnoringCase('started')
+    }
+
+    @Test
     void shouldNotStartInvalidServiceLocator() {
         // Given
         paas.start()

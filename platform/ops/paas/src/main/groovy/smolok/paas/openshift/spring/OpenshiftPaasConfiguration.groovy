@@ -25,6 +25,7 @@ import smolok.lib.vertx.AmqpProbe
 import smolok.paas.DeviceServiceImageLocatorResolver
 import smolok.paas.ImageLocatorResolver
 import smolok.paas.Paas
+import smolok.paas.RestAdapterImageLocatorResolver
 import smolok.paas.openshift.OpenShiftPaas
 
 /**
@@ -45,6 +46,11 @@ class OpenshiftPaasConfiguration {
     @Bean
     DeviceServiceImageLocatorResolver deviceServiceImageLocatorResolver() {
         new DeviceServiceImageLocatorResolver()
+    }
+
+    @Bean
+    RestAdapterImageLocatorResolver restAdapterImageLocatorResolver() {
+        new RestAdapterImageLocatorResolver()
     }
 
 }

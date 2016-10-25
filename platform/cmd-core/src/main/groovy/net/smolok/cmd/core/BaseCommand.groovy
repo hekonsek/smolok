@@ -32,16 +32,20 @@ abstract class BaseCommand implements Command {
         this.commandPrefix = commandPrefix.toArray(new String[0])
     }
 
+    protected String[] commandPrefix() {
+        commandPrefix
+    }
+
     // Command operations
 
     @Override
     boolean supports(String... command) {
-        if(commandPrefix.length > command.length) {
+        if(commandPrefix().length > command.length) {
             return false
         }
 
-        for(int i = 0; i < commandPrefix.length; i++) {
-            if(commandPrefix[i] != command[i]) {
+        for(int i = 0; i < commandPrefix().length; i++) {
+            if(commandPrefix()[i] != command[i]) {
                 return false
             }
         }
