@@ -10,5 +10,5 @@ services:
 env:
 - SUDO_PASSWORD=""
 
-install: mvn install -Pdocker-build-only -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+install: travis_wait mvn install -Pdocker-build-only -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script: mvn test -Dtest-profile=docker -B
