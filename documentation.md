@@ -124,6 +124,23 @@ start device management service, execute the following command:
 
     smolok service-start device
 
+#### Starting REST protocol adapter
+
+REST protocol adapter can be used to bridge HTTP requests to AMQP messages used by event bus i.e. access services
+deployed into Smolok Cloud. In order to start REST protocol adapter execute the following command:
+
+    smolok adapter-start rest
+
+When REST protocol adapter is started you can access event bus using HTTP calls. For example to write a value `bar` into the
+Configuration Service execute the REST call:
+
+    curl http://YOUR-ADDRESS:8080/configuration/put/foo/bar
+
+Now to read the same value execute the following HTTP request:
+
+    $ curl http://YOUR-ADDRESS:8080/configuration/get/foo
+    {"payload":"bar"}
+
 ## Command line tool
 
 Smolok command line tool can be used to create and manage Smolok platform from a command line. In order to install
@@ -208,6 +225,28 @@ connect any device into your event bus, you would like to register it into a dev
 start device management service, execute the following command:
 
     smolok service-start device
+
+### Protocol adapters
+
+Protocol adapters can be used to bridge HTTP requests to AMQP messages used by event bus i.e. access services
+deployed into Smolok Cloud.
+
+#### Starting REST protocol adapter
+
+REST protocol adapter can be used to bridge HTTP requests to AMQP messages used by event bus i.e. access services
+deployed into Smolok Cloud. In order to start REST protocol adapter execute the following command:
+
+    smolok adapter-start rest
+
+When REST protocol adapter is started you can access event bus using HTTP calls. For example to write a value `bar` into the
+Configuration Service execute the REST call:
+
+    curl http://YOUR-ADDRESS:8080/configuration/put/foo/bar
+
+Now to read the same value execute the following HTTP request:
+
+    $ curl http://YOUR-ADDRESS:8080/configuration/get/foo
+    {"payload":"bar"}
 
 ### Spark support
 
