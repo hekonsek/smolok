@@ -211,6 +211,9 @@ If there are issues with some components of Smolok, it will be reported to the s
 
 ### Services
 
+Services are units of backend logic that can be deployed into Smolok Cloud in order to be accessed via event bus. Under
+the hood services are deployed as Docker containers into Kubernetes cluster.
+
 #### Configuration service
 
 One of the services that comes with Smolok Cloud out of the box is Configuration Service. It is distributed key-value
