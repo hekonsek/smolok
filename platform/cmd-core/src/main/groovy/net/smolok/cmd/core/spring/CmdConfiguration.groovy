@@ -23,7 +23,7 @@ import net.smolok.cmd.commands.SparkSubmitCommand
 
 import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 import smolok.status.StatusResolver
 
 /**

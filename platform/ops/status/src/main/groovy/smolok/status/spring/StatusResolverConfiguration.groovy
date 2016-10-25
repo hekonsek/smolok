@@ -2,7 +2,7 @@ package smolok.status.spring
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 import smolok.status.StatusResolver
 import smolok.status.MetricSubjectHandler
 import smolok.status.MetricSubjectsResolver

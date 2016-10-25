@@ -32,7 +32,7 @@ import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.InMemoryOutputSink
 import net.smolok.cmd.core.TestCommand
 import smolok.lib.docker.Docker
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 
 import static com.google.common.io.Files.createTempDir
 import static org.assertj.core.api.Assertions.assertThat

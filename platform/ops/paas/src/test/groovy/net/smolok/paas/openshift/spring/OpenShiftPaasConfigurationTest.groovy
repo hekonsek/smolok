@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas.openshift.spring
+package net.smolok.paas.openshift.spring
 
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
-import smolok.paas.openshift.OpenShiftPaas
+import net.smolok.paas.openshift.OpenShiftPaas
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.MINUTES

@@ -1,4 +1,4 @@
-package smolok.paas
+package net.smolok.paas
 
 import org.junit.Test
 

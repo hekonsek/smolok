@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas.openshift.spring
+package net.smolok.paas.openshift.spring
 
 import net.smolok.lib.download.DownloadManager
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -22,11 +22,11 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
-import smolok.paas.DeviceServiceImageLocatorResolver
-import smolok.paas.ImageLocatorResolver
-import smolok.paas.Paas
-import smolok.paas.RestAdapterImageLocatorResolver
-import smolok.paas.openshift.OpenShiftPaas
+import net.smolok.paas.DeviceServiceImageLocatorResolver
+import net.smolok.paas.ImageLocatorResolver
+import net.smolok.paas.Paas
+import net.smolok.paas.RestAdapterImageLocatorResolver
+import net.smolok.paas.openshift.OpenShiftPaas
 
 /**
  * Spring configuration for OpenShift PaaS provider

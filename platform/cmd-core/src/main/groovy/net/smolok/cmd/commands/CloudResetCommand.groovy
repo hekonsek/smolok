@@ -2,7 +2,7 @@ package net.smolok.cmd.commands
 
 import net.smolok.cmd.core.BaseCommand
 import net.smolok.cmd.core.OutputSink
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 
 class CloudResetCommand extends BaseCommand {
 

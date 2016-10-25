@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas
+package net.smolok.paas
 
 /**
  * Point of contact with PaaS implementation capable of starting and managing containers.

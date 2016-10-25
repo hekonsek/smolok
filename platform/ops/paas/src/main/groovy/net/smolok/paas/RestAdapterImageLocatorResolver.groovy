@@ -14,12 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas
+package net.smolok.paas
 
-interface ImageLocatorResolver {
+import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 
-    boolean canResolveImage(String imageLocator)
+class RestAdapterImageLocatorResolver implements ImageLocatorResolver {
 
-    List<String> resolveImage(String imageLocator)
+    @Override
+    boolean canResolveImage(String imageLocator) {
+        imageLocator == 'rest'
+    }
+
+    @Override
+    List<String> resolveImage(String imageLocator) {
+        def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
+        ["smolok/adapter-rest:${smolokVersion}"]
+    }
 
 }

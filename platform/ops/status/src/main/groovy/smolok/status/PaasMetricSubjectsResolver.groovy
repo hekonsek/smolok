@@ -1,6 +1,6 @@
 package smolok.status
 
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 
 class PaasMetricSubjectsResolver implements MetricSubjectsResolver {
 

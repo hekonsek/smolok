@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas.openshift
+package net.smolok.paas.openshift
 
 import com.jayway.awaitility.core.ConditionTimeoutException
 import net.smolok.lib.download.DownloadManager
@@ -22,9 +22,9 @@ import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
-import smolok.paas.ImageLocatorResolver
-import smolok.paas.Paas
-import smolok.paas.ServiceEndpoint
+import net.smolok.paas.ImageLocatorResolver
+import net.smolok.paas.Paas
+import net.smolok.paas.ServiceEndpoint
 
 import java.nio.file.Paths
 import java.util.concurrent.Callable

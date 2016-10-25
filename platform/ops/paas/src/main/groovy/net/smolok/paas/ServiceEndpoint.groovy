@@ -14,21 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas
+package net.smolok.paas
 
-import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
+import groovy.transform.CompileStatic
+import groovy.transform.Immutable
+import groovy.transform.ToString
 
-class RestAdapterImageLocatorResolver implements ImageLocatorResolver {
+/**
+ * Represents a value of the metric.
+ */
+@CompileStatic
+@Immutable
+@ToString(includeNames=true, includeFields=true)
+class ServiceEndpoint {
 
-    @Override
-    boolean canResolveImage(String imageLocator) {
-        imageLocator == 'rest'
-    }
+    String name
 
-    @Override
-    List<String> resolveImage(String imageLocator) {
-        def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
-        ["smolok/adapter-rest:${smolokVersion}"]
-    }
+    String host
+
+    int port
 
 }

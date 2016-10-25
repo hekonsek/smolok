@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.paas
+package net.smolok.paas
 
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 

@@ -1,6 +1,6 @@
 package net.smolok.cmd.commands
 
-import smolok.paas.Paas
+import net.smolok.paas.Paas
 
 class AdapterStartCommand extends ServiceStartCommand {
 

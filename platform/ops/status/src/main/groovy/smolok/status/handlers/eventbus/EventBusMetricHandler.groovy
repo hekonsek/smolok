@@ -1,7 +1,7 @@
 package smolok.status.handlers.eventbus
 
 import smolok.lib.vertx.AmqpProbe
-import smolok.paas.ServiceEndpoint
+import net.smolok.paas.ServiceEndpoint
 import smolok.status.MetricSubjectHandler
 import smolok.status.Metric
 
