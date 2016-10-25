@@ -19,6 +19,7 @@ package net.smolok.cmd.core.spring
 import org.apache.camel.builder.RouteBuilder
 import org.junit.Before
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -288,6 +289,7 @@ class CmdConfigurationTest {
 
     @Test
     @IfProfileValue(name = 'test-profile', value = 'docker')
+    @Ignore('Need to resolve issue of building docker images on travis')
     void sparkSubmitShouldReturnValidErrorMessageOnStart() {
         // When
         commandHandler.handleCommand(command('spark submit'))
