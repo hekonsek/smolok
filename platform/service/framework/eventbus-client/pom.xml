@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>net.smolok</groupId>
-        <version>0.0.9</version>
+        <version>0.0.10-SNAPSHOT</version>
         <artifactId>smolok-platform-service-framework</artifactId>
         <relativePath>..</relativePath>
     </parent>
