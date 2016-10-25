@@ -45,7 +45,7 @@
             <artifactId>smolok-eventbus-client</artifactId>
         </dependency>
 
-        <!-- Optional runtime -->
+        <!-- External runtime dependencies -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -57,26 +57,26 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Internal testing dependencies -->
+        <!-- Internal runtime dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-bootstrap</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-encoding-json</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-eventbus</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- External testing dependencies -->
