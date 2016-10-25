@@ -9,3 +9,5 @@ services:
 
 env:
 - SUDO_PASSWORD=""
+
+script: mvn test -Pdocker-build-only -B
