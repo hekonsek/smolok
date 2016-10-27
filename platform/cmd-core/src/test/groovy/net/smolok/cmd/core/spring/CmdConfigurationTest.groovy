@@ -289,7 +289,6 @@ class CmdConfigurationTest {
 
     @Test
     @IfProfileValue(name = 'test-profile', value = 'docker')
-    @Ignore('Need to resolve issue of building docker images on travis')
     void sparkSubmitShouldReturnValidErrorMessageOnStart() {
         // When
         commandHandler.handleCommand(command('spark submit'))
