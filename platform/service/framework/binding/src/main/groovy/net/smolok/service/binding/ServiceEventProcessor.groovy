@@ -18,7 +18,7 @@ class ServiceEventProcessor {
     OperationBinding process(ServiceEvent event) {
         def credentials = authenticationProvider.authenticate(event)
         bindCredentials(credentials)
-        operationBindingFactory.operationBinding(credentials, event.channel(), event.body(), event.headers())
+        operationBindingFactory.operationBinding(credentials, event)
     }
 
 }

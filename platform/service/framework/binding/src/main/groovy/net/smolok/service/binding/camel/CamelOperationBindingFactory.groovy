@@ -1,6 +1,7 @@
 package net.smolok.service.binding.camel
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import net.smolok.service.binding.ServiceEvent
 import org.apache.camel.spi.Registry
 import org.apache.commons.lang3.Validate
 import net.smolok.service.binding.security.Credentials
@@ -28,10 +29,10 @@ class CamelOperationBindingFactory implements OperationBindingFactory {
     }
 
     @Override
-    OperationBinding operationBinding(Credentials credentials, String channel, Object incomingPayload, Map<String, Object> headers) {
-        LOG.debug('Parsing operation binding for channel: {}', channel)
-        def normalizedChannel = channel.substring(channel.lastIndexOf('/') + 1)
-        LOG.debug('Channel {} after normalization: {}', channel, normalizedChannel)
+    OperationBinding operationBinding(Credentials credentials, ServiceEvent serviceEvent) {
+        LOG.debug('Parsing operation binding for channel: {}', serviceEvent.channel())
+        def normalizedChannel = serviceEvent.channel().substring(serviceEvent.channel().lastIndexOf('/') + 1)
+        LOG.debug('Channel {} after normalization: {}', serviceEvent.channel(), normalizedChannel)
 
         String[] channelParts = normalizedChannel.split("\\.");
         String service = channelParts[0];
@@ -48,12 +49,13 @@ class CamelOperationBindingFactory implements OperationBindingFactory {
 
         List<Object> arguments = new LinkedList<>(asList(channelParts).subList(2, channelParts.length))
 
-        for(Map.Entry<String, Object> header : headers.entrySet()) {
+        for(Map.Entry<String, Object> header : serviceEvent.headers().entrySet()) {
             if(header.getKey().startsWith("SMOLOK_ARG")) {
                 arguments.add(header.getValue());
             }
         }
 
+        def incomingPayload = serviceEvent.body()
         if (incomingPayload != null) {
             def expectedPayloadType = operationMethod.parameterTypes.last()
             if(incomingPayload.class == byte[].class && (isContainer(expectedPayloadType) || isPojo(expectedPayloadType))) {
