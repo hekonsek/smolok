@@ -1,8 +1,8 @@
-package smolok.service.binding
+package net.smolok.service.binding
 
-import smolok.service.binding.security.AuthenticationProvider
+import net.smolok.service.binding.security.AuthenticationProvider
 
-import static smolok.service.binding.security.CredentialsHolder.bindCredentials
+import static net.smolok.service.binding.security.CredentialsHolder.bindCredentials
 
 class ServiceEventProcessor {
 

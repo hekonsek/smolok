@@ -1,4 +1,4 @@
-package smolok.service.binding
+package net.smolok.service.binding
 
 class ServiceEvent {
 

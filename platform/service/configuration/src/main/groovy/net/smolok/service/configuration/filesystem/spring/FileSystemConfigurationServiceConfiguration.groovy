@@ -5,8 +5,8 @@ import net.smolok.service.configuration.filesystem.FileSystemConfigurationServic
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.service.binding.ServiceBinding
-import smolok.service.binding.ServiceEventProcessor
+import net.smolok.service.binding.ServiceBinding
+import net.smolok.service.binding.ServiceEventProcessor
 
 @Configuration
 class FileSystemConfigurationServiceConfiguration {

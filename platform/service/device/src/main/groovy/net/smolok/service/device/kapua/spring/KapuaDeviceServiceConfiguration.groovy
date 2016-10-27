@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import smolok.service.binding.ServiceBinding
-import smolok.service.binding.ServiceEventProcessor
+import net.smolok.service.binding.ServiceBinding
+import net.smolok.service.binding.ServiceEventProcessor
 
 @Configuration
 @Import(MongodbDeviceRegistryServiceConfiguration.class)

@@ -1,4 +1,4 @@
-package smolok.service.binding
+package net.smolok.service.binding
 
 import org.junit.BeforeClass
 import org.junit.Test
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
-import smolok.service.binding.security.AuthenticationProvider
-import smolok.service.binding.security.CredentialsHolder
-import smolok.service.binding.security.MockAutenticationProvider
+import net.smolok.service.binding.security.AuthenticationProvider
+import net.smolok.service.binding.security.CredentialsHolder
+import net.smolok.service.binding.security.MockAutenticationProvider
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort

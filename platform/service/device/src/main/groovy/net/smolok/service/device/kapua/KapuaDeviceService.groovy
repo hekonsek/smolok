@@ -27,7 +27,7 @@ import org.eclipse.kapua.service.device.registry.KapuaEid
 import org.eclipse.kapua.service.device.registry.mongodb.DocumentStoreDeviceQuery
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDevice
 import org.eclipse.kapua.service.device.registry.mongodb.SimpleDeviceCreator
-import smolok.service.binding.Tenant
+import net.smolok.service.binding.Tenant
 
 import static smolok.lib.common.Lang.nullOr
 

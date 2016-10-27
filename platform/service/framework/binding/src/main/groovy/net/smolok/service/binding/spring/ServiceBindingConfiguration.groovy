@@ -1,12 +1,12 @@
-package smolok.service.binding.spring
+package net.smolok.service.binding.spring
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.service.binding.security.AuthenticationProvider
-import smolok.service.binding.security.MockAutenticationProvider
-import smolok.service.binding.OperationBindingFactory
-import smolok.service.binding.ServiceEventProcessor
+import net.smolok.service.binding.security.AuthenticationProvider
+import net.smolok.service.binding.security.MockAutenticationProvider
+import net.smolok.service.binding.OperationBindingFactory
+import net.smolok.service.binding.ServiceEventProcessor
 
 @Configuration
 class ServiceBindingConfiguration {

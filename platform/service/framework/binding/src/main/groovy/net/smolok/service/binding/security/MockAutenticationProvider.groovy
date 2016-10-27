@@ -1,8 +1,6 @@
-package smolok.service.binding.security
+package net.smolok.service.binding.security
 
-import smolok.service.binding.ServiceEvent
-import smolok.service.binding.security.AuthenticationProvider
-import smolok.service.binding.security.Credentials
+import net.smolok.service.binding.ServiceEvent
 
 class MockAutenticationProvider implements AuthenticationProvider {
 

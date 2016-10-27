@@ -1,6 +1,6 @@
-package smolok.service.binding
+package net.smolok.service.binding
 
-import smolok.service.binding.security.Credentials
+import net.smolok.service.binding.security.Credentials
 
 interface OperationBindingFactory {
 

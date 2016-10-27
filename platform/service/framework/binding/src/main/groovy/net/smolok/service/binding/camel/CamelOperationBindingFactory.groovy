@@ -1,12 +1,12 @@
-package smolok.service.binding.camel
+package net.smolok.service.binding.camel
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.camel.spi.Registry
 import org.apache.commons.lang3.Validate
-import smolok.service.binding.security.Credentials
-import smolok.service.binding.OperationBinding
-import smolok.service.binding.OperationBindingFactory
-import smolok.service.binding.Tenant
+import net.smolok.service.binding.security.Credentials
+import net.smolok.service.binding.OperationBinding
+import net.smolok.service.binding.OperationBindingFactory
+import net.smolok.service.binding.Tenant
 
 import java.lang.reflect.Method
 

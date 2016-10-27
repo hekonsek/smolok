@@ -18,7 +18,6 @@ package net.smolok.adapter.rest.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.ImmutableMap
-import org.assertj.core.api.Assertions
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,8 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.web.client.RestTemplate
 import smolok.bootstrap.Smolok
 import smolok.encoding.spi.PayloadEncoding
-import smolok.service.binding.ServiceBinding
-import smolok.service.binding.ServiceEventProcessor
+import net.smolok.service.binding.ServiceBinding
+import net.smolok.service.binding.ServiceEventProcessor
 
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.eventbus.client.Header.smolokHeaderKey

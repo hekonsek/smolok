@@ -17,9 +17,7 @@
 package net.smolok.service.device.api
 
 import net.smolok.service.documentstore.api.QueryBuilder;
-import smolok.service.binding.Tenant;
-
-import java.util.List;
+import net.smolok.service.binding.Tenant
 
 /**
  * Backend service used to manage devices connecting to the system.

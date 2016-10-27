@@ -1,10 +1,10 @@
-package smolok.service.binding.camel.spring
+package net.smolok.service.binding.camel.spring
 
 import org.apache.camel.CamelContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import smolok.service.binding.OperationBindingFactory
-import smolok.service.binding.camel.CamelOperationBindingFactory
+import net.smolok.service.binding.OperationBindingFactory
+import net.smolok.service.binding.camel.CamelOperationBindingFactory
 
 @Configuration
 class CamelServiceBindingConfiguration {

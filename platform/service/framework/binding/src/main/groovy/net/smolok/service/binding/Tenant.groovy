@@ -1,4 +1,4 @@
-package smolok.service.binding
+package net.smolok.service.binding
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention

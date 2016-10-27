@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import smolok.lib.docker.Docker
-import smolok.service.binding.ServiceBinding
-import smolok.service.binding.ServiceEventProcessor
+import net.smolok.service.binding.ServiceBinding
+import net.smolok.service.binding.ServiceEventProcessor
 import smolok.service.sparkjob.DefaultSparkJobService
 import smolok.lib.spark.DockerizedSparkSubmit
 import smolok.service.sparkjob.InMemoryJobStore
