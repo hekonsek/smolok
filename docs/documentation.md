@@ -17,6 +17,10 @@ Smolok is based on the top of the leading open source projects including [Apache
 This section describes the high-level summary of the features provided by Smolok. Read this if you are interested in
 learning what value can Smolok bring to you.
 
+### Architecture
+
+[![Build](docs/smolok_arch.png)](https://github.com/smolok/smolok)
+
 ### Features summary
 
 Smolok platform provides the following features enabling Big Data for connected devices:
