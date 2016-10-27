@@ -11,6 +11,7 @@ env:
   - SUDO_PASSWORD=""
 
 before_install:
+  - docker pull smolok/spark-base
   - docker pull smolok/zeppelin
 
 
