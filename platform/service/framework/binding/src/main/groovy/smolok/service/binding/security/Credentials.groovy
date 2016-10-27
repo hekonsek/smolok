@@ -1,4 +1,4 @@
-package smolok.service.binding
+package smolok.service.binding.security
 
 import groovy.transform.CompileStatic
 

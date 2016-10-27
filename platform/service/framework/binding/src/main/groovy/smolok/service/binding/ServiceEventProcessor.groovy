@@ -1,5 +1,9 @@
 package smolok.service.binding
 
+import smolok.service.binding.security.AuthenticationProvider
+
+import static smolok.service.binding.security.CredentialsHolder.bindCredentials
+
 class ServiceEventProcessor {
 
     private final AuthenticationProvider authenticationProvider
@@ -13,6 +17,7 @@ class ServiceEventProcessor {
 
     OperationBinding process(ServiceEvent event) {
         def credentials = authenticationProvider.authenticate(event)
+        bindCredentials(credentials)
         operationBindingFactory.operationBinding(credentials, event.channel(), event.body(), event.headers())
     }
 

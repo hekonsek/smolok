@@ -3,7 +3,7 @@ package smolok.service.binding.camel
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.camel.spi.Registry
 import org.apache.commons.lang3.Validate
-import smolok.service.binding.Credentials
+import smolok.service.binding.security.Credentials
 import smolok.service.binding.OperationBinding
 import smolok.service.binding.OperationBindingFactory
 import smolok.service.binding.Tenant

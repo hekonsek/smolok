@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
+import smolok.service.binding.security.AuthenticationProvider
+import smolok.service.binding.security.CredentialsHolder
+import smolok.service.binding.security.MockAutenticationProvider
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
@@ -103,6 +106,12 @@ public class ServiceBindingTest {
         assertThat(received).isEqualTo('tenantfoo')
     }
 
+    @Test
+    void shouldResolveBoundTenant() {
+        def received = eventBus.fromBus('echo.boundTenant', String.class)
+        assertThat(received).isEqualTo('tenant')
+    }
+
     // Beans fixtures
 
     @Component
@@ -130,6 +139,8 @@ public class ServiceBindingTest {
         String tenant(@Tenant String tenant)
 
         String tenantBeforePayload(@Tenant String tenant, String payload)
+
+        String boundTenant()
 
     }
 
@@ -169,6 +180,11 @@ public class ServiceBindingTest {
         @Override
         String tenantBeforePayload(@Tenant String tenant, String payload) {
             tenant + payload
+        }
+
+        @Override
+        String boundTenant() {
+            CredentialsHolder.credentials().tenant()
         }
 
     }
