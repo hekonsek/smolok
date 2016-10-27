@@ -16,7 +16,8 @@
  */
 package net.smolok.service.binding
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper
+import net.smolok.service.binding.camel.Camels;
 import org.apache.camel.builder.RouteBuilder
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory

@@ -11,7 +11,7 @@ class ServiceEvent {
     ServiceEvent(String channel, Object body, Map<String, Object> headers) {
         this.channel = channel
         this.body = body
-        this.headers = headers
+        this.headers = new LinkedHashMap<>(headers)
     }
 
     String channel() {
@@ -23,7 +23,7 @@ class ServiceEvent {
     }
 
     Map<String, Object> headers() {
-        headers
+        new LinkedHashMap<>(headers)
     }
 
 }
