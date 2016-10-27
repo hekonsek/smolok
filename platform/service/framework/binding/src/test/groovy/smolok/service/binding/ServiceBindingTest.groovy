@@ -18,18 +18,21 @@ import smolok.service.binding.security.MockAutenticationProvider
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 import static smolok.eventbus.client.Header.arguments
+import static smolok.lib.common.Properties.setIntProperty
 
 @RunWith(SpringRunner)
 @SpringBootTest(classes = [Smolok, ServiceBindingTest])
 @Configuration
-public class ServiceBindingTest {
+class ServiceBindingTest {
+
+    // Event Bus fixtures
 
     @Autowired
     EventBus eventBus
 
     @BeforeClass
     static void beforeClass() {
-        System.setProperty('EVENTBUS_SERVICE_PORT', "${findAvailableTcpPort()}")
+       setIntProperty('EVENTBUS_SERVICE_PORT', findAvailableTcpPort())
     }
 
     // Tests
@@ -37,8 +40,8 @@ public class ServiceBindingTest {
     @Test
     public void shouldBindServiceToChannel() {
         def payload = 100L
-        def response = eventBus.fromBus("echo.echo", payload, long.class);
-        assertThat(response).isEqualTo(payload);
+        def response = eventBus.fromBus("echo.echo", payload, long.class)
+        assertThat(response).isEqualTo(payload)
     }
 
     @Test
