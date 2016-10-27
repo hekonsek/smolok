@@ -55,8 +55,12 @@ class ServiceBinding extends RouteBuilder {
         this.serviceChannel = serviceChannel
     }
 
+    void start() {
+
+    }
+
     @Override
-    public void configure() throws Exception {
+    void configure() {
         String fromChannel = format("amqp:%s.>?concurrentConsumers=20", serviceChannel);
         LOG.debug("Starting route consuming from channel: {}", fromChannel);
 

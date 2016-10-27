@@ -38,21 +38,21 @@ class ServiceBindingTest {
     // Tests
 
     @Test
-    public void shouldBindServiceToChannel() {
+    void shouldBindServiceToChannel() {
         def payload = 100L
         def response = eventBus.fromBus("echo.echo", payload, long.class)
         assertThat(response).isEqualTo(payload)
     }
 
     @Test
-    public void shouldBindServiceToChannelUsingDestinationOnly() {
+    void shouldBindServiceToChannelUsingDestinationOnly() {
         def payload = 100L
         def response = eventBus.fromBus("echo.echo." + payload, long.class);
         assertThat(response).isEqualTo(payload);
     }
 
     @Test
-    public void shouldHandlePostedMap() {
+    void shouldHandlePostedMap() {
         int receivedSize = eventBus.fromBus("echo.sizeOfMap", ["foo": "foo", "bar": "bar"], int.class)
         assertThat(receivedSize).isEqualTo(2)
     }
@@ -117,14 +117,9 @@ class ServiceBindingTest {
 
     // Beans fixtures
 
-    @Component
-    public static class EchoServiceBinding extends ServiceBinding {
-
-        @Autowired
-        public EchoServiceBinding(ServiceEventProcessor serviceEventProcessor) {
-            super(serviceEventProcessor, "echo");
-        }
-
+    @Bean(initMethod = 'start')
+    ServiceBinding echoServiceBinding(ServiceBindingFactory serviceBindingFactory) {
+        serviceBindingFactory.serviceBinding('echo')
     }
 
     public static interface EchoService {
