@@ -1,14 +1,14 @@
 package smolok.service.binding
 
-import org.junit.BeforeClass;
+import org.junit.BeforeClass
 import org.junit.Test
-import org.junit.runner.RunWith;
+import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import org.springframework.test.context.junit4.SpringRunner
 import smolok.bootstrap.Smolok
 import smolok.eventbus.client.EventBus
 import smolok.service.binding.security.AuthenticationProvider
@@ -17,10 +17,10 @@ import smolok.service.binding.security.MockAutenticationProvider
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
-import static smolok.eventbus.client.Header.arguments;
+import static smolok.eventbus.client.Header.arguments
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@RunWith(SpringRunner)
+@SpringBootTest(classes = [Smolok, ServiceBindingTest])
 @Configuration
 public class ServiceBindingTest {
 
