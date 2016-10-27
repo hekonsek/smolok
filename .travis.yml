@@ -1,19 +1,11 @@
 language: java
 
 jdk:
-  - oraclejdk8
+- oraclejdk8
 
 sudo: required
 services:
   - docker
 
 env:
-  - SUDO_PASSWORD=""
-
-before_install:
-  - docker pull smolok/zeppelin
-
-
-install: mvn install -Pdocker-build-only -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-
-script: mvn test -Dtest-profile=docker -B
+- SUDO_PASSWORD=""
