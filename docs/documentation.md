@@ -19,7 +19,7 @@ learning what value can Smolok bring to you.
 
 ### Architecture
 
-[![Build](docs/smolok_arch.png)](https://github.com/smolok/smolok)
+[![Build](smolok_arch.png)](https://github.com/smolok/smolok)
 
 ### Features summary
 
