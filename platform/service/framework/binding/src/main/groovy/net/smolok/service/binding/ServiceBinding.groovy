@@ -36,10 +36,6 @@ class ServiceBinding extends RouteBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServiceBinding.class);
 
-    // Constants
-
-    private static final String TARGET_PROPERTY = "target";
-
     // Member collaborators
 
     protected final ServiceEventProcessor serviceEventProcessor
@@ -59,6 +55,26 @@ class ServiceBinding extends RouteBuilder {
 
     }
 
+    protected Object onEvent(ServiceEvent serviceEvent) {
+        // Generic
+        def operationBinding = serviceEventProcessor.onEvent(serviceEvent)
+
+        // Camel specific
+        def body = new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes())
+        def response = getContext().createProducerTemplate().requestBody("bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true", body)
+
+        // Generic
+        def returnType = operationBinding.operationMethod().returnType
+        if (Void.TYPE == returnType) {
+            null
+            // This is workaround needed due to the fact that Qpid JMS client doesn't support nested maps.
+        } else if(isPojo(returnType) || isContainer(returnType)) {
+            new ObjectMapper().writeValueAsBytes(response)
+        } else {
+            response
+        }
+    }
+
     @Override
     void configure() {
         String fromChannel = format("amqp:%s.>?concurrentConsumers=20", serviceChannel);
@@ -67,18 +83,7 @@ class ServiceBinding extends RouteBuilder {
         from(fromChannel).process { exchange ->
             def message = exchange.in
             def channel = message.getHeader('JMSDestination', String.class)
-            def operationBinding = serviceEventProcessor.onEvent(new ServiceEvent(channel, message.body, message.headers))
-            exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
-            exchange.setProperty('BINDING', operationBinding)
-            message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));
-        }.toD(format('${property.%s}', TARGET_PROPERTY)).process { it ->
-            def returnType = it.getProperty('BINDING', OperationBinding.class).operationMethod().returnType
-            if (Void.TYPE == returnType) {
-                it.getIn().setBody(null)
-                // This is workaround needed due to the fact that Qpid JMS client doesn't support nested maps.
-            } else if(isPojo(returnType) || isContainer(returnType)) {
-                it.in.body = new ObjectMapper().writeValueAsBytes(it.in.body)
-            }
+            exchange.in.body = onEvent(new ServiceEvent(channel, message.body, message.headers))
         }
     }
 
