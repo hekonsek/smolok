@@ -67,7 +67,7 @@ class ServiceBinding extends RouteBuilder {
         from(fromChannel).process { exchange ->
             def message = exchange.in
             def channel = message.getHeader('JMSDestination', String.class)
-            def operationBinding = serviceEventProcessor.process(new ServiceEvent(channel, message.body, message.headers))
+            def operationBinding = serviceEventProcessor.onEvent(new ServiceEvent(channel, message.body, message.headers))
             exchange.setProperty(TARGET_PROPERTY, "bean:" + operationBinding.service() + "?method=" + operationBinding.operation() + "&multiParameterArray=true");
             exchange.setProperty('BINDING', operationBinding)
             message.setBody(new Camels().convert(getContext(), operationBinding.arguments(), operationBinding.operationMethod().getParameterTypes()));

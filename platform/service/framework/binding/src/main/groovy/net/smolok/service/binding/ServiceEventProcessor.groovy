@@ -15,7 +15,7 @@ class ServiceEventProcessor {
         this.operationBindingFactory = operationBindingFactory
     }
 
-    OperationBinding process(ServiceEvent event) {
+    OperationBinding onEvent(ServiceEvent event) {
         def credentials = authenticationProvider.authenticate(event)
         bindCredentials(credentials)
         operationBindingFactory.operationBinding(credentials, event)
