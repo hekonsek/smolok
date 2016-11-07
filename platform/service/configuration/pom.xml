@@ -33,6 +33,10 @@
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-configuration-api</artifactId>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>
@@ -69,7 +73,7 @@
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-eventbus-client</artifactId>
+            <artifactId>smolok-service-configuration-sdk</artifactId>
             <scope>test</scope>
         </dependency>
 

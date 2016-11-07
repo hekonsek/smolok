@@ -158,6 +158,26 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-binding-client</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-configuration</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-configuration-api</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
+                <artifactId>smolok-service-configuration-sdk</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-service-documentstore-api</artifactId>
                 <version>${smolok.version}</version>
             </dependency>
