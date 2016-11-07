@@ -1,5 +1,6 @@
 package net.smolok.service.binding
 
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringRunner
-import smolok.bootstrap.Smolok
+
 import smolok.eventbus.client.EventBus
 import net.smolok.service.binding.security.AuthenticationProvider
 import net.smolok.service.binding.security.CredentialsHolder
@@ -21,7 +22,7 @@ import static smolok.eventbus.client.Header.arguments
 import static smolok.lib.common.Properties.setIntProperty
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = [Smolok, ServiceBindingTest])
+@SpringBootTest(classes = [KapuaApplication, ServiceBindingTest])
 @Configuration
 class ServiceBindingTest {
 

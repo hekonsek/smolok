@@ -1,12 +1,15 @@
 package net.smolok.cmd.core
 
+import org.eclipse.kapua.locator.spring.KapuaApplication
+import org.slf4j.LoggerFactory
 import org.springframework.context.ConfigurableApplicationContext
-import smolok.bootstrap.Smolok
 
 /**
  * Main class for Smolok command line.
  */
-class Cmd extends Smolok {
+class Cmd extends KapuaApplication {
+
+    def log = LoggerFactory.getLogger(Cmd)
 
     @Override
     ConfigurableApplicationContext run(String... command) {

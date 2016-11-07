@@ -17,6 +17,7 @@
 package net.smolok.service.device.kapua.spring
 
 import net.smolok.service.device.api.Device
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
@@ -24,7 +25,7 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
-import smolok.bootstrap.Smolok
+
 import smolok.eventbus.client.EventBus
 
 import static net.smolok.service.device.api.Device.device
@@ -35,7 +36,7 @@ import static smolok.lib.common.Properties.setIntProperty
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = Smolok)
+@SpringBootTest(classes = KapuaApplication)
 class KapuaDeviceServiceConfigurationTest {
 
     @Autowired

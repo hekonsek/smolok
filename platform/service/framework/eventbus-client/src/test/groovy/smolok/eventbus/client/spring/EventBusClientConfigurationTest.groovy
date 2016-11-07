@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.EqualsAndHashCode
 import org.apache.camel.ProducerTemplate
 import org.apache.camel.builder.RouteBuilder
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,9 +13,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.bootstrap.Smolok
+
 import smolok.eventbus.client.EventBus
-import smolok.eventbus.client.Header
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
@@ -23,7 +23,7 @@ import static smolok.eventbus.client.Header.smolokHeaderKey
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@SpringApplicationConfiguration(classes = KapuaApplication.class)
 @Configuration
 class EventBusClientConfigurationTest {
 

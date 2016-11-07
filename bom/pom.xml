@@ -58,6 +58,11 @@
             <!-- Smolok dependencies -->
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>kapua-locator-spring</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-bootstrap</artifactId>
                 <version>${smolok.version}</version>
             </dependency>

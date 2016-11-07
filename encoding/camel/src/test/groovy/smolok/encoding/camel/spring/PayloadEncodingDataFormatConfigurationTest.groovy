@@ -1,6 +1,7 @@
 package smolok.encoding.camel.spring;
 
-import org.assertj.core.api.Assertions;
+import org.assertj.core.api.Assertions
+import org.eclipse.kapua.locator.spring.KapuaApplication;
 import smolok.encoding.camel.PayloadEncodingDataFormat
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.RoutesBuilder;
@@ -12,10 +13,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.bootstrap.Smolok;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@SpringApplicationConfiguration(classes = KapuaApplication.class)
 @Configuration
 class PayloadEncodingDataFormatConfigurationTest {
 

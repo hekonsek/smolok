@@ -17,6 +17,7 @@
 package net.smolok.cmd.core.spring
 
 import org.apache.camel.builder.RouteBuilder
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -28,7 +29,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.context.junit4.SpringRunner
-import smolok.bootstrap.Smolok
+
 import net.smolok.cmd.core.Command
 import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.InMemoryOutputSink
@@ -45,7 +46,7 @@ import static smolok.lib.process.ExecutorBasedProcessManager.command
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = [CmdConfigurationTest.class, Smolok.class])
+@SpringBootTest(classes = [CmdConfigurationTest.class, KapuaApplication.class])
 @Configuration
 class CmdConfigurationTest {
 

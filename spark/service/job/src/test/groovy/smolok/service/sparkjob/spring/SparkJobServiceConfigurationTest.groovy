@@ -1,5 +1,6 @@
 package smolok.service.sparkjob.spring
 
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -8,7 +9,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.bootstrap.Smolok
+
 import smolok.eventbus.client.EventBus
 import smolok.lib.spark.EchoSparkSubmit
 import smolok.lib.spark.SparkSubmit
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static org.springframework.util.SocketUtils.findAvailableTcpPort
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = [Smolok.class])
+@SpringApplicationConfiguration(classes = [KapuaApplication.class])
 @Configuration
 class SparkJobServiceConfigurationTest {
 

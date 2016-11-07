@@ -1,11 +1,12 @@
 package smolok.lib.docker.spring
 
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.bootstrap.Smolok
+
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ContainerStatus
 import smolok.lib.docker.Docker
@@ -17,7 +18,7 @@ import static smolok.lib.docker.ServiceStartupResults.alreadyRunning
 import static smolok.lib.docker.ServiceStartupResults.created
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@SpringApplicationConfiguration(classes = KapuaApplication.class)
 class DockerConfigurationTest {
 
     @Autowired

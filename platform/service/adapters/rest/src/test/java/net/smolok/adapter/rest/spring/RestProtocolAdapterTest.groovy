@@ -18,6 +18,7 @@ package net.smolok.adapter.rest.spring
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.collect.ImmutableMap
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +31,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.web.client.RestTemplate
-import smolok.bootstrap.Smolok
+
 import smolok.encoding.spi.PayloadEncoding
 import net.smolok.service.binding.ServiceBinding
 import net.smolok.service.binding.ServiceEventProcessor
@@ -40,7 +41,7 @@ import static smolok.eventbus.client.Header.smolokHeaderKey
 import static smolok.lib.common.Networks.findAvailableTcpPort
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = [Smolok, RestProtocolAdapterTest])
+@SpringBootTest(classes = [KapuaApplication, RestProtocolAdapterTest])
 class RestProtocolAdapterTest {
 
     // Collaborators fixtures

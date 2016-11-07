@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package smolok.encoding.json.spring;
+package smolok.encoding.json.spring
 
+import org.eclipse.kapua.locator.spring.KapuaApplication;
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import smolok.bootstrap.Smolok
+
 import smolok.encoding.spi.PayloadEncoding
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Smolok.class)
+@SpringApplicationConfiguration(classes = KapuaApplication.class)
 class JsonPayloadEncodingConfigurationTest {
 
     @Autowired
