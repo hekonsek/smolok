@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat
 class BindingClientFactoryConfigurationTest {
 
     @Bean
-    TestService testService() {
+    TestServiceImpl testService() {
         new TestServiceImpl()
     }
 
@@ -33,7 +33,7 @@ class BindingClientFactoryConfigurationTest {
     }
 
     @Autowired
-    TestService testServiceClient
+    TestServiceImpl testServiceClient
 
     @Test
     void shouldAcceptSingleArgument() {
@@ -53,6 +53,12 @@ class BindingClientFactoryConfigurationTest {
         assertThat(response).isEqualTo('echo')
     }
 
+    @Test
+    void shouldHandleVoidOperation() {
+        testServiceClient.noResponse('innerValue')
+        assertThat(testServiceClient.innerValue).isEqualTo('innerValue')
+    }
+
     static interface TestService {
 
         String echo(String echo)
@@ -61,9 +67,13 @@ class BindingClientFactoryConfigurationTest {
 
         String noArguments()
 
+        void noResponse(String innerValue)
+
     }
 
     static class TestServiceImpl implements TestService {
+
+        String innerValue
 
         @Override
         String echo(String echo) {
@@ -78,6 +88,11 @@ class BindingClientFactoryConfigurationTest {
         @Override
         String noArguments() {
             'echo'
+        }
+
+        @Override
+        void noResponse(String innerValue) {
+            this.innerValue = innerValue
         }
 
     }

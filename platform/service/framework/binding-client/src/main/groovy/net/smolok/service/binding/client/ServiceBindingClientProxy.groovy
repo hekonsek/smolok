@@ -31,7 +31,13 @@ class ServiceBindingClientProxy implements InvocationHandler {
             remindedArguments.remove(args.length - 1)
             headers = Header.arguments(remindedArguments)
         }
-        eventBus.fromBus("${serviceName}.${method.name}", body, method.returnType, headers)
+
+        if(method.returnType == Void.TYPE) {
+            eventBus.toBusAndWait("${serviceName}.${method.name}", body, headers)
+            null
+        } else {
+            eventBus.fromBus("${serviceName}.${method.name}", body, method.returnType, headers)
+        }
     }
 
 }
