@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static java.util.Arrays.asList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -22,11 +23,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 @SpringBootApplication(scanBasePackages = "org.eclipse.kapua")
 public class KapuaApplication {
 
+    // Logger
+
     private static final Logger LOG = getLogger(KapuaApplication.class);
 
     // Execution points
 
     public ConfigurableApplicationContext run(String... args) {
+        LOG.debug("Running Spring application with arguments: {}", asList(args));
         return new SpringApplicationBuilder(KapuaApplication.class).run(args);
     }
 

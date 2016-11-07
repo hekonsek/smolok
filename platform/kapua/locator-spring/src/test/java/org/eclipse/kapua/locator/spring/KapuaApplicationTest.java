@@ -18,10 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Configuration
 public class KapuaApplicationTest {
 
+    // Fixtures
+
     @Bean
     String kapuaBean() {
         return "kapuaBean";
     }
+
+    // Tests
 
     @Test
     public void shouldLoadBeanFromKapuaClasspath() {
