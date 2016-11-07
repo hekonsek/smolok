@@ -120,6 +120,40 @@ can tell you if the Smolok Event Bus is up and operational:
     $ smolok cloud status
     eventbus.canSend	true
 
+#### Accessing Configuration Service from Spring Boot
+
+Smolok Cloud comes with the Configuration Service out of the box (i.e. distributed key-value service that can be read
+and modified using Event Bus). In order to access this service from the Spring Boot application, add the following
+dependency to your `pom.xml`:
+
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-configuration-sdk</artifactId>
+            <version>0.0.9</version>
+        </dependency>
+
+Then inject `net.smolok.service.configuration.api.ConfigurationService` into your Spring bean:
+
+    @Component
+    class MyBean {
+
+        @Autowired
+        ConfigurationService configurationService
+
+        public String readConfig() {
+            configurationService.get("foo");
+        }
+
+        public void writeConfig() {
+            configurationService.put("foo", "bar");
+        }
+
+    }
+
+If you deploy your application into Kubernetes, it is all you need to do. If your Spring Boot application is deployed
+outside of the Kubernetes, you need to specify the coordinates of the Smolok Cloud Event Bus using `EVENTBUS_SERVICE_HOST`
+and `EVENTBUS_SERVICE_PORT` environment variables (or system properties).
+
 #### Starting device management service
 
 Now when you have your Smolok Cloud started, you probably would like to connect some device into it. Usually before you
@@ -224,6 +258,40 @@ One of the services that comes with Smolok Cloud out of the box is Configuration
 service that can be read and modified using Event Bus.
 
 Default Configuration Service started with Smolok Cloud is based Java properties file stored on the Kubernetes volume.
+
+##### Accessing Configuration Service from Spring Boot
+
+Smolok Cloud comes with the Configuration Service out of the box (i.e. distributed key-value service that can be read
+and modified using Event Bus). In order to access this service from the Spring Boot application, add the following
+dependency to your `pom.xml`:
+
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-configuration-sdk</artifactId>
+            <version>0.0.9</version>
+        </dependency>
+
+Then inject `net.smolok.service.configuration.api.ConfigurationService` into your Spring bean:
+
+    @Component
+    class MyBean {
+
+        @Autowired
+        ConfigurationService configurationService
+
+        public String readConfig() {
+            configurationService.get("foo");
+        }
+
+        public void writeConfig() {
+            configurationService.put("foo", "bar");
+        }
+
+    }
+
+If you deploy your application into Kubernetes, it is all you need to do. If your Spring Boot application is deployed
+outside of the Kubernetes, you need to specify the coordinates of the Smolok Cloud Event Bus using `EVENTBUS_SERVICE_HOST`
+and `EVENTBUS_SERVICE_PORT` environment variables (or system properties).
 
 #### Device management service
 
