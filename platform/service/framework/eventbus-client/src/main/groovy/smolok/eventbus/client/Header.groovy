@@ -5,6 +5,8 @@ package smolok.eventbus.client
  */
 class Header {
 
+    // Constants
+
     public static final String SMOLOK_HEADER_PREFIX = 'SMOLOK_ARG'
 
     // Members
@@ -26,8 +28,12 @@ class Header {
         new Header(key, value)
     }
 
-    static Header[] arguments(Object... arguments) {
+    static Header[] arguments(Iterable<Object> arguments) {
         arguments.toList().withIndex().collect{ arg, i -> header(smolokHeaderKey(i), arguments[i]) }
+    }
+
+    static Header[] arguments(Object... args) {
+        arguments(args.toList())
     }
 
     static Map<String, Object> arguments(Header[] arguments) {
