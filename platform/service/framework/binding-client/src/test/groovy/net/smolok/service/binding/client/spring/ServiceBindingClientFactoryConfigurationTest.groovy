@@ -2,7 +2,7 @@ package net.smolok.service.binding.client.spring
 
 import net.smolok.service.binding.ServiceBinding
 import net.smolok.service.binding.ServiceBindingFactory
-import net.smolok.service.binding.client.BindingClientFactory
+import net.smolok.service.binding.client.ServiceBindingClientFactory
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,8 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner
 import static org.assertj.core.api.Assertions.assertThat
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = [KapuaApplication, BindingClientFactoryConfigurationTest])
-class BindingClientFactoryConfigurationTest {
+@SpringBootTest(classes = [KapuaApplication, ServiceBindingClientFactoryConfigurationTest])
+class ServiceBindingClientFactoryConfigurationTest {
 
     @Bean
     TestServiceImpl testService() {
@@ -28,7 +28,7 @@ class BindingClientFactoryConfigurationTest {
     }
 
     @Bean
-    TestService testServiceClient(BindingClientFactory bindingClientFactory) {
+    TestService testServiceClient(ServiceBindingClientFactory bindingClientFactory) {
         bindingClientFactory.build(TestService.class, 'testService')
     }
 
