@@ -30,7 +30,7 @@ if [ -z "$AGENT_PROCESS" ]; then
     fi
 
     echo 'Starting Smolok agent...'
-    nohup java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar > /dev/null &
+    nohup java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar >/dev/null 2>&1 &
 
     REST_API_OUTPUT=''
     while [ -z "$REST_API_OUTPUT" ]; do
@@ -49,6 +49,10 @@ COMMAND_ID=`curl -s http://localhost:8081/execute/${COMMAND}`
 OFFSET=0
 
 while [ "${OFFSET}" != "-1" ]; do
-    echo `curl -s http://localhost:8081/output/${COMMAND_ID}/${OFFSET}   | tail -n +2`
-    OFFSET=`curl -s http://localhost:8081/output/${COMMAND_ID}/${OFFSET}  | head -n 1`
+    OUTPUT_BATCH=`curl -s http://localhost:8081/output/${COMMAND_ID}/${OFFSET}`
+    TEXT=`echo $OUTPUT_BATCH | sed 's/___/\n/g' | tail -n +2`
+    if [ ! -z "$TEXT" ]; then
+        echo $TEXT
+    fi
+    OFFSET=`echo $OUTPUT_BATCH | sed 's/___/\n/g' | head -n 1`
 done
