@@ -25,12 +25,12 @@ class CloudResetCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         validateOptions(command)
 
-        outputSink.out('Resetting Smolok Cloud...')
+        outputSink.out(commandId, 'Resetting Smolok Cloud...')
         paas.reset()
-        outputSink.out('Smolok Cloud has been reset.')
+        outputSink.out(commandId, 'Smolok Cloud has been reset.')
     }
 
 }

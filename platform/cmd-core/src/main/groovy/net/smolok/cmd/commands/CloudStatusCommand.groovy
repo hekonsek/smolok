@@ -16,9 +16,9 @@ class CloudStatusCommand extends BaseCommand {
     // Handler operations
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         statusResolver.status().each {
-            outputSink.out("${it.key()}\t${it.value()}\t${it.warning() ? 'Warning!' : ''}")
+            outputSink.out(commandId, "${it.key()}\t${it.value()}\t${it.warning() ? 'Warning!' : ''}")
         }
     }
 

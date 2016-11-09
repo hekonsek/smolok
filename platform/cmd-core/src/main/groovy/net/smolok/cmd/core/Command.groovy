@@ -16,7 +16,7 @@ interface Command {
      */
     boolean supports(String... command)
 
-    void handle(OutputSink outputSink, String... command)
+    void handle(OutputSink outputSink, String commandId, String... command)
 
     boolean helpRequested(String... command)
 

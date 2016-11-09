@@ -20,11 +20,11 @@ class ServiceStartCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         def serviceLocator = command[1]
-        outputSink.out("Starting service '${serviceLocator}'...")
+        outputSink.out(commandId, "Starting service '${serviceLocator}'...")
         paas.startService(serviceLocator)
-        outputSink.out('Service started.')
+        outputSink.out(commandId, 'Service started.')
     }
 
 }

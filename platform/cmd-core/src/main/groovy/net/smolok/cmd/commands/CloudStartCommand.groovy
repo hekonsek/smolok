@@ -20,10 +20,10 @@ class CloudStartCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
-        outputSink.out('Starting Smolok Cloud...')
+    void handle(OutputSink outputSink, String commandId, String... command) {
+        outputSink.out(commandId, 'Starting Smolok Cloud...')
         paas.start()
-        outputSink.out('Smolok Cloud started.')
+        outputSink.out(commandId, 'Smolok Cloud started.')
     }
 
 }

@@ -1,8 +1,9 @@
 package net.smolok.cmd.commands
 
+import net.smolok.cmd.core.OutputSink
 import org.apache.commons.lang3.Validate
 import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+
 import smolok.lib.docker.Container
 import smolok.lib.docker.Docker
 
@@ -23,7 +24,7 @@ class SparkSubmitCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... inputCommand) {
+    void handle(OutputSink outputSink, String commandId, String... inputCommand) {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
@@ -45,7 +46,7 @@ class SparkSubmitCommand extends BaseCommand {
             arguments[indexOfJobArtifact] = "/var/smolok/spark/jobs/${arguments[indexOfJobArtifact]}".toString()
         }
         docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', cleanUp, ['/var/smolok/spark': '/var/smolok/spark'], [:], arguments)).each {
-            outputSink.out(it)
+            outputSink.out(commandId, it)
         }
     }
 

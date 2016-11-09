@@ -29,33 +29,37 @@ class CommandDispatcher {
 
     // Operations
 
-    void handleCommand(String... command) {
-        LOG.debug('Executing command: {}', command.toList())
-        if (command.length == 0) {
-            outputSink.out('Cannot execute empty command. Use --help option to list available commands.')
-            return
-        }
-
-        if(command[0] == '--help') {
-            def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
-            outputSink.out("Welcome to Smolok v${smolokVersion}.")
-            return
-        }
-
-        def flatCommand = command.join(' ')
-        LOG.debug('About to execute command {}', flatCommand)
+    void handleCommand(String commandId, String... command) {
         try {
-            def handler = commands.find { it.supports(command) }
-            Validate.notNull(handler, "Cannot find handler for the command: ${flatCommand}")
-
-            if(handler.helpRequested(command)) {
-                outputSink.out(handler.help())
-            } else {
-                handler.handle(outputSink, command)
+            LOG.debug('Executing command: {}', command.toList())
+            if (command.length == 0) {
+                outputSink.out(commandId, 'Cannot execute empty command. Use --help option to list available commands.')
+                return
             }
-        } catch (Exception e) {
-            outputSink.out(e.message)
-            LOG.info('Exception catch during command execution:', e)
+
+            if (command[0] == '--help') {
+                def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
+                outputSink.out(commandId, "Welcome to Smolok v${smolokVersion}.")
+                return
+            }
+
+            def flatCommand = command.join(' ')
+            LOG.debug('About to execute command {}', flatCommand)
+            try {
+                def handler = commands.find { it.supports(command) }
+                Validate.notNull(handler, "Cannot find handler for the command: ${flatCommand}")
+
+                if (handler.helpRequested(command)) {
+                    outputSink.out(commandId, handler.help())
+                } else {
+                    handler.handle(outputSink, commandId, command)
+                }
+            } catch (Exception e) {
+                outputSink.out(commandId, e.message)
+                LOG.info('Exception catch during command execution:', e)
+            }
+        }  finally {
+            outputSink.markAsDone(commandId)
         }
     }
 

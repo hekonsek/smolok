@@ -21,7 +21,7 @@
 
     <properties>
         <!-- Docker image configuration -->
-        <mainClass>net.smolok.cmd.core.Cmd</mainClass>
+        <mainClass>org.eclipse.kapua.SmolokApplication</mainClass>
     </properties>
 
     <dependencies>

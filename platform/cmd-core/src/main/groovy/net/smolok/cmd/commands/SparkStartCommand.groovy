@@ -1,9 +1,10 @@
 package net.smolok.cmd.commands
 
+import net.smolok.cmd.core.OutputSink
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory
 import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ServiceStartupResults
 import smolok.lib.docker.Docker
@@ -34,7 +35,7 @@ class SparkStartCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... inputCommand) {
+    void handle(OutputSink outputSink, String commandId, String... inputCommand) {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
@@ -48,12 +49,12 @@ class SparkStartCommand extends BaseCommand {
 
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
-            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
-            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
         } else if(inputCommand[2] == 'master') {
-            startSparkNode(outputSink, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
         } else if(inputCommand[2] == 'worker') {
-            startSparkNode(outputSink, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
         } else {
             throw new RuntimeException("Unknown Spark node type: ${inputCommand[2]}")
         }
@@ -61,17 +62,17 @@ class SparkStartCommand extends BaseCommand {
 
     // Private helpers
 
-    private void startSparkNode(OutputSink outputSink, String imageVersion, String nodeType, Optional<String> masterUrl, String host, Optional<String> masterIP, Optional<String> localIP) {
+    private void startSparkNode(OutputSink outputSink, String commandId, String imageVersion, String nodeType, Optional<String> masterUrl, String host, Optional<String> masterIP, Optional<String> localIP) {
         LOG.debug('Starting Spark node: {}', nodeType)
         switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl, host, masterIP.orElse(null), localIP.orElse(null))) {
             case alreadyRunning:
-                outputSink.out("Spark ${nodeType} is already running. No need to start it.")
+                outputSink.out(commandId, "Spark ${nodeType} is already running. No need to start it.")
                 break
             case started:
-                outputSink.out("Started existing Spark ${nodeType} instance.")
+                outputSink.out(commandId, "Started existing Spark ${nodeType} instance.")
                 break
             case created:
-                outputSink.out("No Spark ${nodeType} found. New one created and started.")
+                outputSink.out(commandId, "No Spark ${nodeType} found. New one created and started.")
                 break
         }
     }

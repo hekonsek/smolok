@@ -1,29 +1,20 @@
 package net.smolok.cmd.core.spring
 
-import net.smolok.cmd.commands.AdapterStartCommand
-import net.smolok.cmd.commands.CloudResetCommand
-import net.smolok.cmd.commands.ServiceStartCommand
-import net.smolok.cmd.commands.ZeppelinStartCommand
+import net.smolok.cmd.commands.*
+import net.smolok.cmd.core.Command
+import net.smolok.cmd.core.CommandDispatcher
+import net.smolok.cmd.core.GuavaCacheOutputSink
+import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.endpoints.RestEndpoint
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
+import net.smolok.paas.Paas
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import net.smolok.cmd.core.Command
-import net.smolok.cmd.core.CommandDispatcher
-import net.smolok.cmd.core.OutputSink
-import net.smolok.cmd.core.StdoutOutputSink
-import net.smolok.cmd.commands.CloudStartCommand
-import net.smolok.cmd.commands.CloudStatusCommand
-import net.smolok.cmd.commands.EndpointCommand
-import net.smolok.cmd.commands.SdcardInstallRaspbianCommand
-import net.smolok.cmd.commands.SparkStartCommand
-import net.smolok.cmd.commands.SparkSubmitCommand
-
 import smolok.lib.docker.Docker
 import smolok.lib.process.ProcessManager
-import net.smolok.paas.Paas
 import smolok.status.StatusResolver
 
 /**
@@ -35,13 +26,18 @@ class CmdConfiguration {
     @Bean
     @ConditionalOnMissingBean
     OutputSink outputSink() {
-        new StdoutOutputSink()
+        new GuavaCacheOutputSink()
     }
 
     @Bean
     @ConditionalOnMissingBean
     CommandDispatcher commandDispatcher(OutputSink outputSink, List<Command> commands) {
         new CommandDispatcher(outputSink, commands)
+    }
+
+    @Bean
+    RestEndpoint restEndpoint(CommandDispatcher commandDispatcher, OutputSink readableOutputSink, @Value('${agent.rest.port:8081}') int port) {
+        new RestEndpoint(commandDispatcher, readableOutputSink, port)
     }
 
     // Commands

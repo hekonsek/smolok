@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat
 
 class BaseCommandTest {
 
-    def output = new InMemoryOutputSink()
+    def output = new GuavaCacheOutputSink()
 
     def command = new TestCommand()
 

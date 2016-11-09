@@ -39,7 +39,7 @@ class ZeppelinStartCommand extends BaseCommand {
     }
 
     @Override
-    void handle(OutputSink outputSink, String... inputCommand) {
+    void handle(OutputSink outputSink, String commandId, String... inputCommand) {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas')
         Validate.isTrue(smolokVersion.present, 'Smolok version cannot be resolved.')
 
@@ -77,13 +77,13 @@ class ZeppelinStartCommand extends BaseCommand {
         def container = containerBuilder.build()
         switch (docker.startService(container)) {
             case alreadyRunning:
-                outputSink.out("Zeppelin is already running. No need to start it.")
+                outputSink.out(commandId, "Zeppelin is already running. No need to start it.")
                 break
             case started:
-                outputSink.out("Started existing Zeppelin instance.")
+                outputSink.out(commandId, "Started existing Zeppelin instance.")
                 break
             case created:
-                outputSink.out("No Zeppelin found. New one created and started.")
+                outputSink.out(commandId, "No Zeppelin found. New one created and started.")
                 break
         }
 

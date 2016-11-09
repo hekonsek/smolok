@@ -1,9 +1,9 @@
 package net.smolok.cmd.commands
 
+import net.smolok.cmd.core.OutputSink
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.Validate
 import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
 
 import smolok.lib.process.ProcessManager
 
@@ -41,7 +41,7 @@ class SdcardInstallRaspbianCommand extends BaseCommand {
     // Command operations
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         // Device validation
         Validate.isTrue(command.length >= 3, 'Device not specified. Expected device name, for example:\n\n\tsmolok sdcard install-raspbian mmcblk0')
         def device = "${devicesDirectory}/${command[2]}"
@@ -49,13 +49,13 @@ class SdcardInstallRaspbianCommand extends BaseCommand {
 
         downloadManager.download(image)
 
-        outputSink.out('Writing image to SD card...')
+        outputSink.out(commandId, 'Writing image to SD card...')
         def extractedImage = downloadManager.downloadedFile(image.extractedFileName())
         processManager.execute(cmd("dd", "bs=4M", "if=${extractedImage}", "of=${device}")).forEach {
-            outputSink.out(it)
+            outputSink.out(commandId, it)
         }
         processManager.execute(cmd('sync')).forEach {
-            outputSink.out(it)
+            outputSink.out(commandId, it)
         }
     }
 

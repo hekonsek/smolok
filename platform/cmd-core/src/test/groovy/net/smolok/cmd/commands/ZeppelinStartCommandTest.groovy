@@ -1,6 +1,5 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.commands.ZeppelinStartCommand
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
@@ -9,6 +8,7 @@ import smolok.lib.docker.Docker
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.BDDMockito.given
+import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class ZeppelinStartCommandTest {
@@ -17,6 +17,8 @@ class ZeppelinStartCommandTest {
 
     def containerCaptor = ArgumentCaptor.forClass(Container.class)
 
+    def commandId = uuid()
+
     @Test
     void shouldUseDefaultValues() {
         // Given
@@ -24,7 +26,7 @@ class ZeppelinStartCommandTest {
         def cmd = new ZeppelinStartCommand(docker)
 
         // When
-        cmd.handle(null, command('zeppelin start'))
+        cmd.handle(null, commandId, command('zeppelin start'))
 
         // Then
         def container = containerCaptor.value
@@ -39,7 +41,7 @@ class ZeppelinStartCommandTest {
         def cmd = new ZeppelinStartCommand(docker)
 
         // When
-        cmd.handle(null, command('zeppelin start --master=foo'))
+        cmd.handle(null, commandId, command('zeppelin start --master=foo'))
 
         // Then
         def container = containerCaptor.value
@@ -53,7 +55,7 @@ class ZeppelinStartCommandTest {
         def cmd = new ZeppelinStartCommand(docker)
 
         // When
-        cmd.handle(null, command("zeppelin start --localIP=bar --deploy-mode cluster --executor-memory 2G"))
+        cmd.handle(null, commandId, command("zeppelin start --localIP=bar --deploy-mode cluster --executor-memory 2G"))
 
         // Then
         def container = containerCaptor.value
@@ -68,7 +70,7 @@ class ZeppelinStartCommandTest {
         def cmd = new ZeppelinStartCommand(docker)
 
         // When
-        cmd.handle(null, command("zeppelin start --notebookDir=/foo/bar"))
+        cmd.handle(null, commandId, command("zeppelin start --notebookDir=/foo/bar"))
 
         // Then
         def container = containerCaptor.value

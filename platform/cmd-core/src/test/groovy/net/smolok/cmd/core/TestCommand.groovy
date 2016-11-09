@@ -23,7 +23,7 @@ class TestCommand extends BaseCommand {
     }
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         validateOptions(command)
     }
 

@@ -14,13 +14,13 @@ class EndpointCommand extends BaseCommand {
     }
 
     @Override
-    void handle(OutputSink outputSink, String... command) {
+    void handle(OutputSink outputSink, String commandId, String... command) {
         def endpointUri = command[1]
         def body = command [2]
 
         def response = endpoint.request(endpointUri, body)
 
-        outputSink.out(response)
+        outputSink.out(commandId, response)
     }
 
 }

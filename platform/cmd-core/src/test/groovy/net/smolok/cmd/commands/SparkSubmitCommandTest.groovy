@@ -24,6 +24,7 @@ import smolok.lib.docker.Docker
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.mockito.BDDMockito.given
+import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
 class SparkSubmitCommandTest {
@@ -32,6 +33,8 @@ class SparkSubmitCommandTest {
 
     def containerCaptor = ArgumentCaptor.forClass(Container.class)
 
+    def commandId = uuid()
+
     @Test
     void shouldPassArguments() {
         // Given
@@ -39,7 +42,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -53,7 +56,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit --master=foo artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit --master=foo artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -67,7 +70,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit --master=foo artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit --master=foo artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -82,7 +85,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit --master=foo --keep-logs artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit --master=foo --keep-logs artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -97,7 +100,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -111,7 +114,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit --deploy-mode=client artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit --deploy-mode=client artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
@@ -125,7 +128,7 @@ class SparkSubmitCommandTest {
         def cmd = new SparkSubmitCommand(docker)
 
         // When
-        cmd.handle(null, command('spark submit --deploy-mode=cluster artifact argument1 argument2'))
+        cmd.handle(null, commandId, command('spark submit --deploy-mode=cluster artifact argument1 argument2'))
 
         // Then
         def container = containerCaptor.value
