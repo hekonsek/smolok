@@ -194,6 +194,7 @@ class CmdConfigurationTest {
         def commandId = commandHandler.handleCommand(command('spark start'))
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(docker.status('spark-master')).isIn(created, running)
         assertThat(docker.status('spark-worker')).isIn(created, running)
     }
@@ -299,6 +300,7 @@ class CmdConfigurationTest {
         def commandId = commandHandler.handleCommand(command('zeppelin start'))
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(docker.status('zeppelin')).isIn(created, running)
     }
 
