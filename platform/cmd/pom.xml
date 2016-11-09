@@ -19,11 +19,6 @@
         </license>
     </licenses>
 
-    <properties>
-        <!-- Docker image configuration -->
-        <mainClass>org.eclipse.kapua.locator.spring.KapuaApplication</mainClass>
-    </properties>
-
     <dependencies>
         <!-- Internal dependencies -->
         <dependency>
