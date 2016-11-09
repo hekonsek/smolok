@@ -300,7 +300,7 @@ class CmdConfigurationTest {
         def commandId = commandHandler.handleCommand(command('zeppelin start'))
 
         // Then
-        await().until condition {outputSink.isDone(commandId)}
+        await().atMost(3, MINUTES).until condition {outputSink.isDone(commandId)}
         assertThat(docker.status('zeppelin')).isIn(created, running)
     }
 
