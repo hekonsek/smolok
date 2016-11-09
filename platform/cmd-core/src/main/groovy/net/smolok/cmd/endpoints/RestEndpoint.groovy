@@ -21,8 +21,10 @@ class RestEndpoint extends RouteBuilder {
         this.port = port
     }
 
+    // Routes
+
     @Override
-    void configure() throws Exception {
+    void configure() {
         from("netty4-http:http://localhost:${port}/execute?matchOnUriPrefix=true").process {
             def requestUri = it.getIn().getHeader(HTTP_URI, String).substring(9)
             def command = new String(Base64.decoder.decode(requestUri))
@@ -31,14 +33,14 @@ class RestEndpoint extends RouteBuilder {
             it.in.body = commandId
         }
 
-        from("netty4-http:http://localhost:${port}/output?matchOnUriPrefix=true").process {
-            def commandId = it.getIn().getHeader(HTTP_URI, String).substring(8)
-            def xxx = commandId.split('/')
-            def lines = readableOutputSink.output(xxx[0], xxx[1].toInteger())
+        from("netty4-http:http://localhost:${port}/output/{commandId}/{offset}").process {
+            def commandId = it.in.getHeader('commandId', String)
+            def offset = it.in.getHeader('offset', int)
+            def lines = readableOutputSink.output(commandId, offset)
             if(lines == null) {
                 it.in.body = '-1'
             } else {
-                it.in.body = "${xxx[1].toInteger() + lines.size()}\n" + lines.join('\n')
+                it.in.body = "${offset + lines.size()}\n" + lines.join('\n')
             }
         }
     }
