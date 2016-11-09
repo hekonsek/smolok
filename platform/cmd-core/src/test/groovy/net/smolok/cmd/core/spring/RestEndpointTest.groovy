@@ -16,36 +16,19 @@
  */
 package net.smolok.cmd.core.spring
 
-import net.smolok.cmd.core.Command
-import net.smolok.cmd.core.CommandDispatcher
-import net.smolok.cmd.core.OutputSink
-import net.smolok.cmd.core.TestCommand
-import net.smolok.paas.Paas
 import org.apache.camel.builder.RouteBuilder
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
-import org.junit.Before
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.test.annotation.IfProfileValue
 import org.springframework.test.context.junit4.SpringRunner
-import smolok.lib.common.Networks
-import smolok.lib.docker.Docker
 
-import static com.google.common.io.Files.createTempDir
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Networks.findAvailableTcpPort
-import static smolok.lib.common.Uuids.uuid
-import static smolok.lib.docker.ContainerStatus.created
-import static smolok.lib.docker.ContainerStatus.running
-import static smolok.lib.process.ExecutorBasedProcessManager.command
-import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = [RestEndpointTest.class, KapuaApplication.class])
@@ -75,6 +58,9 @@ class RestEndpointTest {
     void shouldReturnWelcomeMessage() {
         // When
         def commandId = IOUtils.toString(new URL("http://localhost:${restPort}/execute/" + new String(Base64.encoder.encode('--help'.getBytes()))))
+
+        Thread.sleep(3000)
+
         def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
         def outputList = output.split('\n')
         assertThat(outputList[1]).startsWith('Welcome to Smolok')
@@ -84,6 +70,8 @@ class RestEndpointTest {
     void shouldReturnExecutionDoneMarker() {
         // When
         def commandId = IOUtils.toString(new URL("http://localhost:${restPort}/execute/" + new String(Base64.encoder.encode('--help'.getBytes()))))
+
+        Thread.sleep(3000)
 
         def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
         def outputList = output.split('\n')
