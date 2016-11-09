@@ -16,6 +16,7 @@
  */
 package net.smolok.cmd.core.spring
 
+import com.jayway.awaitility.Awaitility
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
@@ -23,9 +24,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
+import smolok.lib.common.Awaitilities
 
+import static com.jayway.awaitility.Awaitility.await
 import static java.util.Base64.encoder
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.common.Awaitilities.condition
 import static smolok.lib.common.Networks.findAvailableTcpPort
 
 @RunWith(SpringRunner)
@@ -41,20 +45,22 @@ class RestEndpointTest {
 
     def executeUrl = "http://localhost:${restPort}/execute"
 
+    def outputUrl = { commandId, offset -> new URL("http://localhost:${restPort}/output/${commandId}/${offset}") }
+
     def encodedHelpOption = new String(encoder.encode('--help'.getBytes()))
 
     def executeHelpUrl = new URL("${executeUrl}/${encodedHelpOption}")
 
-    // Cloud tests
+    // Tests
 
     @Test
     void shouldReturnWelcomeMessage() {
         // Given
         def commandId = IOUtils.toString(executeHelpUrl)
-        Thread.sleep(3000)
+        await().until condition { IOUtils.toString(outputUrl(commandId, 0)) != '0' }
 
         // When
-        def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
+        def output = IOUtils.toString(outputUrl(commandId, 0))
         def outputList = output.split('\n')
 
         // Then
@@ -65,8 +71,7 @@ class RestEndpointTest {
     void shouldReturnExecutionDoneMarker() {
         // When
         def commandId = IOUtils.toString(executeHelpUrl)
-
-        Thread.sleep(3000)
+        await().until condition { IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0") ) != '0' }
 
         def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
         def outputList = output.split('\n')
