@@ -1,15 +1,16 @@
 package net.smolok.cmd.core
 
 import com.google.common.cache.Cache
-import com.google.common.cache.CacheBuilder
 
 import java.util.concurrent.Callable
 
+import static com.google.common.cache.CacheBuilder.newBuilder
+
 class GuavaCacheOutputSink implements OutputSink {
 
-    Cache<String, List<String>> outputCache = CacheBuilder.newBuilder().build()
+    private final Cache<String, List<String>> outputCache = newBuilder().build()
 
-    Cache<String, Boolean> doneMarkers = CacheBuilder.newBuilder().build()
+    private final Cache<String, Boolean> doneMarkers = newBuilder().build()
 
     @Override
     List<String> output(String commandId, int offset) {
@@ -39,6 +40,16 @@ class GuavaCacheOutputSink implements OutputSink {
     @Override
     def markAsDone(String commandId) {
         doneMarkers.put(commandId, true)
+    }
+
+    @Override
+    boolean isDone(String commandId) {
+        doneMarkers.get(commandId, new Callable<Boolean>() {
+            @Override
+            Boolean call() throws Exception {
+                false
+            }
+        })
     }
 
     @Override

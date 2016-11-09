@@ -37,7 +37,11 @@ import org.springframework.test.context.junit4.SpringRunner
 import smolok.lib.docker.Docker
 
 import static com.google.common.io.Files.createTempDir
+import static com.jayway.awaitility.Awaitility.await
+import static java.util.concurrent.TimeUnit.MINUTES
 import static org.assertj.core.api.Assertions.assertThat
+import static smolok.lib.common.Awaitilities.condition
+import static smolok.lib.common.Networks.findAvailableTcpPort
 import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.running
@@ -82,6 +86,7 @@ class CmdConfigurationTest {
         System.setProperty('devices.directory', devicesDirectory.absolutePath)
         System.setProperty('raspbian.image.file.name.extracted', uuid())
         System.setProperty('raspbian.image.file.name.compressed', "${uuid()}.zip")
+        System.setProperty('agent.rest.port', "${findAvailableTcpPort()}")
     }
 
     // PaaS fixtures
@@ -104,7 +109,7 @@ class CmdConfigurationTest {
     @Test
     void shouldExecuteCloudStartCommand() {
         // When
-        commandHandler.handleCommand(commandId, 'cloud', 'start')
+        def commandId = commandHandler.handleCommand('cloud', 'start')
 
         // Then
         assertThat(paas.started)
@@ -113,9 +118,10 @@ class CmdConfigurationTest {
     @Test
     void shouldInformAboutCloudStart() {
         // When
-        commandHandler.handleCommand(commandId, 'cloud', 'start')
+        def commandId = commandHandler.handleCommand('cloud', 'start')
 
         // Then
+        await().atMost(3, MINUTES).until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0)).hasSize(2)
         assertThat(outputSink.output(commandId, 0)).containsSubsequence('Smolok Cloud started.')
     }
@@ -126,9 +132,10 @@ class CmdConfigurationTest {
         paas.start()
 
         // When
-        commandHandler.handleCommand(commandId, 'cloud', 'status')
+        def commandId = commandHandler.handleCommand('cloud', 'status')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         def eventBusStatus = outputSink.output(commandId, 0).find{ it.startsWith(EVENTBUS_CAN_SEND_METRIC_KEY) }
         assertThat(eventBusStatus).startsWith("${EVENTBUS_CAN_SEND_METRIC_KEY}\t${true}")
     }
@@ -136,9 +143,10 @@ class CmdConfigurationTest {
     @Test
     void cloudResetShouldNotAcceptOptions() {
         // When
-        commandHandler.handleCommand(commandId, 'cloud', 'reset', '--someOption')
+        def commandId = commandHandler.handleCommand('cloud', 'reset', '--someOption')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).contains('Unsupported options used')
     }
 
@@ -151,27 +159,30 @@ class CmdConfigurationTest {
         device.createNewFile()
 
         // When
-        commandHandler.handleCommand(commandId, 'sdcard', 'install-raspbian', 'foo')
+        def commandId = commandHandler.handleCommand('sdcard', 'install-raspbian', 'foo')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(device.length()).isGreaterThan(0L)
     }
 
     @Test
     void shouldValidateDeviceParameterAbsence() {
         // When
-        commandHandler.handleCommand(commandId, 'sdcard', 'install-raspbian')
+        def commandId = commandHandler.handleCommand('sdcard', 'install-raspbian')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).startsWith('Device not specified.')
     }
 
     @Test
     void shouldValidateDeviceAbsence() {
         // When
-        commandHandler.handleCommand(commandId, 'sdcard', 'install-raspbian', 'bar')
+        def commandId = commandHandler.handleCommand('sdcard', 'install-raspbian', 'bar')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).matches('Device .* does not exist.')
     }
 
@@ -180,7 +191,7 @@ class CmdConfigurationTest {
     @Test
     void shouldStartSpark() {
         // When
-        commandHandler.handleCommand(commandId, command('spark start'))
+        def commandId = commandHandler.handleCommand(command('spark start'))
 
         // Then
         assertThat(docker.status('spark-master')).isIn(created, running)
@@ -190,18 +201,20 @@ class CmdConfigurationTest {
     @Test
     void shouldValidateInvalidSparkCluster() {
         // When
-        commandHandler.handleCommand(commandId, command('spark start foo'))
+        def commandId = commandHandler.handleCommand(command('spark start foo'))
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).isEqualTo('Unknown Spark node type: foo')
     }
 
     @Test
     void shouldHandleEmptyCommand() {
         // When
-        commandHandler.handleCommand(commandId)
+        def commandId = commandHandler.handleCommand()
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).matches(/Cannot execute empty command.+/)
     }
 
@@ -210,18 +223,20 @@ class CmdConfigurationTest {
     @Test
     void shouldDisplayGlobalHelp() {
         // When
-        commandHandler.handleCommand(commandId, '--help')
+        def commandId = commandHandler.handleCommand('--help')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).startsWith('Welcome')
     }
 
     @Test
     void shouldDisplayCommandHelp() {
         // When
-        commandHandler.handleCommand(commandId, 'this', 'is', 'my', 'command', '--help')
+        def commandId = commandHandler.handleCommand('this', 'is', 'my', 'command', '--help')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first().split(/\n/).toList()).hasSize(3)
     }
 
@@ -230,9 +245,10 @@ class CmdConfigurationTest {
     @Test
     void shouldSendMessageToEndpoint() {
         // When
-        commandHandler.handleCommand(commandId, 'endpoint', 'direct:echo', '[foo: "bar"]')
+        def commandId = commandHandler.handleCommand('endpoint', 'direct:echo', '[foo: "bar"]')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).first()).isEqualTo('{foo=bar}')
     }
 
@@ -244,9 +260,10 @@ class CmdConfigurationTest {
         paas.start()
 
         // When
-        commandHandler.handleCommand(commandId, 'service-start', 'device')
+        def commandId = commandHandler.handleCommand('service-start', 'device')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).last()).containsIgnoringCase('started')
     }
 
@@ -256,9 +273,10 @@ class CmdConfigurationTest {
         paas.start()
 
         // When
-        commandHandler.handleCommand(commandId, 'adapter-start', 'rest')
+        def commandId = commandHandler.handleCommand('adapter-start', 'rest')
 
         // Then
+        await().until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0).last()).containsIgnoringCase('started')
     }
 
@@ -268,16 +286,17 @@ class CmdConfigurationTest {
         paas.start()
 
         // When
-        commandHandler.handleCommand(commandId, 'service-start', 'invalidCommand')
+        def commandId = commandHandler.handleCommand('service-start', 'invalidCommand')
 
         // Then
+        await().atMost(2, MINUTES).until condition {outputSink.isDone(commandId)}
         assertThat(outputSink.output(commandId, 0)[1]).containsIgnoringCase('problem starting service container')
     }
 
     @Test
     void shouldStartZeppelin() {
         // When
-        commandHandler.handleCommand(commandId, command('zeppelin start'))
+        def commandId = commandHandler.handleCommand(command('zeppelin start'))
 
         // Then
         assertThat(docker.status('zeppelin')).isIn(created, running)
@@ -288,7 +307,7 @@ class CmdConfigurationTest {
     @Ignore('Need to resolve issue of building docker images on travis')
     void sparkSubmitShouldReturnValidErrorMessageOnStart() {
         // When
-        commandHandler.handleCommand(commandId, command('spark submit'))
+        def commandId = commandHandler.handleCommand(command('spark submit'))
 
         // Then
         assertThat(outputSink.output(commandId, 0)[0]).doesNotContain('exec format error')

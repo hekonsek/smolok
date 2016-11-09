@@ -52,13 +52,6 @@ import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN
 @Configuration
 class RestEndpointTest {
 
-    def commandId = uuid()
-
-    @Bean
-    Command testCommand() {
-        new TestCommand()
-    }
-
     @Bean
     RouteBuilder routeBuilder() {
         new RouteBuilder() {

@@ -28,9 +28,7 @@ class RestEndpoint extends RouteBuilder {
         from("netty4-http:http://localhost:${port}/execute?matchOnUriPrefix=true").process {
             def requestUri = it.getIn().getHeader(HTTP_URI, String).substring(9)
             def command = new String(Base64.decoder.decode(requestUri))
-            def commandId = Uuids.uuid()
-            commandDispatcher.handleCommand(commandId, command.split(' '))
-            it.in.body = commandId
+            it.in.body = commandDispatcher.handleCommand(command.split(' '))
         }
 
         from("netty4-http:http://localhost:${port}/output/{commandId}/{offset}").process {

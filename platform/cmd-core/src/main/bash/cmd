@@ -21,10 +21,34 @@ fi
 
 mkdir -p ~/.smolok/logs
 
-if [ ! -e ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar ] || [ ! -z `echo ${SMOLOK_VERSION} | grep SNAPSHOT` ]; then
-  echo 'Downloading Smolok command line tool...'
-  mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=net.smolok:smolok-cmd:${SMOLOK_VERSION}:jar:fat -DremoteRepositories=http://repo1.maven.apache.org/maven2,https://oss.sonatype.org/content/repositories/snapshots >> ~/.smolok/logs/cmd 2>&1
-  echo 'Downloaded Smolok command line tool.'
+AGENT_PROCESS=`ps aux | grep smolok-cmd- | grep java`
+if [ -z "$AGENT_PROCESS" ]; then
+    if [ ! -e ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar ] || [ ! -z `echo ${SMOLOK_VERSION} | grep SNAPSHOT` ]; then
+        echo 'Downloading Smolok agent...'
+        mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -Dartifact=net.smolok:smolok-cmd:${SMOLOK_VERSION}:jar:fat -DremoteRepositories=http://repo1.maven.apache.org/maven2,https://oss.sonatype.org/content/repositories/snapshots >> ~/.smolok/logs/cmd 2>&1
+        echo 'Downloaded Smolok agent.'
+    fi
+
+    echo 'Starting Smolok agent...'
+    nohup java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar > /dev/null &
+
+    REST_API_OUTPUT=''
+    while [ -z "$REST_API_OUTPUT" ]; do
+        echo -n '.'
+        REST_API_OUTPUT=`curl -s http://localhost:8081/execute/LS12ZXJzaW9u`
+        sleep 1
+    done
+    echo
+    echo 'Smolok agent started.'
+
+    echo
 fi
 
-java -jar ~/.m2/repository/net/smolok/smolok-cmd/${SMOLOK_VERSION}/smolok-cmd-${SMOLOK_VERSION}-fat.jar "$@"
+COMMAND=`echo -n $@ | base64`
+COMMAND_ID=`curl -s http://localhost:8081/execute/${COMMAND}`
+OFFSET=0
+
+while [ "${OFFSET}" != "-1" ]; do
+    echo `curl -s http://localhost:8081/output/${COMMAND_ID}/${OFFSET}   | tail -n +2`
+    OFFSET=`curl -s http://localhost:8081/output/${COMMAND_ID}/${OFFSET}  | head -n 1`
+done

@@ -8,5 +8,7 @@ interface OutputSink {
 
     def markAsDone(String commandId)
 
+    boolean isDone(String commandId)
+
     def reset()
 }
