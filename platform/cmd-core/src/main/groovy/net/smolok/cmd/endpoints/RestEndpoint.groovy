@@ -3,9 +3,8 @@ package net.smolok.cmd.endpoints
 import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.OutputSink
 import org.apache.camel.builder.RouteBuilder
-import smolok.lib.common.Uuids
 
-import static org.apache.camel.Exchange.HTTP_URI
+import static java.util.Base64.decoder
 
 class RestEndpoint extends RouteBuilder {
 
@@ -25,10 +24,10 @@ class RestEndpoint extends RouteBuilder {
 
     @Override
     void configure() {
-        from("netty4-http:http://localhost:${port}/execute?matchOnUriPrefix=true").process {
-            def requestUri = it.getIn().getHeader(HTTP_URI, String).substring(9)
-            def command = new String(Base64.decoder.decode(requestUri))
-            it.in.body = commandDispatcher.handleCommand(command.split(' '))
+        from("netty4-http:http://localhost:${port}/execute/{command}").transform {
+            def command = it.in.getHeader('command', String)
+            def decodedCommand = new String(decoder.decode(command))
+            commandDispatcher.handleCommand(decodedCommand.split(' '))
         }
 
         from("netty4-http:http://localhost:${port}/output/{commandId}/{offset}").process {

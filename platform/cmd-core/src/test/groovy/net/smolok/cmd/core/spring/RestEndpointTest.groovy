@@ -16,7 +16,6 @@
  */
 package net.smolok.cmd.core.spring
 
-import com.jayway.awaitility.Awaitility
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
@@ -24,7 +23,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
-import smolok.lib.common.Awaitilities
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.Base64.encoder
