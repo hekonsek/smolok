@@ -16,34 +16,21 @@
  */
 package net.smolok.cmd.core.spring
 
-import org.apache.camel.builder.RouteBuilder
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringRunner
 
+import static java.util.Base64.encoder
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Networks.findAvailableTcpPort
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = [RestEndpointTest.class, KapuaApplication.class])
-@Configuration
+@RunWith(SpringRunner)
+@SpringBootTest(classes = [RestEndpointTest, KapuaApplication])
 class RestEndpointTest {
-
-    @Bean
-    RouteBuilder routeBuilder() {
-        new RouteBuilder() {
-            @Override
-            void configure() {
-                from('direct:echo').log('Echo!')
-            }
-        }
-    }
 
     static restPort = findAvailableTcpPort()
 
@@ -52,24 +39,32 @@ class RestEndpointTest {
         System.setProperty('agent.rest.port', "${restPort}")
     }
 
+    def executeUrl = "http://localhost:${restPort}/execute"
+
+    def encodedHelpOption = new String(encoder.encode('--help'.getBytes()))
+
+    def executeHelpUrl = new URL("${executeUrl}/${encodedHelpOption}")
+
     // Cloud tests
 
     @Test
     void shouldReturnWelcomeMessage() {
-        // When
-        def commandId = IOUtils.toString(new URL("http://localhost:${restPort}/execute/" + new String(Base64.encoder.encode('--help'.getBytes()))))
-
+        // Given
+        def commandId = IOUtils.toString(executeHelpUrl)
         Thread.sleep(3000)
 
+        // When
         def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
         def outputList = output.split('\n')
+
+        // Then
         assertThat(outputList[1]).startsWith('Welcome to Smolok')
     }
 
     @Test
     void shouldReturnExecutionDoneMarker() {
         // When
-        def commandId = IOUtils.toString(new URL("http://localhost:${restPort}/execute/" + new String(Base64.encoder.encode('--help'.getBytes()))))
+        def commandId = IOUtils.toString(executeHelpUrl)
 
         Thread.sleep(3000)
 
