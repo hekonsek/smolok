@@ -104,52 +104,6 @@ class CmdConfigurationTest {
     @Autowired
     Docker docker
 
-    // Cloud tests
-
-    @Test
-    void shouldExecuteCloudStartCommand() {
-        // When
-        def commandId = commandHandler.handleCommand('cloud', 'start')
-
-        // Then
-        assertThat(paas.started)
-    }
-
-    @Test
-    void shouldInformAboutCloudStart() {
-        // When
-        def commandId = commandHandler.handleCommand('cloud', 'start')
-
-        // Then
-        await().atMost(3, MINUTES).until condition {outputSink.isDone(commandId)}
-        assertThat(outputSink.output(commandId, 0)).hasSize(2)
-        assertThat(outputSink.output(commandId, 0)).containsSubsequence('Smolok Cloud started.')
-    }
-
-    @Test
-    void shouldShowEventBusStatus() {
-        // Given
-        paas.start()
-
-        // When
-        def commandId = commandHandler.handleCommand('cloud', 'status')
-
-        // Then
-        await().until condition {outputSink.isDone(commandId)}
-        def eventBusStatus = outputSink.output(commandId, 0).find{ it.startsWith(EVENTBUS_CAN_SEND_METRIC_KEY) }
-        assertThat(eventBusStatus).startsWith("${EVENTBUS_CAN_SEND_METRIC_KEY}\t${true}")
-    }
-
-    @Test
-    void cloudResetShouldNotAcceptOptions() {
-        // When
-        def commandId = commandHandler.handleCommand('cloud', 'reset', '--someOption')
-
-        // Then
-        await().until condition {outputSink.isDone(commandId)}
-        assertThat(outputSink.output(commandId, 0).first()).contains('Unsupported options used')
-    }
-
     // "smolok sdcard install-raspbian" tests
 
     @Test
