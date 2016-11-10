@@ -18,7 +18,7 @@ package net.smolok.cmd.core.spring
 
 import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.OutputSink
-import net.smolok.paas.Paas
+import net.smolok.paas.openshift.OpenShiftPaas
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Before
 import org.junit.BeforeClass
@@ -28,13 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 
-import static com.google.common.io.Files.createTempDir
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.MINUTES
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Awaitilities.condition
 import static smolok.lib.common.Networks.findAvailableTcpPort
-import static smolok.lib.common.Uuids.uuid
 import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
 @RunWith(SpringRunner)
@@ -45,25 +43,17 @@ class CloudTest {
     OutputSink outputSink
 
     @Autowired
-    CommandDispatcher commandHandler
-
-    // Raspbian install fixtures
-
-    static def devicesDirectory = createTempDir()
+    CommandDispatcher commandDispatcher
 
     @BeforeClass
     static void beforeClass() {
-        System.setProperty('raspbian.image.uri', 'https://repo1.maven.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar')
-        System.setProperty('devices.directory', devicesDirectory.absolutePath)
-        System.setProperty('raspbian.image.file.name.extracted', uuid())
-        System.setProperty('raspbian.image.file.name.compressed', "${uuid()}.zip")
         System.setProperty('agent.rest.port', "${findAvailableTcpPort()}")
     }
 
     // PaaS fixtures
 
     @Autowired
-    Paas paas
+    OpenShiftPaas paas
 
     @Before
     void before() {
@@ -73,16 +63,17 @@ class CloudTest {
     @Test
     void shouldExecuteCloudStartCommand() {
         // When
-        def commandId = commandHandler.handleCommand('cloud', 'start')
+        def commandId = commandDispatcher.handleCommand('cloud', 'start')
 
         // Then
+        await().atMost(3, MINUTES).until condition {outputSink.isDone(commandId)}
         assertThat(paas.started)
     }
 
     @Test
     void shouldInformAboutCloudStart() {
         // When
-        def commandId = commandHandler.handleCommand('cloud', 'start')
+        def commandId = commandDispatcher.handleCommand('cloud', 'start')
 
         // Then
         await().atMost(3, MINUTES).until condition {outputSink.isDone(commandId)}
@@ -96,7 +87,7 @@ class CloudTest {
         paas.start()
 
         // When
-        def commandId = commandHandler.handleCommand('cloud', 'status')
+        def commandId = commandDispatcher.handleCommand('cloud', 'status')
 
         // Then
         await().until condition {outputSink.isDone(commandId)}
@@ -105,9 +96,19 @@ class CloudTest {
     }
 
     @Test
+    void cloudResetShouldRemoveOpenShiftDirectories() {
+        // When
+        def commandId = commandDispatcher.handleCommand('cloud', 'reset')
+
+        // Then
+        await().until condition {outputSink.isDone(commandId)}
+        assertThat(paas.openshiftHome().list().findAll{ it.startsWith('openshift.local.') }).isEmpty()
+    }
+
+    @Test
     void cloudResetShouldNotAcceptOptions() {
         // When
-        def commandId = commandHandler.handleCommand('cloud', 'reset', '--someOption')
+        def commandId = commandDispatcher.handleCommand('cloud', 'reset', '--someOption')
 
         // Then
         await().until condition {outputSink.isDone(commandId)}

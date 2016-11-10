@@ -18,13 +18,13 @@ package net.smolok.paas.openshift
 
 import com.jayway.awaitility.core.ConditionTimeoutException
 import net.smolok.lib.download.DownloadManager
+import net.smolok.paas.ImageLocatorResolver
+import net.smolok.paas.Paas
+import net.smolok.paas.ServiceEndpoint
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.process.ProcessManager
 import smolok.lib.vertx.AmqpProbe
-import net.smolok.paas.ImageLocatorResolver
-import net.smolok.paas.Paas
-import net.smolok.paas.ServiceEndpoint
 
 import java.nio.file.Paths
 import java.util.concurrent.Callable
@@ -200,6 +200,12 @@ class OpenShiftPaas implements Paas {
         images.each {
             Validate.isTrue(!oc("new-app ${it}").first().contains('error'), "Problem starting service container: ${it}")
         }
+    }
+
+    // Accessors
+
+    File openshiftHome() {
+        openshiftHome
     }
 
     // Helpers
