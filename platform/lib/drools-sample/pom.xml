@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.smolok</groupId>
         <artifactId>smolok-lib</artifactId>
-        <version>0.0.10-SNAPSHOT</version>
+        <version>0.0.10</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>smolok-lib-drools-sample</artifactId>
