@@ -67,17 +67,18 @@ class RestEndpointTest {
 
     @Test
     void shouldReturnExecutionDoneMarker() {
-        // When
+        // Given
         def commandId = IOUtils.toString(executeHelpUrl)
-        await().until condition { IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0") ) != '0' }
+        await().until condition { IOUtils.toString(outputUrl(commandId, 0)) != '0' }
+        def output = IOUtils.toString(outputUrl(commandId, 0))
+        def outputParts = output.split('___')
 
-        def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
-        def outputList = output.split('___')
+        // When
+        output = IOUtils.toString(outputUrl(commandId, outputParts[0].toInteger()))
+        outputParts = output.split('___')
 
-        output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/${outputList[0]}"))
-        outputList = output.split('___')
-
-        assertThat(outputList[0]).isEqualTo('-1')
+        // Then
+        assertThat(outputParts[0]).isEqualTo('-1')
     }
 
 }
