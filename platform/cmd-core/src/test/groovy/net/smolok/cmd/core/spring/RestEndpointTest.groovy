@@ -16,13 +16,20 @@
  */
 package net.smolok.cmd.core.spring
 
+import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.Command
+import net.smolok.cmd.core.OutputSink
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.junit4.SpringRunner
+
+import java.util.concurrent.TimeUnit
 
 import static com.jayway.awaitility.Awaitility.await
 import static java.util.Base64.encoder
@@ -32,6 +39,7 @@ import static smolok.lib.common.Networks.findAvailableTcpPort
 
 @RunWith(SpringRunner)
 @SpringBootTest(classes = [RestEndpointTest, KapuaApplication])
+@Configuration
 class RestEndpointTest {
 
     static restPort = findAvailableTcpPort()
@@ -41,13 +49,33 @@ class RestEndpointTest {
         System.setProperty('agent.rest.port', "${restPort}")
     }
 
-    def executeUrl = "http://localhost:${restPort}/execute"
+    def baseUrl = "http://localhost:${restPort}"
 
-    def outputUrl = { commandId, offset -> new URL("http://localhost:${restPort}/output/${commandId}/${offset}") }
+    def executeUrl = { commandId -> new URL("${baseUrl}/execute/${commandId}") }
+
+    def outputUrl = { commandId, offset -> new URL("${baseUrl}/output/${commandId}/${offset}") }
 
     def encodedHelpOption = new String(encoder.encode('--help'.getBytes()))
 
-    def executeHelpUrl = new URL("${executeUrl}/${encodedHelpOption}")
+    def executeHelpUrl = executeUrl(encodedHelpOption)
+
+    @Bean
+    Command slowCommand() {
+        new SlowCommand()
+    }
+
+    static class SlowCommand extends BaseCommand {
+
+        SlowCommand() {
+            super(['slowCommand'])
+        }
+
+        @Override
+        void handle(OutputSink outputSink, String commandId, String... command) {
+            TimeUnit.MINUTES.sleep(5)
+        }
+
+    }
 
     // Tests
 
@@ -79,6 +107,18 @@ class RestEndpointTest {
 
         // Then
         assertThat(outputParts[0]).isEqualTo('-1')
+    }
+
+    @Test
+    void shouldReturnEmptyOffsetForNoOutput() {
+        // Given
+        def commandId = IOUtils.toString(executeUrl(new String(encoder.encode('slowCommand'.getBytes()))))
+
+        // When
+        def output = IOUtils.toString(outputUrl(commandId, 0))
+
+        // Then
+        assertThat(output).isEqualTo('0')
     }
 
 }

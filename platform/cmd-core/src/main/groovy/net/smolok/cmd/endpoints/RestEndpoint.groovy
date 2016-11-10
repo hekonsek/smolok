@@ -37,7 +37,9 @@ class RestEndpoint extends RouteBuilder {
             if(lines == null) {
                 it.in.body = '-1'
             } else {
-                it.in.body = "${offset + lines.size()}___" + lines.join('___')
+                def outputBatch = new LinkedList(lines)
+                outputBatch.add(0, "${offset + lines.size()}")
+                it.in.body = outputBatch.join('___')
             }
         }
     }
