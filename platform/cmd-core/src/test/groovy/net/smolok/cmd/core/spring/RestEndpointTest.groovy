@@ -59,7 +59,7 @@ class RestEndpointTest {
 
         // When
         def output = IOUtils.toString(outputUrl(commandId, 0))
-        def outputList = output.split('\n')
+        def outputList = output.split('___')
 
         // Then
         assertThat(outputList[1]).startsWith('Welcome to Smolok')
@@ -72,10 +72,10 @@ class RestEndpointTest {
         await().until condition { IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0") ) != '0' }
 
         def output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/0"))
-        def outputList = output.split('\n')
+        def outputList = output.split('___')
 
         output = IOUtils.toString(new URL("http://localhost:${restPort}/output/${commandId}/${outputList[0]}"))
-        outputList = output.split('\n')
+        outputList = output.split('___')
 
         assertThat(outputList[0]).isEqualTo('-1')
     }
