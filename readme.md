@@ -1,6 +1,6 @@
 # Smolok - Big Data for connected devices
 
-[![Version](https://img.shields.io/badge/smolok-0.0.9-blue.svg)](https://github.com/smolok/smolok/releases)
+[![Version](https://img.shields.io/badge/smolok-0.0.10-blue.svg)](https://github.com/smolok/smolok/releases)
 [![Build](https://api.travis-ci.org/smolok/smolok.svg)](https://travis-ci.org/smolok/smolok/)
 
 [![Build](docs/smolok.png)](https://github.com/smolok/smolok)
