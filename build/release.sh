@@ -30,6 +30,6 @@ fi
 mvn -Darguments='-Dmaven.test.skip=true' release:prepare release:perform
 
 
-sed -i -e "s/${OLD_VERSION}/${NEW_VERSION}/g" readme.md platform/cmd-core/src/main/bash/cmd
+sed -i -e "s/${OLD_VERSION}/${NEW_VERSION}/g" readme.md platform/cmd-core/src/main/bash/cmd docs/documentation.md
 
 mvn clean install -Pdocker -DskipTests

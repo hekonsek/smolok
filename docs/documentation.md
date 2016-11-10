@@ -91,7 +91,7 @@ To install Docker and Maven on CentOS 7.2 execute the following command:
 In order to verify that command line tool has been properly installed, execute the following command:
 
     $ smolok --help
-    Welcome to Smolok v0.0.6.
+    Welcome to Smolok v0.0.10.
 
 #### Starting Smolok Cloud
 
@@ -201,7 +201,7 @@ To install Docker and Maven on CentOS 7.2 execute the following command:
 In order to verify that command line tool has been properly installed, execute the following command:
 
     $ smolok --help
-    Welcome to Smolok v0.0.6.
+    Welcome to Smolok v0.0.10.
 
 ### Enforcing Smolok version
 
