@@ -64,6 +64,7 @@ Smolok provisions and manages messaging infrastructure that can be used for the 
 
 Smolok provides out of the box backend services enabling IoT, Big Data and Machine Learning applications. For example:
 - centralized configuration service
+- centralized configuration service Java SDK
 - device management service
 
 ### Common use cases
