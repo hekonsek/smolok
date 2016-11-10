@@ -30,16 +30,16 @@ class RestEndpoint extends RouteBuilder {
             commandDispatcher.handleCommand(decodedCommand.split(' '))
         }
 
-        from("netty4-http:http://localhost:${port}/output/{commandId}/{offset}").process {
+        from("netty4-http:http://localhost:${port}/output/{commandId}/{offset}").transform {
             def commandId = it.in.getHeader('commandId', String)
             def offset = it.in.getHeader('offset', int)
             def lines = readableOutputSink.output(commandId, offset)
             if(lines == null) {
-                it.in.body = '-1'
+                '-1'
             } else {
                 def outputBatch = new LinkedList(lines)
                 outputBatch.add(0, "${offset + lines.size()}")
-                it.in.body = outputBatch.join('___')
+                outputBatch.join('___')
             }
         }
     }
