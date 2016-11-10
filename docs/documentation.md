@@ -39,8 +39,9 @@ a single shell command. The command line administration tool provides the follow
 - single (and simple) administration interface
 - easy access to platform status and monitoring information
 - ability to add custom commands
+- commands can be executed via REST API
 
-#### Paas infrastructure
+#### PaaS infrastructure
 
 Smolok provisions Kubernetes-based PaaS backend that handles container-based deployment of the cloud services. In particular
 PaaS provides:
