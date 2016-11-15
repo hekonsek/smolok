@@ -28,13 +28,13 @@ class SparkMachineLearningService implements MachineLearningService {
     private final Map<String, List<FeatureVector>> featureVectors = [:].withDefault{[]}
 
     @Override
-    void saveTrainingData(String collection, FeatureVector featureVector) {
+    void storeTrainingData(String collection, FeatureVector featureVector) {
         featureVectors[collection] << featureVector
     }
 
     @Override
     List<Double> predict(String collection, FeatureVector featureVector) {
-        List<Row> data = featureVectors[collection].collect{ RowFactory.create(it.targetFeature, it.text) }
+        def data = featureVectors[collection].collect{ RowFactory.create(it.targetFeature, it.text) }
         if(data.isEmpty()) {
             throw new IllegalStateException()
         }
@@ -98,12 +98,12 @@ class SparkMachineLearningService implements MachineLearningService {
         def serv = new SparkMachineLearningService(SparkSession.builder()
                 .master("local[*]")
                 .getOrCreate())
-        serv.saveTrainingData('col', new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0.0d))
-        serv.saveTrainingData('col', new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0.0d))
-        serv.saveTrainingData('col', new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1.0d))
-//        serv.saveTrainingData('col', new FeatureVector(text: 'foo bar baz', targetFeature: 1.0d))
+        serv.storeTrainingData('col', new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0.0d))
+        serv.storeTrainingData('col', new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0.0d))
+        serv.storeTrainingData('col', new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1.0d))
+//        serv.storeTrainingData('col', new FeatureVector(text: 'foo bar baz', targetFeature: 1.0d))
 
-//        serv.saveTrainingData('col', new FeatureVector(text: 'no key words here', targetFeature: 0.0d))
+//        serv.storeTrainingData('col', new FeatureVector(text: 'no key words here', targetFeature: 0.0d))
 
 
 //        def ooo = serv.predict('col', new FeatureVector(text: 'foo bar baz'))
