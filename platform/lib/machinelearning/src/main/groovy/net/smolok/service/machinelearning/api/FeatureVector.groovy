@@ -10,6 +10,8 @@ class FeatureVector {
 
     double targetFeature
 
+    String targetLabel
+
     String text
 
 }

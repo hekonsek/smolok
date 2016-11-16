@@ -4,6 +4,6 @@ interface MachineLearningService {
 
     void storeTrainingData(String collection, FeatureVector featureVector)
 
-    List<Double> predict(String collection, FeatureVector featureVector)
+    Map<String, Double> predict(String collection, FeatureVector featureVector)
 
 }
