@@ -26,11 +26,15 @@ class SparkMachineLearningServiceConfigurationTest {
     @Test
     void shouldDetectSimilarity() {
         // Given
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0))
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0))
-        5.times {
-            machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1))
-        }
+        machineLearningService.storeTrainingData(collection,
+                [new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0),
+                 new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0),
+                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
+                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
+                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
+                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
+                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1)]
+        )
 
         // When
         def result = machineLearningService.predict(collection, new FeatureVector(text: 'I love Logistic regression'))
@@ -42,16 +46,22 @@ class SparkMachineLearningServiceConfigurationTest {
     @Test
     void shouldDetectDoubleSimilarity() {
         // Given
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0, targetLabel: 'foo'))
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0, targetLabel: 'foo'))
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0, targetLabel: 'lorem'))
-        machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0, targetLabel: 'lorem'))
-        5.times {
-            machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'))
-        }
-        5.times {
-            machineLearningService.storeTrainingData(collection, new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem'))
-        }
+        machineLearningService.storeTrainingData(collection,
+                [new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0, targetLabel: 'foo'),
+                 new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0, targetLabel: 'foo'),
+                 new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'),
+                 new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'),
+                 new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'),
+                 new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'),
+                 new FeatureVector(text: 'foo bar baz', targetFeature: 1, targetLabel: 'foo'),
+                 new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem'),
+                 new FeatureVector(text: 'lorem ipsum', targetFeature: 1, targetLabel: 'lorem')]
+        )
 
         // When
         def result = machineLearningService.predict(collection, new FeatureVector(text: 'This text contains some foo and lorem'))
