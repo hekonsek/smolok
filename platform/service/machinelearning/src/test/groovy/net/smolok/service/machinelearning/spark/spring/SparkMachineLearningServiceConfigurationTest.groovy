@@ -1,8 +1,8 @@
 package net.smolok.service.machinelearning.spark.spring
 
-import net.smolok.lib.machinelearning.spring.PredictionEngineConfiguration
 import net.smolok.service.machinelearning.api.FeatureVector
 import net.smolok.service.machinelearning.api.MachineLearningService
+import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Uuids.uuid
 
 @RunWith(SpringRunner)
-@SpringBootTest(classes = [PredictionEngineConfiguration, SparkMachineLearningServiceConfiguration])
+@SpringBootTest(classes = KapuaApplication)
 class SparkMachineLearningServiceConfigurationTest {
 
     @Autowired
