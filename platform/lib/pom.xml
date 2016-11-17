@@ -34,7 +34,6 @@
         <module>drools-sample</module>
         <module>drools</module>
         <module>spark</module>
-        <module>machinelearning</module>
     </modules>
 
 </project>
