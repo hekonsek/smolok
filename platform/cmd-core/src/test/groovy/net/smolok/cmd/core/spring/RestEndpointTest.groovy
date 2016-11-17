@@ -16,9 +16,9 @@
  */
 package net.smolok.cmd.core.spring
 
-import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.Command
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.BaseCommandHandler
+import net.smolok.cmd.spi.CommandHandler
+import net.smolok.cmd.spi.OutputSink
 import org.apache.commons.io.IOUtils
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.BeforeClass
@@ -60,13 +60,13 @@ class RestEndpointTest {
     def executeHelpUrl = executeUrl(encodedHelpOption)
 
     @Bean
-    Command slowCommand() {
-        new SlowCommand()
+    CommandHandler slowCommand() {
+        new SlowCommandHandler()
     }
 
-    static class SlowCommand extends BaseCommand {
+    static class SlowCommandHandler extends BaseCommandHandler {
 
-        SlowCommand() {
+        SlowCommandHandler() {
             super(['slowCommand'])
         }
 

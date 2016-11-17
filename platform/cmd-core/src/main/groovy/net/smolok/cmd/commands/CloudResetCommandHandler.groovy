@@ -1,10 +1,10 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.BaseCommandHandler
+import net.smolok.cmd.spi.OutputSink
 import net.smolok.paas.Paas
 
-class CloudResetCommand extends BaseCommand {
+class CloudResetCommandHandler extends BaseCommandHandler {
 
     // Collaborators
 
@@ -12,7 +12,7 @@ class CloudResetCommand extends BaseCommand {
 
     // Constructors
 
-    CloudResetCommand(Paas paas) {
+    CloudResetCommandHandler(Paas paas) {
         super('cloud', 'reset')
         this.paas = paas
     }
@@ -22,7 +22,7 @@ class CloudResetCommand extends BaseCommand {
         Optional.of([])
     }
 
-    // Command operations
+    // CommandHandler operations
 
     @Override
     void handle(OutputSink outputSink, String commandId, String... command) {

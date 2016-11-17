@@ -1,6 +1,7 @@
 package net.smolok.cmd.core
 
 import com.google.common.cache.Cache
+import net.smolok.cmd.spi.OutputSink
 
 import java.util.concurrent.Callable
 

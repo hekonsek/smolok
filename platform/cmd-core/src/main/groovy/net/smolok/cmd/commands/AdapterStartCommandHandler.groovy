@@ -2,9 +2,9 @@ package net.smolok.cmd.commands
 
 import net.smolok.paas.Paas
 
-class AdapterStartCommand extends ServiceStartCommand {
+class AdapterStartCommandHandler extends ServiceStartCommandHandler {
 
-    AdapterStartCommand(Paas paas) {
+    AdapterStartCommandHandler(Paas paas) {
         super(paas)
     }
 

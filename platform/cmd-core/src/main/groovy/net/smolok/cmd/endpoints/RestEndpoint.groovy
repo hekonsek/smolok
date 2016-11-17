@@ -1,7 +1,7 @@
 package net.smolok.cmd.endpoints
 
 import net.smolok.cmd.core.CommandDispatcher
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import org.apache.camel.builder.RouteBuilder
 
 import static java.util.Base64.decoder

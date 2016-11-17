@@ -1,5 +1,7 @@
 package net.smolok.cmd.core
 
+import net.smolok.cmd.spi.CommandHandler
+import net.smolok.cmd.spi.OutputSink
 import org.apache.commons.lang3.Validate
 
 import java.util.concurrent.ExecutorService
@@ -22,13 +24,13 @@ class CommandDispatcher {
 
     private final OutputSink outputSink
 
-    private final List<Command> commands
+    private final List<CommandHandler> commands
 
     private final ExecutorService executor = Executors.newCachedThreadPool()
 
     // Constructors
 
-    CommandDispatcher(OutputSink outputSink, List<Command> commands) {
+    CommandDispatcher(OutputSink outputSink, List<CommandHandler> commands) {
         this.outputSink = outputSink
         this.commands = commands
     }

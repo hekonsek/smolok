@@ -23,6 +23,10 @@
         <!-- Smolok dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
+            <artifactId>smolok-cmd-spi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
             <artifactId>smolok-lib-download</artifactId>
         </dependency>
         <dependency>

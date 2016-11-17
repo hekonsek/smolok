@@ -27,7 +27,7 @@ import static org.mockito.BDDMockito.given
 import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
-class SparkSubmitCommandTest {
+class SparkSubmitCommandHandlerTest {
 
     def docker = Mockito.mock(Docker.class)
 
@@ -39,7 +39,7 @@ class SparkSubmitCommandTest {
     void shouldPassArguments() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit artifact argument1 argument2'))
@@ -53,7 +53,7 @@ class SparkSubmitCommandTest {
     void shouldSkipOptionsAndFindJobArtifact() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit --master=foo artifact argument1 argument2'))
@@ -67,7 +67,7 @@ class SparkSubmitCommandTest {
     void shouldCleanUpContainerByDefault() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit --master=foo artifact argument1 argument2'))
@@ -82,7 +82,7 @@ class SparkSubmitCommandTest {
     void shouldHandleKeepLogsOption() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit --master=foo --keep-logs artifact argument1 argument2'))
@@ -97,7 +97,7 @@ class SparkSubmitCommandTest {
     void shouldUseDefaultMasterUrl() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit artifact argument1 argument2'))
@@ -111,7 +111,7 @@ class SparkSubmitCommandTest {
     void shouldUseDefaultMasterUrlForClientMode() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit --deploy-mode=client artifact argument1 argument2'))
@@ -125,7 +125,7 @@ class SparkSubmitCommandTest {
     void shouldUseDefaultMasterUrlForClusterMode() {
         // Given
         given(docker.execute(containerCaptor.capture())).willReturn([])
-        def cmd = new SparkSubmitCommand(docker)
+        def cmd = new SparkSubmitCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('spark submit --deploy-mode=cluster artifact argument1 argument2'))

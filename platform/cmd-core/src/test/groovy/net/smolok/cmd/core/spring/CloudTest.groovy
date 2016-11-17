@@ -17,7 +17,7 @@
 package net.smolok.cmd.core.spring
 
 import net.smolok.cmd.core.CommandDispatcher
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import net.smolok.paas.openshift.OpenShiftPaas
 import org.eclipse.kapua.locator.spring.KapuaApplication
 import org.junit.Before

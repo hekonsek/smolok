@@ -1,7 +1,7 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.BaseCommandHandler
+import net.smolok.cmd.spi.OutputSink
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.Validate
 import smolok.lib.docker.ContainerBuilder
@@ -10,7 +10,7 @@ import smolok.lib.docker.Docker
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 import static smolok.lib.docker.ServiceStartupResults.*
 
-class ZeppelinStartCommand extends BaseCommand {
+class ZeppelinStartCommandHandler extends BaseCommandHandler {
 
     // Collaborators
 
@@ -18,12 +18,12 @@ class ZeppelinStartCommand extends BaseCommand {
 
     // Constructors
 
-    ZeppelinStartCommand(Docker docker) {
+    ZeppelinStartCommandHandler(Docker docker) {
         super(['zeppelin', 'start'] as String[])
         this.docker = docker
     }
 
-    // Command operations
+    // CommandHandler operations
 
     private Optional<String> submitOptions(String... inputCommand) {
         inputCommand = removeOption(inputCommand, 'master')

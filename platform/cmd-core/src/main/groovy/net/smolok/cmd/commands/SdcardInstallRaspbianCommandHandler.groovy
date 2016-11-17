@@ -1,20 +1,20 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import net.smolok.lib.download.DownloadManager
 import org.apache.commons.lang3.Validate
-import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.BaseCommandHandler
 
 import smolok.lib.process.ProcessManager
 
 import static org.slf4j.LoggerFactory.getLogger
 import static smolok.lib.process.Command.cmd
 
-class SdcardInstallRaspbianCommand extends BaseCommand {
+class SdcardInstallRaspbianCommandHandler extends BaseCommandHandler {
 
     // Logger
 
-    private static final LOG = getLogger(SdcardInstallRaspbianCommand)
+    private static final LOG = getLogger(SdcardInstallRaspbianCommandHandler)
 
     // Collaborators
 
@@ -30,7 +30,7 @@ class SdcardInstallRaspbianCommand extends BaseCommand {
 
     // Constructors
 
-    SdcardInstallRaspbianCommand(DownloadManager downloadManager, ProcessManager processManager, String devicesDirectory, DownloadManager.BinaryCoordinates image) {
+    SdcardInstallRaspbianCommandHandler(DownloadManager downloadManager, ProcessManager processManager, String devicesDirectory, DownloadManager.BinaryCoordinates image) {
         super('sdcard', 'install-raspbian')
         this.devicesDirectory = devicesDirectory
         this.downloadManager = downloadManager
@@ -38,7 +38,7 @@ class SdcardInstallRaspbianCommand extends BaseCommand {
         this.image = image
     }
 
-    // Command operations
+    // CommandHandler operations
 
     @Override
     void handle(OutputSink outputSink, String commandId, String... command) {

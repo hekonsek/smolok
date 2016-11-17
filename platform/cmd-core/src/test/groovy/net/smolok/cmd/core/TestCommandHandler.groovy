@@ -16,9 +16,11 @@
  */
 package net.smolok.cmd.core
 
-class TestCommand extends BaseCommand {
+import net.smolok.cmd.spi.OutputSink
 
-    TestCommand() {
+class TestCommandHandler extends BaseCommandHandler {
+
+    TestCommandHandler() {
         super('this', 'is', 'my', 'command')
     }
 

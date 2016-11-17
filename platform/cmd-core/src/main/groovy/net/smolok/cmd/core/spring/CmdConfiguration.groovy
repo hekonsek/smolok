@@ -1,10 +1,10 @@
 package net.smolok.cmd.core.spring
 
 import net.smolok.cmd.commands.*
-import net.smolok.cmd.core.Command
+import net.smolok.cmd.spi.CommandHandler
 import net.smolok.cmd.core.CommandDispatcher
 import net.smolok.cmd.core.GuavaCacheOutputSink
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import net.smolok.cmd.endpoints.RestEndpoint
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
@@ -31,7 +31,7 @@ class CmdConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    CommandDispatcher commandDispatcher(OutputSink outputSink, List<Command> commands) {
+    CommandDispatcher commandDispatcher(OutputSink outputSink, List<CommandHandler> commands) {
         new CommandDispatcher(outputSink, commands)
     }
 
@@ -43,61 +43,61 @@ class CmdConfiguration {
     // Commands
 
     @Bean
-    CloudStartCommand cloudStartCommand(Paas paas) {
-        new CloudStartCommand(paas)
+    CloudStartCommandHandler cloudStartCommand(Paas paas) {
+        new CloudStartCommandHandler(paas)
     }
 
     @Bean
-    CloudResetCommand cloudResetCommand(Paas paas) {
-        new CloudResetCommand(paas)
+    CloudResetCommandHandler cloudResetCommand(Paas paas) {
+        new CloudResetCommandHandler(paas)
     }
 
     @Bean
-    CloudStatusCommand cloudStatusCommand(StatusResolver statusResolver) {
-        new CloudStatusCommand(statusResolver)
+    CloudStatusCommandHandler cloudStatusCommand(StatusResolver statusResolver) {
+        new CloudStatusCommandHandler(statusResolver)
     }
 
     @Bean
-    SdcardInstallRaspbianCommand sdcardInstallRaspbianCommand(
+    SdcardInstallRaspbianCommandHandler sdcardInstallRaspbianCommand(
             @Value('${devices.directory:/host/dev}') String devicesDirectory, DownloadManager downloadManager, ProcessManager processManager,
             @Value('${raspbian.image.uri:http://vx2-downloads.raspberrypi.org/raspbian/images/raspbian-2016-02-29/2016-02-26-raspbian-jessie.zip}') URL imageUrl,
             @Value('${raspbian.image.file.name.compressed:2016-02-26-raspbian-jessie.zip}') String compressedFileName,
             @Value('${raspbian.image.file.name.extracted:2016-02-26-raspbian-jessie.img}') String extractedFileName) {
-        new SdcardInstallRaspbianCommand(downloadManager, processManager, devicesDirectory, new DownloadManager.BinaryCoordinates(imageUrl, compressedFileName, extractedFileName))
+        new SdcardInstallRaspbianCommandHandler(downloadManager, processManager, devicesDirectory, new DownloadManager.BinaryCoordinates(imageUrl, compressedFileName, extractedFileName))
     }
 
     @Bean
-    EndpointCommand endpointCommand(Endpoint endpoint) {
-        new EndpointCommand(endpoint)
+    EndpointCommandHandler endpointCommand(Endpoint endpoint) {
+        new EndpointCommandHandler(endpoint)
     }
 
     @Bean
-    ServiceStartCommand serviceStartCommand(Paas paas) {
-        new ServiceStartCommand(paas)
+    ServiceStartCommandHandler serviceStartCommand(Paas paas) {
+        new ServiceStartCommandHandler(paas)
     }
 
     @Bean
-    AdapterStartCommand adapterStartCommand(Paas paas) {
-        new AdapterStartCommand(paas)
+    AdapterStartCommandHandler adapterStartCommand(Paas paas) {
+        new AdapterStartCommandHandler(paas)
     }
 
     // Spark commands
 
     @Bean
-    SparkStartCommand sparkStartCommand(Docker docker) {
-        new SparkStartCommand(docker)
+    SparkStartCommandHandler sparkStartCommand(Docker docker) {
+        new SparkStartCommandHandler(docker)
     }
 
     @Bean
-    SparkSubmitCommand sparkSubmitCommand(Docker docker) {
-        new SparkSubmitCommand(docker)
+    SparkSubmitCommandHandler sparkSubmitCommand(Docker docker) {
+        new SparkSubmitCommandHandler(docker)
     }
 
     // Zeppelin commands
 
     @Bean
-    ZeppelinStartCommand zeppelinStartCommand(Docker docker) {
-        new ZeppelinStartCommand(docker)
+    ZeppelinStartCommandHandler zeppelinStartCommand(Docker docker) {
+        new ZeppelinStartCommandHandler(docker)
     }
 
 }

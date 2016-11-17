@@ -11,7 +11,7 @@ import static org.mockito.BDDMockito.given
 import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
-class ZeppelinStartCommandTest {
+class ZeppelinStartCommandHandlerTest {
 
     def docker = Mockito.mock(Docker.class)
 
@@ -23,7 +23,7 @@ class ZeppelinStartCommandTest {
     void shouldUseDefaultValues() {
         // Given
         given(docker.startService(containerCaptor.capture())).willReturn(null)
-        def cmd = new ZeppelinStartCommand(docker)
+        def cmd = new ZeppelinStartCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('zeppelin start'))
@@ -38,7 +38,7 @@ class ZeppelinStartCommandTest {
     void shouldOverrideMaster() {
         // Given
         given(docker.startService(containerCaptor.capture())).willReturn(null)
-        def cmd = new ZeppelinStartCommand(docker)
+        def cmd = new ZeppelinStartCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command('zeppelin start --master=foo'))
@@ -52,7 +52,7 @@ class ZeppelinStartCommandTest {
     void shouldSetMultipleSparkOptions() {
         // Given
         given(docker.startService(containerCaptor.capture())).willReturn(null)
-        def cmd = new ZeppelinStartCommand(docker)
+        def cmd = new ZeppelinStartCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command("zeppelin start --localIP=bar --deploy-mode cluster --executor-memory 2G"))
@@ -67,7 +67,7 @@ class ZeppelinStartCommandTest {
     void shouldUseCustomNotebookDirectory() {
         // Given
         given(docker.startService(containerCaptor.capture())).willReturn(null)
-        def cmd = new ZeppelinStartCommand(docker)
+        def cmd = new ZeppelinStartCommandHandler(docker)
 
         // When
         cmd.handle(null, commandId, command("zeppelin start --notebookDir=/foo/bar"))

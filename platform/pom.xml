@@ -16,6 +16,7 @@
     <modules>
         <module>kapua</module>
         <module>lib</module>
+        <module>cmd-spi</module>
         <module>cmd-core</module>
         <module>cmd</module>
         <module>ops</module>

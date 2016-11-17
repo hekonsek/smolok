@@ -1,14 +1,14 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.BaseCommandHandler
+import net.smolok.cmd.spi.OutputSink
 import smolok.status.StatusResolver
 
-class CloudStatusCommand extends BaseCommand {
+class CloudStatusCommandHandler extends BaseCommandHandler {
 
     private final StatusResolver statusResolver
 
-    CloudStatusCommand(StatusResolver statusResolver) {
+    CloudStatusCommandHandler(StatusResolver statusResolver) {
         super('cloud', 'status')
         this.statusResolver = statusResolver
     }

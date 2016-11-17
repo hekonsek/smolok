@@ -1,27 +1,27 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import org.apache.commons.lang3.Validate
-import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.BaseCommandHandler
 
 import smolok.lib.docker.Container
 import smolok.lib.docker.Docker
 
 import static smolok.lib.common.Mavens.artifactVersionFromDependenciesProperties
 
-class SparkSubmitCommand extends BaseCommand {
+class SparkSubmitCommandHandler extends BaseCommandHandler {
 
     // Collaborators
 
     private final Docker docker
 
     // Constructors
-    SparkSubmitCommand(Docker docker) {
+    SparkSubmitCommandHandler(Docker docker) {
         super('spark', 'submit')
         this.docker = docker
     }
 
-    // Command operations
+    // CommandHandler operations
 
     @Override
     void handle(OutputSink outputSink, String commandId, String... inputCommand) {

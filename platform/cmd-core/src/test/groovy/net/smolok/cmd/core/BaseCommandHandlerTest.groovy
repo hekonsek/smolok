@@ -20,11 +20,11 @@ import org.junit.Test
 
 import static org.assertj.core.api.Assertions.assertThat
 
-class BaseCommandTest {
+class BaseCommandHandlerTest {
 
     def output = new GuavaCacheOutputSink()
 
-    def command = new TestCommand()
+    def command = new TestCommandHandler()
 
     // Tests
 

@@ -1,9 +1,9 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.spi.OutputSink
 import org.apache.commons.lang3.Validate
 import org.slf4j.LoggerFactory
-import net.smolok.cmd.core.BaseCommand
+import net.smolok.cmd.core.BaseCommandHandler
 
 import smolok.lib.docker.ContainerBuilder
 import smolok.lib.docker.ServiceStartupResults
@@ -17,9 +17,9 @@ import static ServiceStartupResults.started
 /**
  * Starts Spark cluster consisting of single master and slave nodes.
  */
-class SparkStartCommand extends BaseCommand {
+class SparkStartCommandHandler extends BaseCommandHandler {
 
-    private static final LOG = LoggerFactory.getLogger(SparkStartCommand.class)
+    private static final LOG = LoggerFactory.getLogger(SparkStartCommandHandler.class)
 
     // Collaborators
 
@@ -27,12 +27,12 @@ class SparkStartCommand extends BaseCommand {
 
     // Constructors
 
-    SparkStartCommand(Docker docker) {
+    SparkStartCommandHandler(Docker docker) {
         super(['spark', 'start'] as String[])
         this.docker = docker
     }
 
-    // Command operations
+    // CommandHandler operations
 
     @Override
     void handle(OutputSink outputSink, String commandId, String... inputCommand) {

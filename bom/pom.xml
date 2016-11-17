@@ -73,6 +73,11 @@
             </dependency>
             <dependency>
                 <groupId>net.smolok</groupId>
+                <artifactId>smolok-cmd-spi</artifactId>
+                <version>${smolok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smolok</groupId>
                 <artifactId>smolok-docker-spark-base</artifactId>
                 <version>${smolok.version}</version>
             </dependency>

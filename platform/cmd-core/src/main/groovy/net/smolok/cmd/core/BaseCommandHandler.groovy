@@ -16,19 +16,20 @@
  */
 package net.smolok.cmd.core
 
+import net.smolok.cmd.spi.CommandHandler
 import org.apache.commons.lang3.ArrayUtils
 
-abstract class BaseCommand implements Command {
+abstract class BaseCommandHandler implements CommandHandler {
 
     private final String[] commandPrefix
 
     // Constructors
 
-    BaseCommand(String[] commandPrefix) {
+    BaseCommandHandler(String[] commandPrefix) {
         this.commandPrefix = commandPrefix
     }
 
-    BaseCommand(List<String> commandPrefix) {
+    BaseCommandHandler(List<String> commandPrefix) {
         this.commandPrefix = commandPrefix.toArray(new String[0])
     }
 
@@ -36,7 +37,7 @@ abstract class BaseCommand implements Command {
         commandPrefix
     }
 
-    // Command operations
+    // CommandHandler operations
 
     @Override
     boolean supports(String... command) {

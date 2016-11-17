@@ -1,14 +1,14 @@
 package net.smolok.cmd.commands
 
-import net.smolok.cmd.core.BaseCommand
-import net.smolok.cmd.core.OutputSink
+import net.smolok.cmd.core.BaseCommandHandler
+import net.smolok.cmd.spi.OutputSink
 import net.smolok.lib.endpoint.Endpoint
 
-class EndpointCommand extends BaseCommand {
+class EndpointCommandHandler extends BaseCommandHandler {
 
     private final Endpoint endpoint
 
-    EndpointCommand(Endpoint endpoint) {
+    EndpointCommandHandler(Endpoint endpoint) {
         super(['endpoint'])
         this.endpoint = endpoint
     }

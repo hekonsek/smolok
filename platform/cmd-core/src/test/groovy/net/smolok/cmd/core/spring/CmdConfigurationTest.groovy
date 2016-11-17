@@ -16,10 +16,10 @@
  */
 package net.smolok.cmd.core.spring
 
-import net.smolok.cmd.core.Command
+import net.smolok.cmd.spi.CommandHandler
 import net.smolok.cmd.core.CommandDispatcher
-import net.smolok.cmd.core.OutputSink
-import net.smolok.cmd.core.TestCommand
+import net.smolok.cmd.spi.OutputSink
+import net.smolok.cmd.core.TestCommandHandler
 import net.smolok.paas.Paas
 import org.apache.camel.builder.RouteBuilder
 import org.eclipse.kapua.locator.spring.KapuaApplication
@@ -46,7 +46,6 @@ import static smolok.lib.common.Uuids.uuid
 import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.running
 import static smolok.lib.process.ExecutorBasedProcessManager.command
-import static smolok.status.handlers.eventbus.EventBusMetricHandler.EVENTBUS_CAN_SEND_METRIC_KEY
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = [CmdConfigurationTest.class, KapuaApplication.class])
@@ -56,8 +55,8 @@ class CmdConfigurationTest {
     def commandId = uuid()
 
     @Bean
-    Command testCommand() {
-        new TestCommand()
+    CommandHandler testCommand() {
+        new TestCommandHandler()
     }
 
     @Bean
