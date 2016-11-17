@@ -26,6 +26,10 @@
             <groupId>net.smolok</groupId>
             <artifactId>smolok-service-binding</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-machinelearning-api</artifactId>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>

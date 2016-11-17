@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
 import smolok.eventbus.client.EventBus
 
+import static net.smolok.service.machinelearning.api.FeatureVector.textFeatureVector
 import static org.assertj.core.api.Assertions.assertThat
 import static smolok.lib.common.Uuids.uuid
 
@@ -38,13 +39,13 @@ class SparkMachineLearningServiceConfigurationTest {
     void shouldDetectSimilarity() {
         // Given
         machineLearningService.storeTrainingData(collection,
-                new FeatureVector(text: 'Hi I heard about Spark', targetFeature: 0),
-                new FeatureVector(text: 'I wish Java could use case classes', targetFeature: 0),
-                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
-                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
-                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
-                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1),
-                new FeatureVector(text: 'Logistic regression models are neat', targetFeature: 1)
+                textFeatureVector('Hi I heard about Spark', false),
+                textFeatureVector('I wish Java could use case classes', false),
+                textFeatureVector('Logistic regression models are neat', true),
+                textFeatureVector('Logistic regression models are neat', true),
+                textFeatureVector('Logistic regression models are neat', true),
+                textFeatureVector('Logistic regression models are neat', true),
+                textFeatureVector('Logistic regression models are neat', true)
         )
 
         // When

@@ -30,4 +30,12 @@ class FeatureVector {
 
     String text
 
+    static FeatureVector textFeatureVector(String text, String targetLabel, boolean targetFeature) {
+        new FeatureVector(text: text, targetLabel: targetLabel, targetFeature: targetFeature ? 1 : 0)
+    }
+
+    static FeatureVector textFeatureVector(String text, boolean targetFeature) {
+        new FeatureVector(text: text, targetFeature: targetFeature ? 1 : 0)
+    }
+
 }
