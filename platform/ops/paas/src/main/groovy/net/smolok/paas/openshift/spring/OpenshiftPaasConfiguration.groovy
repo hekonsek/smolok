@@ -17,6 +17,7 @@
 package net.smolok.paas.openshift.spring
 
 import net.smolok.lib.download.DownloadManager
+import net.smolok.paas.MachineLearningServiceImageLocatorResolver
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -51,6 +52,11 @@ class OpenshiftPaasConfiguration {
     @Bean
     RestAdapterImageLocatorResolver restAdapterImageLocatorResolver() {
         new RestAdapterImageLocatorResolver()
+    }
+
+    @Bean
+    MachineLearningServiceImageLocatorResolver machineLearningServiceImageLocatorResolver() {
+        new MachineLearningServiceImageLocatorResolver()
     }
 
 }

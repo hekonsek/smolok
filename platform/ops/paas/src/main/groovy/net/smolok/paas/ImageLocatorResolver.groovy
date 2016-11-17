@@ -20,6 +20,6 @@ interface ImageLocatorResolver {
 
     boolean canResolveImage(String imageLocator)
 
-    List<String> resolveImage(String imageLocator)
+    List<ServiceConfiguration> resolveImage(String imageLocator)
 
 }

@@ -11,13 +11,13 @@ class DeviceServiceImageLocatorResolverTest {
     @Test
     void shouldResolveDeviceServiceImage() {
         def resolvedImage = resolver.resolveImage('device')
-        assertThat(resolvedImage.last().toString()).startsWith('smolok/service-device')
+        assertThat(resolvedImage.last().image).startsWith('smolok/service-device')
     }
 
     @Test
     void shouldResolveMongodbServiceImage() {
         def resolvedImage = resolver.resolveImage('device')
-        assertThat(resolvedImage.first()).startsWith('mongo')
+        assertThat(resolvedImage.first().image).startsWith('mongo')
     }
 
 }

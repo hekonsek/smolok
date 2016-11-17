@@ -26,9 +26,9 @@ class RestAdapterImageLocatorResolver implements ImageLocatorResolver {
     }
 
     @Override
-    List<String> resolveImage(String imageLocator) {
+    List<ServiceConfiguration> resolveImage(String imageLocator) {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
-        ["smolok/adapter-rest:${smolokVersion}"]
+        [new ServiceConfiguration("smolok/adapter-rest:${smolokVersion}")]
     }
 
 }

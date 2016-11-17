@@ -20,6 +20,7 @@ import com.jayway.awaitility.core.ConditionTimeoutException
 import net.smolok.lib.download.DownloadManager
 import net.smolok.paas.ImageLocatorResolver
 import net.smolok.paas.Paas
+import net.smolok.paas.ServiceConfiguration
 import net.smolok.paas.ServiceEndpoint
 import org.apache.commons.lang3.SystemUtils
 import org.apache.commons.lang3.Validate
@@ -196,9 +197,10 @@ class OpenShiftPaas implements Paas {
     @Override
     void startService(String serviceLocator) {
         def imageResolver = imageLocatorResolvers.find{ it.canResolveImage(serviceLocator) }
-        def images = imageResolver == null ? [serviceLocator] : imageResolver.resolveImage(serviceLocator)
+        def images = imageResolver == null ? [new ServiceConfiguration(serviceLocator)] : imageResolver.resolveImage(serviceLocator)
         images.each {
-            Validate.isTrue(!oc("new-app ${it}").first().contains('error'), "Problem starting service container: ${it}")
+            def environment = it.environment.inject('') { result, entry -> "${result} -e ${entry.key}=${entry.value}" }
+            Validate.isTrue(!oc("new-app ${it.image} ${environment}").first().contains('error'), "Problem starting service container: ${it}")
         }
     }
 

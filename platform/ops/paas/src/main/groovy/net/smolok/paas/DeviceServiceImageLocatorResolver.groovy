@@ -26,9 +26,9 @@ class DeviceServiceImageLocatorResolver implements ImageLocatorResolver {
     }
 
     @Override
-    List<String> resolveImage(String imageLocator) {
+    List<ServiceConfiguration> resolveImage(String imageLocator) {
         def smolokVersion = artifactVersionFromDependenciesProperties('net.smolok', 'smolok-paas').get()
-        ['mongo', "smolok/service-device:${smolokVersion}"]
+        [new ServiceConfiguration('mongo'), new ServiceConfiguration("smolok/service-device:${smolokVersion}")]
     }
 
 }
