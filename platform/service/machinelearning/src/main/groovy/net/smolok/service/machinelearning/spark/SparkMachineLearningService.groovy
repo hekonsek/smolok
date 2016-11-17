@@ -29,7 +29,7 @@ class SparkMachineLearningService implements MachineLearningService {
     }
 
     @Override
-    void storeTrainingData(String collection, List<FeatureVector> featureVectors) {
+    void storeTrainingData(String collection, FeatureVector... featureVectors) {
         if(featureVectorStore instanceof ReadWriteFeatureVectorStore) {
             featureVectors.each {
                 (featureVectorStore as ReadWriteFeatureVectorStore).write(collection, it)

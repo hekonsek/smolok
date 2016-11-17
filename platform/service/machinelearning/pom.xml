@@ -66,10 +66,15 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Smolok testing dependencies -->
+        <!-- Internal testing dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-eventbus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.smolok</groupId>
+            <artifactId>smolok-service-binding-client</artifactId>
             <scope>test</scope>
         </dependency>
 
