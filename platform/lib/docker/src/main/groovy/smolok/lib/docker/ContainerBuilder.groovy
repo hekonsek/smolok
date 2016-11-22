@@ -49,7 +49,7 @@ class ContainerBuilder {
         this
     }
 
-    ContainerBuilder arguments(String[] arguments) {
+    ContainerBuilder arguments(String... arguments) {
         this.arguments = arguments
         this
     }

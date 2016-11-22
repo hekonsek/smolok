@@ -81,6 +81,12 @@ class CmdConfiguration {
         new AdapterStartCommandHandler(paas)
     }
 
+    @Bean
+    ServiceExposeCommandHandler exposeCommandHandler(Paas paas, ProcessManager processManager, Docker docker) {
+        new ServiceExposeCommandHandler(paas, processManager, docker)
+    }
+
+
     // Spark commands
 
     @Bean
