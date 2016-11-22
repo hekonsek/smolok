@@ -16,7 +16,7 @@
 #!/usr/bin/env bash
 
 if [ -z "${SMOLOK_VERSION}" ]; then
-  SMOLOK_VERSION='0.0.10'
+  SMOLOK_VERSION='0.0.11'
 fi
 
 mkdir -p ~/.smolok/logs
