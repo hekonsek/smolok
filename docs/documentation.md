@@ -69,7 +69,8 @@ Smolok provides out of the box backend services enabling IoT, Big Data and Machi
 
 ### Common use cases
 
-This section briefly describes common use cases of Smolok platform.
+This section briefly describes common use cases of Smolok platform. This is perfact reading if you are interested in
+high level overview of Smolok capabilities without digging into configuration options and details.
 
 #### Install command line tool
 
