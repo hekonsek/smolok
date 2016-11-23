@@ -20,7 +20,7 @@
     </licenses>
 
     <dependencies>
-        <!-- Internal dependencies -->
+        <!-- Smolok dependencies -->
         <dependency>
             <groupId>net.smolok</groupId>
             <artifactId>smolok-cmd-spi</artifactId>
@@ -39,14 +39,9 @@
         </dependency>
         <dependency>
             <groupId>net.smolok</groupId>
-            <artifactId>smolok-service-configuration-sdk</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.smolok</groupId>
             <artifactId>smolok-status</artifactId>
         </dependency>
 
-        <!-- External dependencies -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot</artifactId>

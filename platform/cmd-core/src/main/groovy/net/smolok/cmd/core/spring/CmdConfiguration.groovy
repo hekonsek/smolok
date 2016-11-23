@@ -9,7 +9,6 @@ import net.smolok.cmd.endpoints.RestEndpoint
 import net.smolok.lib.download.DownloadManager
 import net.smolok.lib.endpoint.Endpoint
 import net.smolok.paas.Paas
-import net.smolok.service.configuration.api.ConfigurationService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -73,13 +72,13 @@ class CmdConfiguration {
     }
 
     @Bean
-    ServiceStartCommandHandler serviceStartCommand(Paas paas, ConfigurationService configurationService) {
-        new ServiceStartCommandHandler(paas, configurationService)
+    ServiceStartCommandHandler serviceStartCommand(Paas paas) {
+        new ServiceStartCommandHandler(paas)
     }
 
     @Bean
-    AdapterStartCommandHandler adapterStartCommand(Paas paas, ConfigurationService configurationService) {
-        new AdapterStartCommandHandler(paas, configurationService)
+    AdapterStartCommandHandler adapterStartCommand(Paas paas) {
+        new AdapterStartCommandHandler(paas)
     }
 
     @Bean
