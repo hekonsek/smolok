@@ -47,12 +47,10 @@ import static smolok.lib.docker.ContainerStatus.created
 import static smolok.lib.docker.ContainerStatus.running
 import static smolok.lib.process.ExecutorBasedProcessManager.command
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = [CmdConfigurationTest.class, KapuaApplication.class])
+@RunWith(SpringRunner)
+@SpringBootTest(classes = [CmdConfigurationTest, KapuaApplication])
 @Configuration
 class CmdConfigurationTest {
-
-    def commandId = uuid()
 
     @Bean
     CommandHandler testCommand() {
