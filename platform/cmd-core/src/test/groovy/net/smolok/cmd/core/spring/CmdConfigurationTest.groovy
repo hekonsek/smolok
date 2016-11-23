@@ -206,47 +206,6 @@ class CmdConfigurationTest {
         assertThat(outputSink.output(commandId, 0).first()).isEqualTo('{foo=bar}')
     }
 
-    // cloud service-start test
-
-    @Test
-    void shouldStartDeviceService() {
-        // Given
-        paas.start()
-
-        // When
-        def commandId = commandHandler.handleCommand('service-start', 'device')
-
-        // Then
-        await().until condition {outputSink.isDone(commandId)}
-        assertThat(outputSink.output(commandId, 0).last()).containsIgnoringCase('started')
-    }
-
-    @Test
-    void shouldStartRestAdapter() {
-        // Given
-        paas.start()
-
-        // When
-        def commandId = commandHandler.handleCommand('adapter-start', 'rest')
-
-        // Then
-        await().until condition {outputSink.isDone(commandId)}
-        assertThat(outputSink.output(commandId, 0).last()).containsIgnoringCase('started')
-    }
-
-    @Test
-    void shouldNotStartInvalidServiceLocator() {
-        // Given
-        paas.start()
-
-        // When
-        def commandId = commandHandler.handleCommand('service-start', 'invalidCommand')
-
-        // Then
-        await().atMost(2, MINUTES).until condition {outputSink.isDone(commandId)}
-        assertThat(outputSink.output(commandId, 0)[1]).containsIgnoringCase('problem starting service container')
-    }
-
     @Test
     void shouldStartZeppelin() {
         // When
@@ -268,4 +227,5 @@ class CmdConfigurationTest {
         assertThat(outputSink.output(commandId, 0)[0]).doesNotContain('exec format error')
         assertThat(outputSink.output(commandId, 0)[0]).containsIgnoringCase('Error: Cannot load main class from JAR file')
     }
+
 }
