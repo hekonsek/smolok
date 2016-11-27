@@ -134,4 +134,18 @@ class SparkSubmitCommandHandlerTest {
         def container = containerCaptor.value
         assertThat(container.arguments()).isEqualTo(['--master=spark://localhost:6066', '--deploy-mode=cluster', '/var/smolok/spark/jobs/artifact', 'argument1', 'argument2'])
     }
+
+    @Test
+    void shouldSetSparkLocalIpEnvironment() {
+        // Given
+        given(docker.execute(containerCaptor.capture())).willReturn([])
+        def cmd = new SparkSubmitCommandHandler(docker)
+
+        // When
+        cmd.handle(null, commandId, command('spark submit --deploy-mode=client --localIP=localhost'))
+
+        // Then
+        def container = containerCaptor.value
+        assertThat(container.environment()).contains(new MapEntry('SPARK_LOCAL_IP', 'localhost'))
+    }
 }

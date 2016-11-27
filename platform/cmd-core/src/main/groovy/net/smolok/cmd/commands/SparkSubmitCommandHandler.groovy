@@ -40,12 +40,21 @@ class SparkSubmitCommandHandler extends BaseCommandHandler {
         def cleanUp = !hasOption(inputCommand, keepLogs)
         inputCommand = removeOption(inputCommand, keepLogs)
 
+        def localIP = option(inputCommand, 'localIP')
+        inputCommand = removeOption(inputCommand, 'localIP')
+
         def arguments = inputCommand[2..inputCommand.length - 1].toArray(new String[0])
         def indexOfJobArtifact = arguments.findIndexOf { !it.startsWith('-') }
         if(!arguments[indexOfJobArtifact].startsWith('/')) {
             arguments[indexOfJobArtifact] = "/var/smolok/spark/jobs/${arguments[indexOfJobArtifact]}".toString()
         }
-        docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', cleanUp, ['/var/smolok/spark': '/var/smolok/spark'], [:], arguments)).each {
+
+        def environment = [:]
+        if(localIP.isPresent()) {
+            environment['SPARK_LOCAL_IP'] = localIP.get()
+        }
+
+        docker.execute(new Container("smolok/spark-submit:${smolokVersion.get()}", null, 'host', cleanUp, ['/var/smolok/spark': '/var/smolok/spark'], environment, arguments)).each {
             outputSink.out(commandId, it)
         }
     }
