@@ -352,6 +352,10 @@ If you would like to connect worker node to a certain Spark cluster, use `--mast
 
     smolok spark start worker --master=spark://mysparkmaster.com:7077
 
+If you need to set custom options to Spark worker, use `--workerOps` option:
+
+    smolok spark start worker --workerOpts="-Dspark.worker.cleanup.enabled=true -Dspark.worker.cleanup.appDataTtl=7200"
+
 ##### Setting up Spark node network
 
 You can also use `--host` option to specify the hostname on which given Spark node should listen on

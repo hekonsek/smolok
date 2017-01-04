@@ -47,14 +47,16 @@ class SparkStartCommandHandler extends BaseCommandHandler {
 
         def localIP = option(inputCommand, 'localIP')
 
+        def workerOpts = option(inputCommand, 'workerOpts')
+
         if(inputCommand.length < 3) {
             LOG.debug('No node type specified - starting master and worker nodes...')
-            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
-            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP, Optional.empty())
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP, workerOpts)
         } else if(inputCommand[2] == 'master') {
-            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'master', masterUrl, host, masterIP, localIP, Optional.empty())
         } else if(inputCommand[2] == 'worker') {
-            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP)
+            startSparkNode(outputSink, commandId, smolokVersion.get(), 'worker', masterUrl, host, masterIP, localIP, workerOpts)
         } else {
             throw new RuntimeException("Unknown Spark node type: ${inputCommand[2]}")
         }
@@ -62,9 +64,10 @@ class SparkStartCommandHandler extends BaseCommandHandler {
 
     // Private helpers
 
-    private void startSparkNode(OutputSink outputSink, String commandId, String imageVersion, String nodeType, Optional<String> masterUrl, String host, Optional<String> masterIP, Optional<String> localIP) {
+    private void startSparkNode(OutputSink outputSink, String commandId, String imageVersion, String nodeType, Optional<String> masterUrl, String host,
+                                Optional<String> masterIP, Optional<String> localIP, Optional<String> workerOpts) {
         LOG.debug('Starting Spark node: {}', nodeType)
-        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl, host, masterIP.orElse(null), localIP.orElse(null))) {
+        switch(new SparkClusterManager(docker).startSparkNode(imageVersion, nodeType, masterUrl, host, masterIP.orElse(null), localIP.orElse(null), workerOpts.orElse(null))) {
             case alreadyRunning:
                 outputSink.out(commandId, "Spark ${nodeType} is already running. No need to start it.")
                 break
@@ -85,7 +88,7 @@ class SparkStartCommandHandler extends BaseCommandHandler {
             this.docker = docker
         }
 
-        ServiceStartupResults startSparkNode(String imageVersion, String nodeType, Optional<String> masterUrl, String host, String masterIP, String localIP) {
+        ServiceStartupResults startSparkNode(String imageVersion, String nodeType, Optional<String> masterUrl, String host, String masterIP, String localIP, String workerOpts) {
             LOG.debug('Starting Spark node: {}', nodeType)
             def containerBuilder = new ContainerBuilder("smolok/spark-standalone-${nodeType}:${imageVersion}").
                     name("spark-${nodeType}").net('host').
@@ -102,6 +105,9 @@ class SparkStartCommandHandler extends BaseCommandHandler {
             }
             if(localIP != null) {
                 environment['SPARK_LOCAL_IP'] = localIP
+            }
+            if (workerOpts != null) {
+                environment['SPARK_WORKER_OPTS'] = workerOpts
             }
             containerBuilder.environment(environment)
             def container = containerBuilder.build()
