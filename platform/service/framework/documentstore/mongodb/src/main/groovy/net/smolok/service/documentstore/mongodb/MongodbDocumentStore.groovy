@@ -84,6 +84,11 @@ class MongodbDocumentStore implements DocumentStore {
     }
 
     @Override
+    long count(String collection) {
+        documentCollection(collection).count()
+    }
+
+    @Override
     long count(String collection, net.smolok.service.documentstore.api.QueryBuilder queryBuilder) {
         documentCollection(collection).find(mongodbMapper.mongoQuery(queryBuilder.query)).
                 limit(queryBuilder.size).skip(queryBuilder.skip()).sort(mongodbMapper.sortConditions(queryBuilder)).

@@ -39,6 +39,13 @@ interface DocumentStore {
     List<Map<String,Object>> find(String collection, QueryBuilder queryBuilder)
 
     /**
+     * Return total number of documents in the given collection.
+     * @param collection to count against.
+     * @return
+     */
+    long count(String collection)
+
+    /**
      * Returns the number of the documents in the given collection.
      *
      * @param collection to query against.

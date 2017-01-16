@@ -273,6 +273,19 @@ class MongodbDocumentStoreConfigurationTest {
         assertThat(invoices).isEqualTo(1)
     }
 
+    @Test
+    void shouldCountAll() {
+        // Given
+        documentStore.save(collection, serialize(invoice))
+        documentStore.save(collection, serialize(invoice))
+        documentStore.save(collection, serialize(invoice))
+
+        // When
+        long count = documentStore.count(collection)
+
+        // Then
+        assertThat(count).isEqualTo(3)
+    }
 
     @Test
     public void shouldFindByNestedQuery() {
