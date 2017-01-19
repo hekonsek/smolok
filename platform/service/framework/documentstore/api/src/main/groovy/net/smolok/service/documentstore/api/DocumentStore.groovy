@@ -56,4 +56,12 @@ interface DocumentStore {
 
     void remove(String collection, String id)
 
+    /**
+     * Returns a list of distinct values in a given column of a given collection
+     * @param collection to query against
+     * @param column with distinct values
+     * @return The distinct values from the column
+     */
+    List<String> distinct(String collection, String column)
+
 }
