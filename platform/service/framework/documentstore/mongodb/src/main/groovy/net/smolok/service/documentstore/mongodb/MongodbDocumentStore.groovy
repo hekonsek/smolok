@@ -100,6 +100,10 @@ class MongodbDocumentStore implements DocumentStore {
         documentCollection(collection).remove(new BasicDBObject(MONGO_ID, new ObjectId(identifier)))
     }
 
+    @Override
+    List<String> distinct(String collection, String column) {
+        documentCollection(collection).distinct(column)
+    }
     // Helpers
 
     private DBCollection documentCollection(String collection) {
